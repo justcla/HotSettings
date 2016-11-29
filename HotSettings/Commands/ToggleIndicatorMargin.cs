@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="Command1.cs" company="Company">
+// <copyright file="ToggleIndicatorMargin.cs" company="Company">
 //     Copyright (c) Company.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -15,17 +15,17 @@ namespace HotSettings
     /// <summary>
     /// Command handler
     /// </summary>
-    internal sealed class Command1
+    internal sealed class ToggleIndicatorMargin
     {
         /// <summary>
         /// Command ID.
         /// </summary>
-        public const int CommandId = 0x0100;
+        public const int ToggleIndicatorMarginCommandId = 0x1021;  // Comes from VSCT file - Symbols
 
         /// <summary>
         /// Command menu group (command set GUID).
         /// </summary>
-        public static readonly Guid CommandSet = new Guid("9969e8da-9f82-49ef-8125-17cd2bade576");
+        public static readonly Guid CommandSet = new Guid("c75f116c-9249-4984-8d82-d3c6025afb17");
 
         /// <summary>
         /// VS Package that provides this command, not null.
@@ -33,11 +33,11 @@ namespace HotSettings
         private readonly Package package;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Command1"/> class.
+        /// Initializes a new instance of the <see cref="ToggleIndicatorMargin"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        private Command1(Package package)
+        private ToggleIndicatorMargin(Package package)
         {
             if (package == null)
             {
@@ -49,7 +49,7 @@ namespace HotSettings
             OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
-                var menuCommandID = new CommandID(CommandSet, CommandId);
+                var menuCommandID = new CommandID(CommandSet, ToggleIndicatorMarginCommandId);
                 var menuItem = new MenuCommand(this.MenuItemCallback, menuCommandID);
                 commandService.AddCommand(menuItem);
             }
@@ -58,7 +58,7 @@ namespace HotSettings
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>
-        public static Command1 Instance
+        public static ToggleIndicatorMargin Instance
         {
             get;
             private set;
@@ -81,7 +81,7 @@ namespace HotSettings
         /// <param name="package">Owner package, not null.</param>
         public static void Initialize(Package package)
         {
-            Instance = new Command1(package);
+            Instance = new ToggleIndicatorMargin(package);
         }
 
         /// <summary>
@@ -93,8 +93,8 @@ namespace HotSettings
         /// <param name="e">Event args.</param>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            string message = string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.GetType().FullName);
-            string title = "Command1";
+            string message = string.Format(CultureInfo.CurrentCulture, "Turn on/off indicator margin", this.GetType().FullName);
+            string title = "Toggle Indicator Margin";
 
             // Show a message box to prove we were here
             VsShellUtilities.ShowMessageBox(

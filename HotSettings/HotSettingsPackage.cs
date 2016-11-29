@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="Command1Package.cs" company="Company">
+// <copyright file="HotSettingsPackage.cs" company="Justin Clareburt">
 //     Copyright (c) Company.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -38,19 +38,19 @@ namespace HotSettings
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [Guid(Command1Package.PackageGuidString)]
+    [Guid(HotSettingsPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    public sealed class Command1Package : Package
+    public sealed class HotSettingsPackage : Package
     {
         /// <summary>
-        /// Command1Package GUID string.
+        /// HotSettings GUID string.
         /// </summary>
         public const string PackageGuidString = "d570a6f3-b0ad-42c3-b71f-db7c6b3d39c0";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Command1"/> class.
+        /// Initializes a new instance of the <see cref="global::HotSettings"/> class.
         /// </summary>
-        public Command1Package()
+        public HotSettingsPackage()
         {
             // Inside this method you can place any initialization code that does not require
             // any Visual Studio service because at this point the package object is created but
@@ -66,8 +66,9 @@ namespace HotSettings
         /// </summary>
         protected override void Initialize()
         {
-            Command1.Initialize(this);
             base.Initialize();
+            ToggleIndicatorMargin.Initialize(this);
+            ToggleSelectionMargin.Initialize(this);
         }
 
         #endregion

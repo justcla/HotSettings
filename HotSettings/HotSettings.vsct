@@ -22,7 +22,7 @@
 
   <!--The Commands section is where commands, menus, and menu groups are defined.
       This section uses a Guid to identify the package that provides the command defined inside it. -->
-  <Commands package="guidCommand1Package">
+  <Commands package="guidHotSettingsPackage">
     <!-- Inside this section we have different sub-sections: one for the menus, another
     for the menu groups, one for the buttons (the actual commands), one for the combos
     and the last one for the bitmaps used. Each element is identified by a command id that
@@ -32,11 +32,11 @@
     with command ids defined by other packages. -->
 
     <Menus>
-      <Menu guid="guidToolbarTestCommandPackageCmdSet" id="Toolbar" type="Toolbar" >
+      <Menu guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" type="Toolbar">
         <CommandFlag>DefaultDocked</CommandFlag>
         <Strings>
-          <ButtonText>Test Toolbar</ButtonText>
-          <CommandName>Test Toolbar</CommandName>
+          <ButtonText>Editor Adornments</ButtonText>  <!-- Not sure where this is used. Might be redundant. -->
+          <CommandName>Hot Settings</CommandName>  <!-- This becomes the Toolbar name. Does not show up as a command in Tools->Options,Keyboard -->
         </Strings>
       </Menu>
     </Menus>
@@ -46,11 +46,11 @@
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
     <Groups>
-      <Group guid="guidCommand1PackageCmdSet" id="MyMenuGroup" priority="0x0600">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+      <Group guid="guidHotSettingsPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
       </Group>
-      <Group guid="guidToolbarTestCommandPackageCmdSet" id="ToolbarGroup" priority="0x0000">
-        <Parent guid="guidToolbarTestCommandPackageCmdSet" id="Toolbar"/>
+      <Group guid="guidHotSettingsCmdSet" id="ToolbarGroup" priority="0x0000">
+        <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
       </Group>
     </Groups>
     
@@ -65,11 +65,18 @@
               <CommandFlag>DefaultInvisible</CommandFlag>
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
-      <Button guid="guidCommand1PackageCmdSet" id="Command1Id" priority="0x0100" type="Button">
-        <Parent guid= "guidToolbarTestCommandPackageCmdSet" id="ToolbarGroup" />
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIndicatorMargin" priority="0x0100" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="ToolbarGroup" />
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
-          <ButtonText>Invoke Command1</ButtonText>
+          <ButtonText>Toggle Indicator Margin</ButtonText>  <!-- Appears as tooltip over button when on toolbar -->
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleSelectionMargin" priority="0x0110" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="ToolbarGroup" />
+        <Icon guid="guidImages" id="bmpPic2" />
+        <Strings>
+          <ButtonText>Toggle Selection Margin</ButtonText>  <!-- Appears as tooltip over button when on toolbar -->
         </Strings>
       </Button>
     </Buttons>
@@ -81,21 +88,27 @@
             bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
             inside a button definition. An important aspect of this declaration is that the element id
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
-      <Bitmap guid="guidImages" href="Resources\Command1.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough"/>
+      <Bitmap guid="guidImages" href="Resources\SampleToolbarIcons.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
     </Bitmaps>
   </Commands>
 
   <Symbols>
     <!-- This is the package guid. -->
-    <GuidSymbol name="guidCommand1Package" value="{d570a6f3-b0ad-42c3-b71f-db7c6b3d39c0}" />
+    <GuidSymbol name="guidHotSettingsPackage" value="{d570a6f3-b0ad-42c3-b71f-db7c6b3d39c0}" />
 
     <!-- This is the guid used to group the menu commands together -->
-    <GuidSymbol name="guidCommand1PackageCmdSet" value="{9969e8da-9f82-49ef-8125-17cd2bade576}">
+    <GuidSymbol name="guidHotSettingsPackageCmdSet" value="{9969e8da-9f82-49ef-8125-17cd2bade576}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
-      <IDSymbol name="Command1Id" value="0x0100" />
     </GuidSymbol>
     
-    <GuidSymbol name="guidImages" value="{6d06c52c-db85-42a5-91c8-a0b6023ad326}" >
+    <GuidSymbol name="guidHotSettingsCmdSet" value="{c75f116c-9249-4984-8d82-d3c6025afb17}">
+      <IDSymbol name="HotSettingsToolbar" value="0x1000" />
+      <IDSymbol name="ToolbarGroup" value="0x1050" />
+      <IDSymbol name="cmdidToggleIndicatorMargin" value="0x1021" />
+      <IDSymbol name="cmdidToggleSelectionMargin" value="0x1022" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidImages" value="{6d06c52c-db85-42a5-91c8-a0b6023ad326}">
       <IDSymbol name="bmpPic1" value="1" />
       <IDSymbol name="bmpPic2" value="2" />
       <IDSymbol name="bmpPicSearch" value="3" />
@@ -104,10 +117,5 @@
       <IDSymbol name="bmpPicStrikethrough" value="6" />
     </GuidSymbol>
     
-    <GuidSymbol name="guidToolbarTestCommandPackageCmdSet" value="{c75f116c-9249-4984-8d82-d3c6025afb17}">
-      <IDSymbol name="Toolbar" value="0x1000" />
-      <IDSymbol name="ToolbarGroup" value="0x1050" />
-    </GuidSymbol>
-
-  </Symbols>
+    </Symbols>
 </CommandTable>
