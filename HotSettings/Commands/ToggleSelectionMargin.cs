@@ -93,7 +93,7 @@ namespace HotSettings
         /// <param name="e">Event args.</param>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            string message = string.Format(CultureInfo.CurrentCulture, "Turn on/off indicator margin", this.GetType().FullName);
+            string message = string.Format(CultureInfo.CurrentCulture, "Turn on/off selection margin", this.GetType().FullName);
             string title = "Toggle Selection Margin";
 
             // Show a message box to prove we were here
