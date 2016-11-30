@@ -96,6 +96,12 @@
   </Commands>
 
   <CommandPlacements>
+    <CommandPlacement guid="guidVSStd2K" id="ECMD_OUTLN_STOP_HIDING_ALL" priority="0x0130">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSStd2K" id="ECMD_OUTLN_START_AUTOHIDING" priority="0x0135">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+    </CommandPlacement>
     <CommandPlacement guid="guidVSStd2K" id="ECMD_TOGGLEVISSPACE" priority="0x0100">
       <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
     </CommandPlacement>
