@@ -46,10 +46,13 @@
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
     <Groups>
-      <Group guid="guidHotSettingsPackageCmdSet" id="MyMenuGroup" priority="0x0600">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
+      <Group guid="guidHotSettingsCmdSet" id="EditorMarginGroup" priority="0x0000">
+        <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
       </Group>
-      <Group guid="guidHotSettingsCmdSet" id="ToolbarGroup" priority="0x0000">
+      <Group guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" priority="0x0000">
+        <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
+      </Group>
+      <Group guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" priority="0x0000">
         <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
       </Group>
     </Groups>
@@ -66,14 +69,14 @@
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIndicatorMargin" priority="0x0100" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="ToolbarGroup" />
+        <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
           <ButtonText>Toggle Indicator Margin</ButtonText>  <!-- Appears as tooltip over button when on toolbar -->
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleSelectionMargin" priority="0x0110" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="ToolbarGroup" />
+        <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
         <Icon guid="guidImages" id="bmpPic2" />
         <Strings>
           <ButtonText>Toggle Selection Margin</ButtonText>  <!-- Appears as tooltip over button when on toolbar -->
@@ -92,20 +95,34 @@
     </Bitmaps>
   </Commands>
 
+  <CommandPlacements>
+    <CommandPlacement guid="guidVSStd2K" id="ECMD_TOGGLEVISSPACE" priority="0x0100">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSStd2K" id="ECMD_TOGGLEWORDWRAP" priority="0x0110">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+    </CommandPlacement>
+  </CommandPlacements>
+
+  <VisibilityConstraints>
+    <VisibilityItem guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" context="GUID_TextEditorFactory"/>
+  </VisibilityConstraints>
+
   <Symbols>
     <!-- This is the package guid. -->
     <GuidSymbol name="guidHotSettingsPackage" value="{d570a6f3-b0ad-42c3-b71f-db7c6b3d39c0}" />
 
     <!-- This is the guid used to group the menu commands together -->
-    <GuidSymbol name="guidHotSettingsPackageCmdSet" value="{9969e8da-9f82-49ef-8125-17cd2bade576}">
-      <IDSymbol name="MyMenuGroup" value="0x1020" />
-    </GuidSymbol>
-    
     <GuidSymbol name="guidHotSettingsCmdSet" value="{c75f116c-9249-4984-8d82-d3c6025afb17}">
+      <!-- Toolbar ID -->
       <IDSymbol name="HotSettingsToolbar" value="0x1000" />
-      <IDSymbol name="ToolbarGroup" value="0x1050" />
-      <IDSymbol name="cmdidToggleIndicatorMargin" value="0x1021" />
-      <IDSymbol name="cmdidToggleSelectionMargin" value="0x1022" />
+      <!-- Group IDs -->
+      <IDSymbol name="EditorMarginGroup" value="0x1001" />
+      <IDSymbol name="EditorSettingsGroup" value="0x1002" />
+      <IDSymbol name="ScrollbarSettingsGroup" value="0x1003" />
+      <!-- Command IDs -->
+      <IDSymbol name="cmdidToggleIndicatorMargin" value="0x1021" />   <!-- This must be in sync with constant in Command file (eg. ToggleIndicatorMargin.cs) -->
+      <IDSymbol name="cmdidToggleSelectionMargin" value="0x1022" />   <!-- This must be in sync with constant in Command file (eg. ToggleSelectionMargin.cs) -->
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{6d06c52c-db85-42a5-91c8-a0b6023ad326}">
