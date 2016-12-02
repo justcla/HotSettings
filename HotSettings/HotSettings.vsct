@@ -82,6 +82,16 @@
           <ButtonText>Toggle Selection Margin</ButtonText>  <!-- Appears as tooltip over button when on toolbar -->
         </Strings>
       </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleLUT" priority="0x0110" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+        <Icon guid="guidImages" id="bmpPicArrows" />
+        <Strings>
+          <CommandName>StartLiveUnitTesting</CommandName>
+          <ButtonText>Live Unit Testing - On</ButtonText>  <!-- Appears as button text if no icon available. Shows as tooltip if no ToolTipText provided. -->
+          <MenuText>&amp;Start Live Unit Testing</MenuText>  <!-- Appears as item text in the menu -->
+          <ToolTipText>Provides Live Unit Test indicators in the editor margin</ToolTipText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -129,6 +139,7 @@
       <!-- Command IDs -->
       <IDSymbol name="cmdidToggleIndicatorMargin" value="0x1021" />   <!-- This must be in sync with constant in Command file (eg. ToggleIndicatorMargin.cs) -->
       <IDSymbol name="cmdidToggleSelectionMargin" value="0x1022" />   <!-- This must be in sync with constant in Command file (eg. ToggleSelectionMargin.cs) -->
+      <IDSymbol name="cmdidToggleLUT" value="0x1023" />   <!-- This must be in sync with constant in Command file (eg. ToggleLUT.cs) -->
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{6d06c52c-db85-42a5-91c8-a0b6023ad326}">
