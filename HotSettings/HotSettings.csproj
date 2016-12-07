@@ -51,10 +51,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Commands\ToggleSelectionMargin.cs" />
+    <Compile Include="Commands\ToggleMargin.cs" />
     <Compile Include="HotSettingsPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Commands\ToggleIndicatorMargin.cs" />
     <Compile Include="Margins\SettingsMargin.cs" />
     <Compile Include="Margins\SettingsMarginFactory.cs" />
   </ItemGroup>

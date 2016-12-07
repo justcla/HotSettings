@@ -67,8 +67,7 @@ namespace HotSettings
         protected override void Initialize()
         {
             base.Initialize();
-            ToggleIndicatorMargin.Initialize(this);
-            ToggleSelectionMargin.Initialize(this);
+            ToggleMargin.Initialize(this);
         }
 
         #endregion

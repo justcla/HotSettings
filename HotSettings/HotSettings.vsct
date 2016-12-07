@@ -52,16 +52,20 @@
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
     <Groups>
-      <Group guid="guidHotSettingsCmdSet" id="EditorMarginGroup" priority="0x0000">
+      <Group guid="guidHotSettingsCmdSet" id="EditorMarginGroup" priority="0x0001">
         <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
       </Group>
-      <Group guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" priority="0x0000">
+      <Group guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" priority="0x0002">
         <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
       </Group>
-      <Group guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" priority="0x0000">
+      <Group guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" priority="0x0003">
         <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
       </Group>
-      <Group guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" priority="0x0000">
+      <!-- Editor Margin Context Menu Groups -->
+      <Group guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" priority="0x0001">
+        <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
+      </Group>
+      <Group guid="guidHotSettingsCmdSet" id="EditorMarginSourceControlGroup" priority="0x0002">
         <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
       </Group>
     </Groups>
@@ -77,28 +81,66 @@
               <CommandFlag>DefaultInvisible</CommandFlag>
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
-      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIndicatorMargin" priority="0x0100" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIndicatorMargin" priority="0x0101" type="Button">
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
           <ButtonText>Toggle Indicator Margin</ButtonText>  <!-- Appears as tooltip over button when on toolbar -->
+          <MenuText>Indicator Margin</MenuText>  <!-- Menu item text -->
+          <ToolTipText>Toggle &amp;Indicator / Glyph Margin</ToolTipText>
         </Strings>
       </Button>
-      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleSelectionMargin" priority="0x0110" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleLineNumbers" priority="0x0112" type="Button">
+        <Strings>
+          <ButtonText>Line Numbers</ButtonText>
+          <MenuText>Line Numbers</MenuText>  <!-- Menu item text -->
+          <ToolTipText>Toggle &amp;Line Numbers Margin</ToolTipText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleQuickActions" priority="0x0113" type="Button">
+        <Strings>
+          <ButtonText>Quick Actions</ButtonText>
+          <MenuText>&amp;Quick Actions</MenuText>  <!-- Menu item text -->
+          <ToolTipText>Toggle Quick Actions / Lightbulb Margin</ToolTipText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleSelectionMargin" priority="0x0114" type="Button">
         <Icon guid="guidImages" id="bmpPic2" />
         <Strings>
-          <ButtonText>Toggle Selection Margin</ButtonText>  <!-- Appears as tooltip over button when on toolbar -->
+          <ButtonText>Selection Margin</ButtonText>
+          <ToolTipText>Toggle Selection Margin</ToolTipText>
         </Strings>
       </Button>
-      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleLUT" priority="0x0110" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleTrackChanges" priority="0x0115" type="Button">
+        <Strings>
+          <ButtonText>Track Changes</ButtonText>
+          <ToolTipText>Start/Stop Track Changes</ToolTipText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleDiffMargin" priority="0x0116" type="Button">
+        <Strings>
+          <ButtonText>Diff Margin</ButtonText>
+          <ToolTipText>Toggle Diff Margin</ToolTipText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleOutlining" priority="0x0117" type="Button">
+        <Strings>
+          <ButtonText>Outlining</ButtonText>
+          <ToolTipText>Toggle Outlining</ToolTipText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleLiveUnitTesting" priority="0x0118" type="Button">
         <Icon guid="guidImages" id="bmpPicArrows" />
         <Strings>
           <CommandName>StartLiveUnitTesting</CommandName>
-          <ButtonText>Live Unit Testing - On</ButtonText>  <!-- Appears as button text if no icon available. Shows as tooltip if no ToolTipText provided. -->
-          <MenuText>&amp;Start Live Unit Testing</MenuText>  <!-- Appears as item text in the menu -->
+          <ButtonText>Live Unit Testing</ButtonText>  <!-- Appears as button text if no icon available. Shows as tooltip if no ToolTipText provided. -->
+          <MenuText>&amp;Live Unit Testing</MenuText>  <!-- Appears as item text in the menu -->
           <ToolTipText>Provides Live Unit Test indicators in the editor margin</ToolTipText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleAnnotate" priority="0x0119" type="Button">
+        <Strings>
+          <ButtonText>Annotate</ButtonText>
+          <ToolTipText>View Git Blame / Annotate source control</ToolTipText>
         </Strings>
       </Button>
     </Buttons>
@@ -115,6 +157,22 @@
   </Commands>
 
   <CommandPlacements>
+    <!-- Toolbar placement -->
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleIndicatorMargin" priority="0x0001">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleLineNumbers" priority="0x0002">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleQuickActions" priority="0x0003">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleSelectionMargin" priority="0x0004">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleLiveUnitTesting" priority="0x0008">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+    </CommandPlacement>
     <CommandPlacement guid="guidVSStd2K" id="ECMD_OUTLN_STOP_HIDING_ALL" priority="0x0130">
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
     </CommandPlacement>
@@ -131,10 +189,30 @@
     <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleIndicatorMargin" priority="0x0001">
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleSelectionMargin" priority="0x0002">
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleLineNumbers" priority="0x0002">
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
     </CommandPlacement>
-  
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleQuickActions" priority="0x0003">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleSelectionMargin" priority="0x0004">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleTrackChanges" priority="0x0005">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleDiffMargin" priority="0x0006">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleOutlining" priority="0x0007">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleLiveUnitTesting" priority="0x0008">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleAnnotate" priority="0x0001">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginSourceControlGroup" />
+    </CommandPlacement>
   </CommandPlacements>
 
   <VisibilityConstraints>
@@ -158,10 +236,18 @@
       <IDSymbol name="EditorSettingsGroup" value="0x1002" />
       <IDSymbol name="ScrollbarSettingsGroup" value="0x1003" />
       <IDSymbol name="EditorMarginContextGroup" value="0x1004" />
+      <IDSymbol name="EditorMarginSourceControlGroup" value="0x1005" />
       <!-- Command IDs -->
-      <IDSymbol name="cmdidToggleIndicatorMargin" value="0x1021" />   <!-- This must be in sync with constant in Command file (eg. ToggleIndicatorMargin.cs) -->
-      <IDSymbol name="cmdidToggleSelectionMargin" value="0x1022" />   <!-- This must be in sync with constant in Command file (eg. ToggleSelectionMargin.cs) -->
-      <IDSymbol name="cmdidToggleLUT" value="0x1023" />   <!-- This must be in sync with constant in Command file (eg. ToggleLUT.cs) -->
+      <!-- These must be in sync with constant in Command file (eg. ToggleMargin.cs) -->
+      <IDSymbol name="cmdidToggleIndicatorMargin" value="0x1021" />
+      <IDSymbol name="cmdidToggleLineNumbers" value="0x1022" />
+      <IDSymbol name="cmdidToggleQuickActions" value="0x1023" />
+      <IDSymbol name="cmdidToggleSelectionMargin" value="0x1024" />
+      <IDSymbol name="cmdidToggleTrackChanges" value="0x1025" />
+      <IDSymbol name="cmdidToggleDiffMargin" value="0x1026" />
+      <IDSymbol name="cmdidToggleOutlining" value="0x1027" />
+      <IDSymbol name="cmdidToggleLiveUnitTesting" value="0x1028" />
+      <IDSymbol name="cmdidToggleAnnotate" value="0x1029" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{6d06c52c-db85-42a5-91c8-a0b6023ad326}">

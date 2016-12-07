@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="ToggleIndicatorMargin.cs" company="Company">
+// <copyright file="ToggleMargin.cs" company="Company">
 //     Copyright (c) Company.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -15,12 +15,22 @@ namespace HotSettings
     /// <summary>
     /// Command handler
     /// </summary>
-    internal sealed class ToggleIndicatorMargin
+    internal sealed class ToggleMargin
     {
         /// <summary>
-        /// Command ID.
+        /// Command IDs. Note: These must be in sync with symbols in VSCT file.
         /// </summary>
-        public const int ToggleIndicatorMarginCommandId = 0x1021;  // Comes from VSCT file - Symbols
+        //public const int ToggleIndicatorMarginCommandId = 0x1021;  // Comes from VSCT file - Symbols
+        //public const int ToggleSelectionMarginCommandId = 0x1022;
+        public const int ToggleIndicatorMarginCmdId = 0x1021;
+        public const int ToggleLineNumbersCmdId = 0x1022;
+        public const int ToggleQuickActionsCmdId = 0x1023;
+        public const int ToggleSelectionMarginCmdId = 0x1024;
+        public const int ToggleTrackChangesCmdId = 0x1025;
+        public const int ToggleDiffMarginCmdId = 0x1026;
+        public const int ToggleOutliningCmdId = 0x1027;
+        public const int ToggleLiveUnitTestingCmdId = 0x1028;
+        public const int ToggleAnnotateCmdId = 0x1029;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -33,11 +43,11 @@ namespace HotSettings
         private readonly Package package;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ToggleIndicatorMargin"/> class.
+        /// Initializes a new instance of the <see cref="ToggleMargin"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        private ToggleIndicatorMargin(Package package)
+        private ToggleMargin(Package package)
         {
             if (package == null)
             {
@@ -49,16 +59,28 @@ namespace HotSettings
             OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
-                var menuCommandID = new CommandID(CommandSet, ToggleIndicatorMarginCommandId);
-                var menuItem = new MenuCommand(this.MenuItemCallback, menuCommandID);
-                commandService.AddCommand(menuItem);
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleIndicatorMarginCmdId));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleLineNumbersCmdId));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleQuickActionsCmdId));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleSelectionMarginCmdId));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleTrackChangesCmdId));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleDiffMarginCmdId));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleOutliningCmdId));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleLiveUnitTestingCmdId));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleAnnotateCmdId));
             }
+        }
+
+        private MenuCommand CreateCommand(Guid commandSet, int commandId)
+        {
+            var menuCommandID = new CommandID(commandSet, commandId);
+            return new MenuCommand(this.MenuItemCallback, menuCommandID);
         }
 
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>
-        public static ToggleIndicatorMargin Instance
+        public static ToggleMargin Instance
         {
             get;
             private set;
@@ -81,7 +103,7 @@ namespace HotSettings
         /// <param name="package">Owner package, not null.</param>
         public static void Initialize(Package package)
         {
-            Instance = new ToggleIndicatorMargin(package);
+            Instance = new ToggleMargin(package);
         }
 
         /// <summary>
@@ -93,8 +115,9 @@ namespace HotSettings
         /// <param name="e">Event args.</param>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            string message = string.Format(CultureInfo.CurrentCulture, "Turn on/off indicator margin", this.GetType().FullName);
-            string title = "Toggle Indicator Margin";
+            MenuCommand command = (MenuCommand)sender;
+            string message = string.Format(CultureInfo.CurrentCulture, "Turn {0} margin {1}", command.Checked? "off" : "on", command.CommandID.ID);
+            string title = "Toggle Margin";
 
             // Show a message box to prove we were here
             VsShellUtilities.ShowMessageBox(
@@ -104,6 +127,12 @@ namespace HotSettings
                 OLEMSGICON.OLEMSGICON_INFO,
                 OLEMSGBUTTON.OLEMSGBUTTON_OK,
                 OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+
+            // Now perform the action
+            //TODO: Update settings for visibility of selected margin
+
+            // Update state of checkbox
+            command.Checked = !command.Checked;
         }
     }
 }
