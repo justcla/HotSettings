@@ -82,64 +82,61 @@
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIndicatorMargin" priority="0x0101" type="Button">
-        <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
-          <ButtonText>Toggle Indicator Margin</ButtonText>  <!-- Appears as tooltip over button when on toolbar -->
-          <MenuText>Indicator Margin</MenuText>  <!-- Menu item text -->
-          <ToolTipText>Toggle &amp;Indicator / Glyph Margin</ToolTipText>
+          <ButtonText>Toggle Breakpoint</ButtonText>  <!-- Appears as tooltip over button when on toolbar -->
+          <MenuText>&amp;Breakpoint Margin</MenuText>  <!-- Menu item text -->
+          <ToolTipText>Toggle Breakpoint Margin (Indicator/Glyph Margin)</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleLineNumbers" priority="0x0112" type="Button">
         <Strings>
-          <ButtonText>Line Numbers</ButtonText>
+          <ButtonText>&amp;Line Numbers</ButtonText>
           <MenuText>Line Numbers</MenuText>  <!-- Menu item text -->
-          <ToolTipText>Toggle &amp;Line Numbers Margin</ToolTipText>
+          <ToolTipText>Toggle Line Numbers Margin</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleQuickActions" priority="0x0113" type="Button">
         <Strings>
-          <ButtonText>Quick Actions</ButtonText>
-          <MenuText>&amp;Quick Actions</MenuText>  <!-- Menu item text -->
+          <ButtonText>Lightbulb &amp;Margin</ButtonText>
+          <MenuText>Lightbulb Margin</MenuText>  <!-- Menu item text -->
           <ToolTipText>Toggle Quick Actions / Lightbulb Margin</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleSelectionMargin" priority="0x0114" type="Button">
-        <Icon guid="guidImages" id="bmpPic2" />
         <Strings>
-          <ButtonText>Selection Margin</ButtonText>
+          <ButtonText>&amp;Selection Margin</ButtonText>
           <ToolTipText>Toggle Selection Margin</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleTrackChanges" priority="0x0115" type="Button">
         <Strings>
-          <ButtonText>Track Changes</ButtonText>
+          <ButtonText>Track &amp;Changes</ButtonText>
           <ToolTipText>Start/Stop Track Changes</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleDiffMargin" priority="0x0116" type="Button">
         <Strings>
-          <ButtonText>Diff Margin</ButtonText>
+          <ButtonText>&amp;Diff Margin</ButtonText>
           <ToolTipText>Toggle Diff Margin</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleOutlining" priority="0x0117" type="Button">
         <Strings>
-          <ButtonText>Outlining</ButtonText>
+          <ButtonText>&amp;Outlining</ButtonText>
           <ToolTipText>Toggle Outlining</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleLiveUnitTesting" priority="0x0118" type="Button">
-        <Icon guid="guidImages" id="bmpPicArrows" />
         <Strings>
           <CommandName>StartLiveUnitTesting</CommandName>
-          <ButtonText>Live Unit Testing</ButtonText>  <!-- Appears as button text if no icon available. Shows as tooltip if no ToolTipText provided. -->
-          <MenuText>&amp;Live Unit Testing</MenuText>  <!-- Appears as item text in the menu -->
+          <ButtonText>Live Unit &amp;Testing</ButtonText>  <!-- Appears as button text if no icon available. Shows as tooltip if no ToolTipText provided. -->
+          <MenuText>Live Unit Testing</MenuText>  <!-- Appears as item text in the menu -->
           <ToolTipText>Provides Live Unit Test indicators in the editor margin</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleAnnotate" priority="0x0119" type="Button">
         <Strings>
-          <ButtonText>Annotate</ButtonText>
+          <ButtonText>&amp;Annotate</ButtonText>
           <ToolTipText>View Git Blame / Annotate source control</ToolTipText>
         </Strings>
       </Button>
@@ -168,6 +165,12 @@
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
     </CommandPlacement>
     <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleSelectionMargin" priority="0x0004">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleTrackChanges" priority="0x0005">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleDiffMargin" priority="0x0006">
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
     </CommandPlacement>
     <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleLiveUnitTesting" priority="0x0008">
