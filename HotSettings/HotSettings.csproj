@@ -55,8 +55,6 @@
     <Compile Include="HotSettingsPackage.cs" />
     <Compile Include="HotSettingsTextViewCreationListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Margins\SettingsMargin.cs" />
-    <Compile Include="Margins\SettingsMarginFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
