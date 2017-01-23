@@ -39,16 +39,14 @@ namespace HotCommands
 
             //IWpfTextView textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
             var textViewHost = EditorAdaptersFactoryService.GetWpfTextViewHost(textViewAdapter);
-            //var lineNumberMargin = textViewHost.GetTextViewMargin("LineNumber");
-            //var glyphMargin = textViewHost.GetTextViewMargin("Glyph");
-            //var leftSelectionMargin = textViewHost.GetTextViewMargin("LeftSelection");  // Selection margin - inherited by all left margins
-            //var outliningMargin = textViewHost.GetTextViewMargin("Outlining");
-            //var spacerMargin = textViewHost.GetTextViewMargin("Spacer");  // Selection margin ?
+            var lineNumberMargin = textViewHost.GetTextViewMargin("LineNumber");
+            var glyphMargin = textViewHost.GetTextViewMargin("Glyph");
+            var leftSelectionMargin = textViewHost.GetTextViewMargin("LeftSelection");  // Selection margin - inherited by all left margins
+            var outliningMargin = textViewHost.GetTextViewMargin("Outlining");
+            var spacerMargin = textViewHost.GetTextViewMargin("Spacer");  // Selection margin ?
             var leftMargin = textViewHost.GetTextViewMargin("Left");
 
             leftMargin.VisualElement.MouseRightButtonUp += OnMouseRightButtonUp;
-            //leftSelectionMargin.VisualElement.MouseRightButtonUp += OnMouseRightButtonUp;
-            //glyphMargin.VisualElement.MouseRightButtonUp += OnMouseRightButtonUp;
         }
 
         private void OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
@@ -56,34 +54,33 @@ namespace HotCommands
             ShowContextMenu((FrameworkElement) sender, e);
         }
 
-        private void ShowContextMenu(FrameworkElement sender, MouseButtonEventArgs e)
+        private void ShowContextMenu(FrameworkElement frameworkElement, MouseButtonEventArgs mouseButtonEvent)
         {
             const string guidVSPackageContextMenuCmdSet = "c75f116c-9249-4984-8d82-d3c6025afb17";
             const int MyContextMenuId = 0x1100;
 
-            IVsUIShell uiShell;
-            System.Guid contextMenuGuid = new System.Guid(guidVSPackageContextMenuCmdSet);
-            System.Windows.Point relativePoint;
-            System.Windows.Point screenPoint;
-            POINTS point;
-            POINTS[] points;
-
-            uiShell = Package.GetGlobalService(typeof(SVsUIShell)) as IVsUIShell;
-
-            if (uiShell != null)
+            IVsUIShell uiShell = Package.GetGlobalService(typeof(SVsUIShell)) as IVsUIShell;
+            if (uiShell == null)
             {
-                relativePoint = e.GetPosition(sender);
-                screenPoint = sender.PointToScreen(relativePoint);
-
-                point = new POINTS();
-                point.x = (short)screenPoint.X;
-                point.y = (short)screenPoint.Y;
-
-                points = new[] { point };
-
-                // TODO: error handling
-                uiShell.ShowContextMenu(0, ref contextMenuGuid, MyContextMenuId, points, null);
+                // TODO: Log error - Unable to access UIShell
+                return;
             }
+
+            System.Guid contextMenuGuid = new System.Guid(guidVSPackageContextMenuCmdSet);
+            POINTS[] points = GetPointsFromMouseEvent(frameworkElement, mouseButtonEvent);
+
+            // TODO: error handling
+            uiShell.ShowContextMenu(0, ref contextMenuGuid, MyContextMenuId, points, null);
+        }
+
+        private static POINTS[] GetPointsFromMouseEvent(FrameworkElement frameworkElement, MouseButtonEventArgs mouseButtonEvent)
+        {
+            Point relativePoint = mouseButtonEvent.GetPosition(frameworkElement);
+            Point screenPoint = frameworkElement.PointToScreen(relativePoint);
+            POINTS point = new POINTS();
+            point.x = (short)screenPoint.X;
+            point.y = (short)screenPoint.Y;
+            return new[] { point };
         }
 
     }
