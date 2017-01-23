@@ -1,6 +1,8 @@
 # HotSettings
 Menus and Toolbars that expose Visual Studio settings.
 
+![Hot Settings screenshot](https://raw.githubusercontent.com/justcla/HotSettings/master/Screenshot.PNG)
+
 ## Intended to expose the following settings:
 
 ### Editor Margin Settings (Editor margin context menu)
