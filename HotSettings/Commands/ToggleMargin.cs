@@ -9,6 +9,8 @@ using System.ComponentModel.Design;
 using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.OLE.Interop;
+using Microsoft.VisualStudio;
 
 namespace HotSettings
 {
@@ -92,7 +94,7 @@ namespace HotSettings
         /// <summary>
         /// Gets the service provider from the owner package.
         /// </summary>
-        private IServiceProvider ServiceProvider
+        private System.IServiceProvider ServiceProvider
         {
             get
             {
@@ -141,7 +143,7 @@ namespace HotSettings
         private bool IsLiveUnitTestingRunning()
         {
             // TODO: Determine if Live Unit Testing is started.
-            return true;
+            return false;
         }
 
         private void ToggleLUT(object sender, EventArgs e)
@@ -151,27 +153,36 @@ namespace HotSettings
             // Show a message box to prove we were here
             string message = string.Format(CultureInfo.CurrentCulture, "Turn Live Unit Testing {0}", command.Checked ? "off" : "on");
             string title = "Toggle Live Unit Testing";
-            VsShellUtilities.ShowMessageBox(this.ServiceProvider, message, title, OLEMSGICON.OLEMSGICON_INFO, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+            //VsShellUtilities.ShowMessageBox(this.ServiceProvider, message, title, OLEMSGICON.OLEMSGICON_INFO, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
 
             // Now perform the action
-            ToggleLUTRunningState(commandTarget);
+            ToggleLUTRunningState(command);
 
             // Update state of checkbox
-            command.Checked = IsLiveUnitTestingRunning();
+            command.Checked = !command.Checked; //IsLiveUnitTestingRunning();
         }
 
-        public int ToggleLUTRunningState(OleInterop.IOleCommandTarget commandTarget)
+        public int ToggleLUTRunningState(MenuCommand command)
         {
             // TODO: Fetch correct constants for LUT commands and cmdGroup
-            Guid cmdGroup = VSConstants.VSStd2K;
-            const unit stopLutCmdId = (uint)VSConstants.VSStd2KCmdID.STOP_LUT;
-            const unit startLutCmdId = (uint)VSConstants.VSStd2KCmdID.START_LUT;
+            Guid cmdGroup = new Guid("1E198C22-5980-4E7E-92F3-F73168D1FB63");  // GuidID = 146
+            const uint startLutCmdId = 16897;
+            const uint stopLutCmdId = 16900;
 
             // Call command to Start or Stop LiveUnitTesting depending on current state
-            uint cmdID = IsLiveUnitTestingRunning() ? stopLutCmdId : startLutCmdId;
-            int hr = commandTarget.Exec(ref cmdGroup, cmdID, (uint)OleInterop.OLECMDEXECOPT.OLECMDEXECOPT_DODEFAULT, IntPtr.Zero, IntPtr.Zero);
+            //uint cmdID = IsLiveUnitTestingRunning() ? stopLutCmdId : startLutCmdId;
+            uint cmdID = command.Checked ? stopLutCmdId : startLutCmdId;
+            int hr = GetShellCommandDispatcher().Exec(ref cmdGroup, cmdID, (uint)OLECMDEXECOPT.OLECMDEXECOPT_DODEFAULT, IntPtr.Zero, IntPtr.Zero);
 
             return VSConstants.S_OK;
+        }
+
+        /// <summary>
+        /// Get the SUIHostCommandDispatcher from the global service provider.
+        /// </summary>
+        private IOleCommandTarget GetShellCommandDispatcher()
+        {
+            return this.ServiceProvider.GetService(typeof(SUIHostCommandDispatcher)) as IOleCommandTarget;
         }
 
     }
