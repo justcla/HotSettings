@@ -9,6 +9,8 @@ using System.ComponentModel.Design;
 using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.OLE.Interop;
+using Microsoft.VisualStudio;
 
 namespace HotSettings
 {
@@ -59,22 +61,25 @@ namespace HotSettings
             OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleIndicatorMarginCmdId));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleLineNumbersCmdId));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleQuickActionsCmdId));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleSelectionMarginCmdId));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleTrackChangesCmdId));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleDiffMarginCmdId));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleOutliningCmdId));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleLiveUnitTestingCmdId));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleAnnotateCmdId));
+                var toggleLUTCommand = CreateCommand(CommandSet, ToggleLiveUnitTestingCmdId, this.ToggleLUT);
+                toggleLUTCommand.Checked = IsLiveUnitTestingRunning();
+
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleIndicatorMarginCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleLineNumbersCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleQuickActionsCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleSelectionMarginCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleTrackChangesCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleDiffMarginCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleOutliningCmdId, this.MenuItemCallback));
+                commandService.AddCommand(toggleLUTCommand);
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleAnnotateCmdId, this.MenuItemCallback));
             }
         }
 
-        private MenuCommand CreateCommand(Guid commandSet, int commandId)
+        private MenuCommand CreateCommand(Guid commandSet, int commandId, EventHandler handler)
         {
             var menuCommandID = new CommandID(commandSet, commandId);
-            return new MenuCommand(this.MenuItemCallback, menuCommandID);
+            return new MenuCommand(handler, menuCommandID);
         }
 
         /// <summary>
@@ -89,7 +94,7 @@ namespace HotSettings
         /// <summary>
         /// Gets the service provider from the owner package.
         /// </summary>
-        private IServiceProvider ServiceProvider
+        private System.IServiceProvider ServiceProvider
         {
             get
             {
@@ -134,5 +139,51 @@ namespace HotSettings
             // Update state of checkbox
             command.Checked = !command.Checked;
         }
+
+        private bool IsLiveUnitTestingRunning()
+        {
+            // TODO: Determine if Live Unit Testing is started.
+            return false;
+        }
+
+        private void ToggleLUT(object sender, EventArgs e)
+        {
+            MenuCommand command = (MenuCommand)sender;
+
+            // Show a message box to prove we were here
+            string message = string.Format(CultureInfo.CurrentCulture, "Turn Live Unit Testing {0}", command.Checked ? "off" : "on");
+            string title = "Toggle Live Unit Testing";
+            //VsShellUtilities.ShowMessageBox(this.ServiceProvider, message, title, OLEMSGICON.OLEMSGICON_INFO, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+
+            // Now perform the action
+            ToggleLUTRunningState(command);
+
+            // Update state of checkbox
+            command.Checked = !command.Checked; //IsLiveUnitTestingRunning();
+        }
+
+        public int ToggleLUTRunningState(MenuCommand command)
+        {
+            // TODO: Fetch correct constants for LUT commands and cmdGroup
+            Guid cmdGroup = new Guid("1E198C22-5980-4E7E-92F3-F73168D1FB63");  // GuidID = 146
+            const uint startLutCmdId = 16897;
+            const uint stopLutCmdId = 16900;
+
+            // Call command to Start or Stop LiveUnitTesting depending on current state
+            //uint cmdID = IsLiveUnitTestingRunning() ? stopLutCmdId : startLutCmdId;
+            uint cmdID = command.Checked ? stopLutCmdId : startLutCmdId;
+            int hr = GetShellCommandDispatcher().Exec(ref cmdGroup, cmdID, (uint)OLECMDEXECOPT.OLECMDEXECOPT_DODEFAULT, IntPtr.Zero, IntPtr.Zero);
+
+            return VSConstants.S_OK;
+        }
+
+        /// <summary>
+        /// Get the SUIHostCommandDispatcher from the global service provider.
+        /// </summary>
+        private IOleCommandTarget GetShellCommandDispatcher()
+        {
+            return this.ServiceProvider.GetService(typeof(SUIHostCommandDispatcher)) as IOleCommandTarget;
+        }
+
     }
 }
