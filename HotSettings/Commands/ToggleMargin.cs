@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio;
+using EnvDTE;
 
 namespace HotSettings
 {
@@ -61,9 +62,6 @@ namespace HotSettings
             OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
-                var toggleLUTCommand = CreateCommand(CommandSet, ToggleLiveUnitTestingCmdId, this.ToggleLUT);
-                toggleLUTCommand.Checked = IsLiveUnitTestingRunning();
-
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleIndicatorMarginCmdId, this.MenuItemCallback));
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleLineNumbersCmdId, this.MenuItemCallback));
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleQuickActionsCmdId, this.MenuItemCallback));
@@ -71,7 +69,7 @@ namespace HotSettings
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleTrackChangesCmdId, this.MenuItemCallback));
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleDiffMarginCmdId, this.MenuItemCallback));
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleOutliningCmdId, this.MenuItemCallback));
-                commandService.AddCommand(toggleLUTCommand);
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleLiveUnitTestingCmdId, this.ToggleLUT));
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleAnnotateCmdId, this.MenuItemCallback));
             }
         }
@@ -142,8 +140,7 @@ namespace HotSettings
 
         private bool IsLiveUnitTestingRunning()
         {
-            // TODO: Determine if Live Unit Testing is started.
-            return false;
+            return IsCommandAvailable("Test.LiveUnitTesting.Stop");
         }
 
         private void ToggleLUT(object sender, EventArgs e)
@@ -156,10 +153,17 @@ namespace HotSettings
             //VsShellUtilities.ShowMessageBox(this.ServiceProvider, message, title, OLEMSGICON.OLEMSGICON_INFO, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
 
             // Now perform the action
-            ToggleLUTRunningState(command);
+            if (!command.Checked && !IsLiveUnitTestingRunning())
+            {
+                ToggleLUTRunningState(command);  // Will Start LUT
+            }
+            else if (command.Checked && IsLiveUnitTestingRunning())
+            {
+                ToggleLUTRunningState(command); // Will Stop LUT
+            }
 
             // Update state of checkbox
-            command.Checked = !command.Checked; //IsLiveUnitTestingRunning();
+            command.Checked = !command.Checked;  //IsLiveUnitTestingRunning();  - This happens too slowly to be effective.
         }
 
         public int ToggleLUTRunningState(MenuCommand command)
@@ -170,8 +174,8 @@ namespace HotSettings
             const uint stopLutCmdId = 16900;
 
             // Call command to Start or Stop LiveUnitTesting depending on current state
-            //uint cmdID = IsLiveUnitTestingRunning() ? stopLutCmdId : startLutCmdId;
-            uint cmdID = command.Checked ? stopLutCmdId : startLutCmdId;
+            uint cmdID = IsLiveUnitTestingRunning() ? stopLutCmdId : startLutCmdId;
+            //uint cmdID = command.Checked ? stopLutCmdId : startLutCmdId;
             int hr = GetShellCommandDispatcher().Exec(ref cmdGroup, cmdID, (uint)OLECMDEXECOPT.OLECMDEXECOPT_DODEFAULT, IntPtr.Zero, IntPtr.Zero);
 
             return VSConstants.S_OK;
@@ -184,6 +188,20 @@ namespace HotSettings
         {
             return this.ServiceProvider.GetService(typeof(SUIHostCommandDispatcher)) as IOleCommandTarget;
         }
+
+        private TInterface GetGlobalService<TService, TInterface>()
+            where TService : class
+            where TInterface : class
+        => (TInterface)this.ServiceProvider.GetService(typeof(TService));
+
+        private DTE GetDTE()
+            => GetGlobalService<SDTE, DTE>();
+
+        private bool IsCommandAvailable(string commandName)
+            => GetDTE().Commands.Item(commandName).IsAvailable;
+
+        private void ExecuteCommand(string commandName, string args = "")
+            => GetDTE().ExecuteCommand(commandName, args);
 
     }
 }
