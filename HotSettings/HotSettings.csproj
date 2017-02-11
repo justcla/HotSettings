@@ -56,7 +56,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commands\ToggleLiveUnitTesting.cs" />
     <Compile Include="Commands\ToggleMargin.cs" />
+    <Compile Include="Common\DTEUtil.cs" />
     <Compile Include="HotSettingsPackage.cs" />
     <Compile Include="HotSettingsTextViewCreationListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

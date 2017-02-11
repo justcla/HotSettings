@@ -9,9 +9,6 @@ using System.ComponentModel.Design;
 using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.OLE.Interop;
-using Microsoft.VisualStudio;
-using EnvDTE;
 
 namespace HotSettings
 {
@@ -69,7 +66,7 @@ namespace HotSettings
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleTrackChangesCmdId, this.MenuItemCallback));
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleDiffMarginCmdId, this.MenuItemCallback));
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleOutliningCmdId, this.MenuItemCallback));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleLiveUnitTestingCmdId, this.ToggleLUT));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleLiveUnitTestingCmdId, ToggleLiveUnitTesting.ToggleLUT));
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleAnnotateCmdId, this.MenuItemCallback));
             }
         }
@@ -137,71 +134,6 @@ namespace HotSettings
             // Update state of checkbox
             command.Checked = !command.Checked;
         }
-
-        private bool IsLiveUnitTestingRunning()
-        {
-            return IsCommandAvailable("Test.LiveUnitTesting.Stop");
-        }
-
-        private void ToggleLUT(object sender, EventArgs e)
-        {
-            MenuCommand command = (MenuCommand)sender;
-
-            // Show a message box to prove we were here
-            string message = string.Format(CultureInfo.CurrentCulture, "Turn Live Unit Testing {0}", command.Checked ? "off" : "on");
-            string title = "Toggle Live Unit Testing";
-            //VsShellUtilities.ShowMessageBox(this.ServiceProvider, message, title, OLEMSGICON.OLEMSGICON_INFO, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-
-            // Now perform the action
-            if (!command.Checked && !IsLiveUnitTestingRunning())
-            {
-                ToggleLUTRunningState(command);  // Will Start LUT
-            }
-            else if (command.Checked && IsLiveUnitTestingRunning())
-            {
-                ToggleLUTRunningState(command); // Will Stop LUT
-            }
-
-            // Update state of checkbox
-            command.Checked = !command.Checked;  //IsLiveUnitTestingRunning();  - This happens too slowly to be effective.
-        }
-
-        public int ToggleLUTRunningState(MenuCommand command)
-        {
-            // TODO: Fetch correct constants for LUT commands and cmdGroup
-            Guid cmdGroup = new Guid("1E198C22-5980-4E7E-92F3-F73168D1FB63");  // GuidID = 146
-            const uint startLutCmdId = 16897;
-            const uint stopLutCmdId = 16900;
-
-            // Call command to Start or Stop LiveUnitTesting depending on current state
-            uint cmdID = IsLiveUnitTestingRunning() ? stopLutCmdId : startLutCmdId;
-            //uint cmdID = command.Checked ? stopLutCmdId : startLutCmdId;
-            int hr = GetShellCommandDispatcher().Exec(ref cmdGroup, cmdID, (uint)OLECMDEXECOPT.OLECMDEXECOPT_DODEFAULT, IntPtr.Zero, IntPtr.Zero);
-
-            return VSConstants.S_OK;
-        }
-
-        /// <summary>
-        /// Get the SUIHostCommandDispatcher from the global service provider.
-        /// </summary>
-        private IOleCommandTarget GetShellCommandDispatcher()
-        {
-            return this.ServiceProvider.GetService(typeof(SUIHostCommandDispatcher)) as IOleCommandTarget;
-        }
-
-        private TInterface GetGlobalService<TService, TInterface>()
-            where TService : class
-            where TInterface : class
-        => (TInterface)this.ServiceProvider.GetService(typeof(TService));
-
-        private DTE GetDTE()
-            => GetGlobalService<SDTE, DTE>();
-
-        private bool IsCommandAvailable(string commandName)
-            => GetDTE().Commands.Item(commandName).IsAvailable;
-
-        private void ExecuteCommand(string commandName, string args = "")
-            => GetDTE().ExecuteCommand(commandName, args);
 
     }
 }
