@@ -39,16 +39,16 @@ namespace HotCommands
             AddEditorMarginContextMenu(textViewAdapter);
 
             // Add a Command Filter for ToggleLUT Command (so that we can access QueryStatus)
-            AdCommandFilter(textViewAdapter);
+            AddCommandFilter(textViewAdapter);
         }
 
-        private void AdCommandFilter(IVsTextView textViewAdapter)
+        private void AddCommandFilter(IVsTextView textViewAdapter)
         {
-            IWpfTextView textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
-            CommandFilter commandFilter = new CommandFilter(textView, _aggregatorFactory, _globalServiceProvider, _editorOperationsFactory);
+            //IWpfTextView textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
+            ToggleMarginCommandTarget toggleMarginCommand = new ToggleMarginCommandTarget(_globalServiceProvider);
             IOleCommandTarget next;
-            textViewAdapter.AddCommandFilter(commandFilter, out next);
-            commandFilter.Next = next;
+            textViewAdapter.AddCommandFilter(toggleMarginCommand, out next);
+            toggleMarginCommand.Next = next;
         }
 
         private void AddEditorMarginContextMenu(IVsTextView textViewAdapter)
@@ -76,7 +76,8 @@ namespace HotCommands
         private void ShowContextMenu(FrameworkElement frameworkElement, MouseButtonEventArgs mouseButtonEvent)
         {
             const string guidVSPackageContextMenuCmdSet = "c75f116c-9249-4984-8d82-d3c6025afb17";
-            const int MyContextMenuId = 0x1100;
+            //const string guidVSPackageContextMenuCmdSet = HotSettings.Constants.HotSettingsCmdSetGuid.ToString();
+            const int MyContextMenuId = HotSettings.Constants.EditorMarginContextMenuId; //  0x1100;
 
             IVsUIShell uiShell = Package.GetGlobalService(typeof(SVsUIShell)) as IVsUIShell;
             if (uiShell == null)

@@ -12,20 +12,14 @@ using System.ComponentModel.Design;
 
 namespace HotSettings
 {
-    internal sealed class CommandFilter : IOleCommandTarget
+    internal sealed class ToggleMarginCommandTarget : IOleCommandTarget
     {
-        private readonly IWpfTextView textView;
-        private readonly IClassifier classifier;
         private readonly SVsServiceProvider globalServiceProvider;
-        private IEditorOperations editorOperations;
 
-        public CommandFilter(IWpfTextView textView, IClassifierAggregatorService aggregatorFactory,
-            SVsServiceProvider globalServiceProvider, IEditorOperationsFactoryService editorOperationsFactory)
+        public ToggleMarginCommandTarget(
+            SVsServiceProvider globalServiceProvider)
         {
-            this.textView = textView;
-            classifier = aggregatorFactory.GetClassifier(textView.TextBuffer);
             this.globalServiceProvider = globalServiceProvider;
-            editorOperations = editorOperationsFactory.GetEditorOperations(textView);
         }
 
         public IOleCommandTarget Next { get; internal set; }
@@ -39,6 +33,10 @@ namespace HotSettings
                 {
                     case Constants.ToggleLUTCmdId:
                         HandleLUTQueryStatus(prgCmds);
+                        if (Next != null)
+                        {
+                            return Next.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
+                        }
                         return VSConstants.S_OK;
                     //case Constants.FormatCodeCmdId:
                     //    prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_ENABLED;
@@ -73,14 +71,19 @@ namespace HotSettings
 
             // Set the checked state of the MenuCommand
             //OleMenuCommandService commandService = this.globalServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            OleMenuCommandService commandService = ServiceProvider.GlobalProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if (commandService != null)
+            //OleMenuCommandService commandService = ServiceProvider.GlobalProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            //if (commandService != null)
+            //{
+            //    var toggleLUTCommandObj = commandService.FindCommand(new CommandID(Constants.HotSettingsCmdSetGuid, Constants.ToggleLUTCmdId));
+            //    if (toggleLUTCommandObj != null)
+            //    {
+            //        toggleLUTCommandObj.Checked = isLUTRunning;
+            //    }
+            //}
+            var lutMenuCommand = ToggleMargin.Instance?.ToggleLiveUnitTestingMenuCommand;
+            if (lutMenuCommand != null)
             {
-                var toggleLUTCommandObj = commandService.FindCommand(new CommandID(Constants.HotSettingsCmdSetGuid, Constants.ToggleLUTCmdId));
-                if (toggleLUTCommandObj != null)
-                {
-                    toggleLUTCommandObj.Checked = isLUTRunning;
-                }
+                lutMenuCommand.Checked = isLUTRunning;
             }
         }
 
@@ -95,7 +98,13 @@ namespace HotSettings
                     //case Constants.FormatCodeCmdId:
                     //    return FormatCode.Instance.HandleCommand(textView, GetShellCommandDispatcher());
                     case Constants.ToggleLUTCmdId:
-                        return ToggleLiveUnitTesting.ToggleLUTRunningState();
+                        int success = ToggleLiveUnitTesting.ToggleLUTRunningState();
+                        // Pass to next command handler.
+                        if (Next != null)
+                        {
+                            return Next.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
+                        }
+                        return success;
                 }
             }
 

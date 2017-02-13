@@ -36,6 +36,7 @@ namespace HotSettings
         /// Command menu group (command set GUID).
         /// </summary>
         //public static readonly Guid CommandSet = new Guid("c75f116c-9249-4984-8d82-d3c6025afb17");
+        public MenuCommand ToggleLiveUnitTestingMenuCommand;
 
         /// <summary>
         /// VS Package that provides this command, not null.
@@ -85,6 +86,8 @@ namespace HotSettings
 
             this.package = package;
 
+            ToggleLiveUnitTestingMenuCommand = CreateCommand(Constants.HotSettingsCmdSetGuid, Constants.ToggleLiveUnitTestingCmdId, ToggleLiveUnitTesting.ToggleLUT);
+
             OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
@@ -96,7 +99,7 @@ namespace HotSettings
                 commandService.AddCommand(CreateCommand(Constants.HotSettingsCmdSetGuid, Constants.ToggleDiffMarginCmdId, this.MenuItemCallback));
                 commandService.AddCommand(CreateCommand(Constants.HotSettingsCmdSetGuid, Constants.ToggleOutliningCmdId, this.MenuItemCallback));
                 commandService.AddCommand(CreateCommand(Constants.HotSettingsCmdSetGuid, Constants.ToggleAnnotateCmdId, this.MenuItemCallback));
-                //commandService.AddCommand(CreateCommand(Constants.HotSettingsCmdSetGuid, Constants.ToggleLiveUnitTestingCmdId, ToggleLiveUnitTesting.ToggleLUT));    // Now handled by its own CommandFilter
+                commandService.AddCommand(ToggleLiveUnitTestingMenuCommand);    // Now handled by its own CommandFilter
             }
         }
 

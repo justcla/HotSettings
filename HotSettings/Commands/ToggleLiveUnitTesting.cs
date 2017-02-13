@@ -21,7 +21,7 @@ namespace HotSettings
             if (!command.Checked && !IsLiveUnitTestingRunning()
                 || command.Checked && IsLiveUnitTestingRunning())
             {
-                ToggleLUTRunningState();
+                //ToggleLUTRunningState();
             }
 
             // Update state of checkbox
