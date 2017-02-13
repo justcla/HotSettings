@@ -22,60 +22,25 @@ namespace HotSettings
         /// </summary>
         //public const int ToggleIndicatorMarginCommandId = 0x1021;  // Comes from VSCT file - Symbols
         //public const int ToggleSelectionMarginCommandId = 0x1022;
-        public const int ToggleIndicatorMarginCmdId = 0x1021;
-        public const int ToggleLineNumbersCmdId = 0x1022;
-        public const int ToggleQuickActionsCmdId = 0x1023;
-        public const int ToggleSelectionMarginCmdId = 0x1024;
-        public const int ToggleTrackChangesCmdId = 0x1025;
-        public const int ToggleDiffMarginCmdId = 0x1026;
-        public const int ToggleOutliningCmdId = 0x1027;
-        public const int ToggleLiveUnitTestingCmdId = 0x1028;
-        public const int ToggleAnnotateCmdId = 0x1029;
+        //public const int ToggleIndicatorMarginCmdId = 0x1021;
+        //public const int ToggleLineNumbersCmdId = 0x1022;
+        //public const int ToggleQuickActionsCmdId = 0x1023;
+        //public const int ToggleSelectionMarginCmdId = 0x1024;
+        //public const int ToggleTrackChangesCmdId = 0x1025;
+        //public const int ToggleDiffMarginCmdId = 0x1026;
+        //public const int ToggleOutliningCmdId = 0x1027;
+        //public const int ToggleLiveUnitTestingCmdId = 0x1028;
+        //public const int ToggleAnnotateCmdId = 0x1029;
 
         /// <summary>
         /// Command menu group (command set GUID).
         /// </summary>
-        public static readonly Guid CommandSet = new Guid("c75f116c-9249-4984-8d82-d3c6025afb17");
+        //public static readonly Guid CommandSet = new Guid("c75f116c-9249-4984-8d82-d3c6025afb17");
 
         /// <summary>
         /// VS Package that provides this command, not null.
         /// </summary>
         private readonly Package package;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ToggleMargin"/> class.
-        /// Adds our command handlers for menu (commands must exist in the command table file)
-        /// </summary>
-        /// <param name="package">Owner package, not null.</param>
-        private ToggleMargin(Package package)
-        {
-            if (package == null)
-            {
-                throw new ArgumentNullException("package");
-            }
-
-            this.package = package;
-
-            OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if (commandService != null)
-            {
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleIndicatorMarginCmdId, this.MenuItemCallback));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleLineNumbersCmdId, this.MenuItemCallback));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleQuickActionsCmdId, this.MenuItemCallback));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleSelectionMarginCmdId, this.MenuItemCallback));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleTrackChangesCmdId, this.MenuItemCallback));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleDiffMarginCmdId, this.MenuItemCallback));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleOutliningCmdId, this.MenuItemCallback));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleLiveUnitTestingCmdId, ToggleLiveUnitTesting.ToggleLUT));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleAnnotateCmdId, this.MenuItemCallback));
-            }
-        }
-
-        private MenuCommand CreateCommand(Guid commandSet, int commandId, EventHandler handler)
-        {
-            var menuCommandID = new CommandID(commandSet, commandId);
-            return new MenuCommand(handler, menuCommandID);
-        }
 
         /// <summary>
         /// Gets the instance of the command.
@@ -104,6 +69,41 @@ namespace HotSettings
         public static void Initialize(Package package)
         {
             Instance = new ToggleMargin(package);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ToggleMargin"/> class.
+        /// Adds our command handlers for menu (commands must exist in the command table file)
+        /// </summary>
+        /// <param name="package">Owner package, not null.</param>
+        private ToggleMargin(Package package)
+        {
+            if (package == null)
+            {
+                throw new ArgumentNullException("package");
+            }
+
+            this.package = package;
+
+            OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            if (commandService != null)
+            {
+                commandService.AddCommand(CreateCommand(Constants.HotSettingsCmdSetGuid, Constants.ToggleIndicatorMarginCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(Constants.HotSettingsCmdSetGuid, Constants.ToggleLineNumbersCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(Constants.HotSettingsCmdSetGuid, Constants.ToggleQuickActionsCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(Constants.HotSettingsCmdSetGuid, Constants.ToggleSelectionMarginCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(Constants.HotSettingsCmdSetGuid, Constants.ToggleTrackChangesCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(Constants.HotSettingsCmdSetGuid, Constants.ToggleDiffMarginCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(Constants.HotSettingsCmdSetGuid, Constants.ToggleOutliningCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(Constants.HotSettingsCmdSetGuid, Constants.ToggleAnnotateCmdId, this.MenuItemCallback));
+                //commandService.AddCommand(CreateCommand(Constants.HotSettingsCmdSetGuid, Constants.ToggleLiveUnitTestingCmdId, ToggleLiveUnitTesting.ToggleLUT));    // Now handled by its own CommandFilter
+            }
+        }
+
+        private MenuCommand CreateCommand(Guid commandSet, int commandId, EventHandler handler)
+        {
+            var menuCommandID = new CommandID(commandSet, commandId);
+            return new MenuCommand(handler, menuCommandID);
         }
 
         /// <summary>

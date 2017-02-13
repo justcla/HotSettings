@@ -5,7 +5,7 @@ using EnvDTE;
 
 namespace HotSettings
 {
-    class DTEUtil
+    class ShellUtil
     {
         /// <summary>
         /// Get the SUIHostCommandDispatcher from the global service provider.
@@ -23,7 +23,7 @@ namespace HotSettings
         public static DTE GetDTE()
             => GetGlobalService<SDTE, DTE>();
 
-        public static bool IsCommandAvailable(string commandName)
+        public static bool IsCommandAvailableDTE(string commandName)
             => GetDTE().Commands.Item(commandName).IsAvailable;
 
         public static void ExecuteCommand(string commandName, string args = "")

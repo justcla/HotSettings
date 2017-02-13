@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.Text.Operations;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.VisualStudio.Shell.Interop;
+using HotSettings;
 
 #pragma warning disable 0649
 
@@ -34,16 +35,34 @@ namespace HotCommands
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
+            // Add the Right-Click context menu to the Left Margin of the Editor window
+            AddEditorMarginContextMenu(textViewAdapter);
+
+            // Add a Command Filter for ToggleLUT Command (so that we can access QueryStatus)
+            AdCommandFilter(textViewAdapter);
+        }
+
+        private void AdCommandFilter(IVsTextView textViewAdapter)
+        {
+            IWpfTextView textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
+            CommandFilter commandFilter = new CommandFilter(textView, _aggregatorFactory, _globalServiceProvider, _editorOperationsFactory);
+            IOleCommandTarget next;
+            textViewAdapter.AddCommandFilter(commandFilter, out next);
+            commandFilter.Next = next;
+        }
+
+        private void AddEditorMarginContextMenu(IVsTextView textViewAdapter)
+        {
             //System.Windows.Controls.ContextMenu contextMenu = null;
             //lineNumberFrameworkElement.ContextMenu = contextMenu;
 
             //IWpfTextView textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
             var textViewHost = EditorAdaptersFactoryService.GetWpfTextViewHost(textViewAdapter);
-            var lineNumberMargin = textViewHost.GetTextViewMargin("LineNumber");
-            var glyphMargin = textViewHost.GetTextViewMargin("Glyph");
-            var leftSelectionMargin = textViewHost.GetTextViewMargin("LeftSelection");  // Selection margin - inherited by all left margins
-            var outliningMargin = textViewHost.GetTextViewMargin("Outlining");
-            var spacerMargin = textViewHost.GetTextViewMargin("Spacer");  // Selection margin ?
+            //var lineNumberMargin = textViewHost.GetTextViewMargin("LineNumber");
+            //var glyphMargin = textViewHost.GetTextViewMargin("Glyph");
+            //var leftSelectionMargin = textViewHost.GetTextViewMargin("LeftSelection");  // Selection margin - inherited by all left margins
+            //var outliningMargin = textViewHost.GetTextViewMargin("Outlining");
+            //var spacerMargin = textViewHost.GetTextViewMargin("Spacer");  // Selection margin ?
             var leftMargin = textViewHost.GetTextViewMargin("Left");
 
             leftMargin.VisualElement.MouseRightButtonUp += OnMouseRightButtonUp;
@@ -51,7 +70,7 @@ namespace HotCommands
 
         private void OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            ShowContextMenu((FrameworkElement) sender, e);
+            ShowContextMenu((FrameworkElement)sender, e);
         }
 
         private void ShowContextMenu(FrameworkElement frameworkElement, MouseButtonEventArgs mouseButtonEvent)
