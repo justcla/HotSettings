@@ -5,7 +5,7 @@ using EnvDTE;
 
 namespace HotSettings
 {
-    class DTEUtil
+    public class ShellUtil
     {
         /// <summary>
         /// Get the SUIHostCommandDispatcher from the global service provider.

@@ -66,15 +66,28 @@ namespace HotSettings
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleTrackChangesCmdId, this.MenuItemCallback));
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleDiffMarginCmdId, this.MenuItemCallback));
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleOutliningCmdId, this.MenuItemCallback));
-                commandService.AddCommand(CreateCommand(CommandSet, ToggleLiveUnitTestingCmdId, ToggleLiveUnitTesting.ToggleLUT));
+                commandService.AddCommand(CreateToggleLUTCommand());
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleAnnotateCmdId, this.MenuItemCallback));
             }
+        }
+
+        private OleMenuCommand CreateToggleLUTCommand()
+        {
+            OleMenuCommand ToggleLiveUnitTestingCommand = CreateOLECommand(CommandSet, ToggleLiveUnitTestingCmdId, ToggleLiveUnitTesting.ToggleLUT);
+            ToggleLiveUnitTestingCommand.BeforeQueryStatus += ToggleLiveUnitTesting.OnBeforeQueryStatus;
+            return ToggleLiveUnitTestingCommand;
         }
 
         private MenuCommand CreateCommand(Guid commandSet, int commandId, EventHandler handler)
         {
             var menuCommandID = new CommandID(commandSet, commandId);
             return new MenuCommand(handler, menuCommandID);
+        }
+
+        private OleMenuCommand CreateOLECommand(Guid commandSet, int commandId, EventHandler handler)
+        {
+            CommandID menuCommandID = new CommandID(commandSet, commandId);
+            return new OleMenuCommand(handler, menuCommandID);
         }
 
         /// <summary>

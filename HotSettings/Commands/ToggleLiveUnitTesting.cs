@@ -1,8 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Design;
-using System.Globalization;
 using Microsoft.VisualStudio.OLE.Interop;
-using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
 
 namespace HotSettings
 {
@@ -13,36 +12,42 @@ namespace HotSettings
         private static readonly uint StartLutCmdId = 16897;
         private static readonly uint StopLutCmdId = 16900;
 
+        public static void OnBeforeQueryStatus(object sender, EventArgs e)
+        {
+            OleMenuCommand command = (OleMenuCommand)sender;
+            switch ((uint)command.CommandID.ID)
+            {
+                case Constants.ToggleLiveUnitTestingCmdId:
+                    command.Checked = IsLiveUnitTestingRunning();
+                    break;
+            }
+        }
+
         public static void ToggleLUT(object sender, EventArgs e)
         {
-            MenuCommand command = (MenuCommand)sender;
-
             // Protect against inconsistent state. Don't toggle if the item is already in the correct state.
-            if (!command.Checked && !IsLiveUnitTestingRunning()
-                || command.Checked && IsLiveUnitTestingRunning())
+            MenuCommand command = (MenuCommand)sender;
+            if (!command.Checked && IsLiveUnitTestingRunning()
+                || command.Checked && !IsLiveUnitTestingRunning())
             {
-                ToggleLUTRunningState(command);
+                // Already in desired state. Do not toggle.
+                return;
             }
 
-            // Update state of checkbox
-            command.Checked = !command.Checked;  //IsLiveUnitTestingRunning();  - This happens too slowly to be effective.
+            // Now call action to Toggle LUT.
+            ToggleLUTRunningState();
         }
 
         private static bool IsLiveUnitTestingRunning()
         {
-            return DTEUtil.IsCommandAvailable("Test.LiveUnitTesting.Stop");
+            return ShellUtil.IsCommandAvailable("Test.LiveUnitTesting.Stop");
         }
 
-        private static int ToggleLUTRunningState(MenuCommand command)
+        private static int ToggleLUTRunningState()
         {
             // Call command to Start or Stop LiveUnitTesting depending on current state
-
             uint cmdID = IsLiveUnitTestingRunning() ? StopLutCmdId : StartLutCmdId;
-            //uint cmdID = command.Checked ? stopLutCmdId : startLutCmdId;
-
-            int hr = DTEUtil.GetShellCommandDispatcher().Exec(ref LutCmdGroupGuid, cmdID, (uint)OLECMDEXECOPT.OLECMDEXECOPT_DODEFAULT, IntPtr.Zero, IntPtr.Zero);
-
-            return VSConstants.S_OK;
+            return ShellUtil.GetShellCommandDispatcher().Exec(ref LutCmdGroupGuid, cmdID, (uint)OLECMDEXECOPT.OLECMDEXECOPT_DODEFAULT, IntPtr.Zero, IntPtr.Zero);
         }
 
     }
