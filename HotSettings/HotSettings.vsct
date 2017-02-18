@@ -45,6 +45,11 @@
           <CommandName>EditorMarginContextMenu</CommandName>  <!-- This becomes the Toolbar name. Does not show up as a command in Tools->Options,Keyboard -->
         </Strings>
       </Menu>
+      <Menu guid="guidHotSettingsCmdSet" id="EditorContextMenu" type="Context">
+        <Strings>
+          <ButtonText>View</ButtonText>
+        </Strings>
+      </Menu>
     </Menus>
 
     <!-- In this section you can define new menu groups. A menu group is a container for
@@ -68,6 +73,18 @@
       <Group guid="guidHotSettingsCmdSet" id="EditorMarginSourceControlGroup" priority="0x0002">
         <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
       </Group>
+      <!-- Editor Settings Menu Groups -->
+      <Group guid="guidHotSettingsCmdSet" id="EditorContextGroup" priority="0x1000">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
+      </Group>
+      <!--
+      <Group guid="guidHotSettingsCmdSet" id="EditorContextGroup" priority="0x2000">
+        <Parent guid="CMDSETID_HtmEdGrp" id="IDMX_HTM_SOURCE_HTML" />
+      </Group>
+      <Group guid="guidHotSettingsCmdSet" id="EditorContextGroup" priority="0x2000">
+        <Parent guid="CMDSETID_HtmEdGrp" id="IDMX_HTM_SOURCE_ASPX" />
+      </Group>
+      -->
     </Groups>
     
     <!--Buttons section. -->
@@ -188,7 +205,7 @@
     <CommandPlacement guid="guidVSStd2K" id="ECMD_TOGGLEWORDWRAP" priority="0x0110">
       <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
     </CommandPlacement>
-    <!-- Context menu placements -->
+    <!-- Editor Margin Context menu placements -->
     <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleIndicatorMargin" priority="0x0001">
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
     </CommandPlacement>
@@ -216,6 +233,16 @@
     <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleAnnotate" priority="0x0001">
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginSourceControlGroup" />
     </CommandPlacement>
+    <!-- Editor (Main) Context menu placements -->
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="EditorContextMenu" priority="0x0001">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorContextGroup"/>
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" priority="0x0001">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorContextMenu" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" priority="0x0002">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorContextMenu" />
+    </CommandPlacement>
   </CommandPlacements>
 
   <VisibilityConstraints>
@@ -232,14 +259,16 @@
       <IDSymbol name="HotSettingsToolbar" value="0x1000" />
       <!-- Context Menus-->
       <IDSymbol name="EditorMarginContextMenu" value="0x1100" />   <!-- Must sync with SettingsMargin.cs -->
-      <IDSymbol name="EditorSettingsContextMenu" value="0x1200" />
+      <IDSymbol name="EditorContextMenu" value="0x1200" />
       <IDSymbol name="ScrollbarSettingsContextMenu" value="0x1300" />
       <!-- Group IDs -->
       <IDSymbol name="EditorMarginGroup" value="0x1001" />
       <IDSymbol name="EditorSettingsGroup" value="0x1002" />
       <IDSymbol name="ScrollbarSettingsGroup" value="0x1003" />
       <IDSymbol name="EditorMarginContextGroup" value="0x1004" />
-      <IDSymbol name="EditorMarginSourceControlGroup" value="0x1005" />
+      <IDSymbol name="EditorContextGroup" value="0x1005" />
+      <IDSymbol name="EditorSettingsContextGroup" value="0x1006" />
+      <IDSymbol name="EditorMarginSourceControlGroup" value="0x1007" />
       <!-- Command IDs -->
       <!-- These must be in sync with constant in Command file (eg. ToggleMargin.cs) -->
       <IDSymbol name="cmdidToggleIndicatorMargin" value="0x1021" />
