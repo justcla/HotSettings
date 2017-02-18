@@ -9,6 +9,10 @@ using System.ComponentModel.Design;
 using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Shell.Settings;
+using Microsoft.VisualStudio.Settings;
+using EnvDTE80;
+using EnvDTE;
 
 namespace HotSettings
 {
@@ -42,6 +46,9 @@ namespace HotSettings
         /// </summary>
         private readonly Package package;
 
+        private ShellSettingsManager SettingsManager;
+        private WritableSettingsStore Settings;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ToggleMargin"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
@@ -69,11 +76,14 @@ namespace HotSettings
                 commandService.AddCommand(CreateToggleLUTCommand());
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleAnnotateCmdId, this.MenuItemCallback));
             }
+
+            SettingsManager  = new ShellSettingsManager(package);
+            Settings = SettingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
         }
 
         private OleMenuCommand CreateToggleLUTCommand()
         {
-            OleMenuCommand ToggleLiveUnitTestingCommand = CreateOLECommand(CommandSet, ToggleLiveUnitTestingCmdId, ToggleLiveUnitTesting.ToggleLUT);
+            OleMenuCommand ToggleLiveUnitTestingCommand = CreateOLECommand(CommandSet, ToggleLiveUnitTestingCmdId, this.MenuItemCallback);
             ToggleLiveUnitTestingCommand.BeforeQueryStatus += ToggleLiveUnitTesting.OnBeforeQueryStatus;
             return ToggleLiveUnitTestingCommand;
         }
@@ -129,24 +139,86 @@ namespace HotSettings
         private void MenuItemCallback(object sender, EventArgs e)
         {
             MenuCommand command = (MenuCommand)sender;
-            string message = string.Format(CultureInfo.CurrentCulture, "Turn {0} margin {1}", command.Checked? "off" : "on", command.CommandID.ID);
-            string title = "Toggle Margin";
+            bool newCheckedState = !command.Checked;
 
-            // Show a message box to prove we were here
-            VsShellUtilities.ShowMessageBox(
-                this.ServiceProvider,
-                message,
-                title,
-                OLEMSGICON.OLEMSGICON_INFO,
-                OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-
-            // Now perform the action
-            //TODO: Update settings for visibility of selected margin
+            // Dispatch the action
+            switch (command.CommandID.ID)
+            {
+                case ToggleIndicatorMarginCmdId:
+                    ToggleSetting("TextEditor", "General", "MarginIndicatorBar", newCheckedState);
+                    break;
+                case ToggleLineNumbersCmdId:
+                    ToggleSetting("TextEditor", "AllLanguages", "ShowLineNumbers", newCheckedState);
+                    break;
+                case ToggleQuickActionsCmdId:
+                    // TODO: Implement this - Not yet available by VS2017
+                    break;
+                case ToggleSelectionMarginCmdId:
+                    ToggleSetting("TextEditor", "General", "SelectionMargin", newCheckedState);
+                    break;
+                case ToggleTrackChangesCmdId:
+                    ToggleSetting("TextEditor", "General", "TrackChanges", newCheckedState);
+                    break;
+                case ToggleDiffMarginCmdId:
+                    // TODO: Implement this
+                    break;
+                case ToggleOutliningCmdId:
+                    // TODO: Implement this - Like Toggle Live Unit Testing
+                    break;
+                case ToggleLiveUnitTestingCmdId:
+                    ToggleLiveUnitTesting.ToggleLUT(sender, e);
+                    break;
+                case ToggleAnnotateCmdId:
+                    ToggleSetting("TextEditor", "AllLanguages", "ShowAnnotations", newCheckedState); // TODO: Get this working
+                    break;
+            }
 
             // Update state of checkbox
-            command.Checked = !command.Checked;
+            command.Checked = newCheckedState;
         }
 
+        private void ToggleSetting(string category, string page, string settingName, bool value)
+        {
+            DTE2 _DTE2 = (DTE2)ServiceProvider.GetService(typeof(DTE));
+            // Example: _DTE2.Properties["TextEditor", "General"].Item("TrackChanges").Value = true;
+            Properties properties = _DTE2.Properties[category, page];
+            properties.Item(settingName).Value = value;
+        }
+
+        private void PrintProperties()
+        {
+            AlertMsg("===== General =========");
+            PrintItems("TextEditor", "General");
+            PrintItems("TextEditor", "CSharp");
+            PrintItems("TextEditor", "CSharp-Specific");
+            AlertMsg("===== All Languages =========");
+            PrintItems("TextEditor", "AllLanguages");
+        }
+
+        private void PrintItems(string category, string page)
+        {
+            DTE2 _DTE2 = (DTE2)ServiceProvider.GetService(typeof(DTE));
+            Properties properties = _DTE2.Properties[category, page];
+
+            foreach (Property prop in properties)
+            {
+                try
+                {
+                    AlertMsg(prop.Name);
+                }
+                catch (Exception ex)
+                {
+                    // Do nothing
+                }
+            }
+        }
+
+        private void AlertMsg(string alertMessage)
+        {
+            VsShellUtilities.ShowMessageBox(this.ServiceProvider,
+                alertMessage,
+                "HotSettings Info",
+                OLEMSGICON.OLEMSGICON_INFO, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        }
     }
 }
