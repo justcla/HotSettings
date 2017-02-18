@@ -47,7 +47,7 @@
       </Menu>
       <Menu guid="guidHotSettingsCmdSet" id="EditorContextMenu" type="Context">
         <Strings>
-          <ButtonText>View</ButtonText>
+          <ButtonText>&amp;View</ButtonText>
         </Strings>
       </Menu>
     </Menus>
@@ -100,22 +100,22 @@
           If you do not want an image next to your command, remove the Icon node /> -->
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIndicatorMargin" priority="0x0101" type="Button">
         <Strings>
-          <ButtonText>Toggle Breakpoint</ButtonText>  <!-- Appears as tooltip over button when on toolbar -->
-          <MenuText>&amp;Breakpoint Margin</MenuText>  <!-- Menu item text -->
+          <ButtonText>Breakpoint Margin</ButtonText>  <!-- Appears as tooltip over button when on toolbar -->
+          <MenuText>&amp;Breakpoint/Indicator Margin</MenuText>  <!-- Menu item text -->
           <ToolTipText>Toggle Breakpoint Margin (Indicator/Glyph Margin)</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleLineNumbers" priority="0x0112" type="Button">
         <Strings>
-          <ButtonText>&amp;Line Numbers</ButtonText>
-          <MenuText>Line Numbers</MenuText>  <!-- Menu item text -->
+          <ButtonText>Line Numbers</ButtonText>
+          <MenuText>&amp;Line Numbers</MenuText>  <!-- Menu item text -->
           <ToolTipText>Toggle Line Numbers Margin</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleQuickActions" priority="0x0113" type="Button">
         <Strings>
-          <ButtonText>Lightbulb &amp;Margin</ButtonText>
-          <MenuText>Lightbulb Margin</MenuText>  <!-- Menu item text -->
+          <ButtonText>Lightbulb Margin</ButtonText>
+          <MenuText>Lightbulb M&amp;argin</MenuText>  <!-- Menu item text -->
           <ToolTipText>Toggle Quick Actions / Lightbulb Margin</ToolTipText>
         </Strings>
       </Button>
@@ -127,7 +127,7 @@
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleTrackChanges" priority="0x0115" type="Button">
         <Strings>
-          <ButtonText>Track &amp;Changes</ButtonText>
+          <ButtonText>&amp;Track Changes</ButtonText>
           <ToolTipText>Start/Stop Track Changes</ToolTipText>
         </Strings>
       </Button>
@@ -146,8 +146,8 @@
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleLiveUnitTesting" priority="0x0118" type="Button">
         <Strings>
           <CommandName>StartLiveUnitTesting</CommandName>
-          <ButtonText>Live Unit &amp;Testing</ButtonText>  <!-- Appears as button text if no icon available. Shows as tooltip if no ToolTipText provided. -->
-          <MenuText>Live Unit Testing</MenuText>  <!-- Appears as item text in the menu -->
+          <ButtonText>Live Unit Testing</ButtonText>  <!-- Appears as button text if no icon available. Shows as tooltip if no ToolTipText provided. -->
+          <MenuText>Live &amp;Unit Testing</MenuText>  <!-- Appears as item text in the menu -->
           <ToolTipText>Provides Live Unit Test indicators in the editor margin</ToolTipText>
         </Strings>
       </Button>
@@ -161,25 +161,25 @@
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleNavigationBar" priority="0x0200" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <Strings>
-          <ButtonText>Navigation Bar</ButtonText>
+          <ButtonText>&amp;Navigation Bar</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleCodeLens" priority="0x0201" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <Strings>
-          <ButtonText>Code Lens</ButtonText>
+          <ButtonText>&amp;Code Lens</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIndentGuides" priority="0x0202" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <Strings>
-          <ButtonText>Indent Guides</ButtonText>
+          <ButtonText>Indent &amp;Guides</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightCurrentLine" priority="0x0203" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <Strings>
-          <ButtonText>Highlight Current Line</ButtonText>
+          <ButtonText>&amp;Highlight Current Line</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleAutoDelimiterHighlighting" priority="0x0204" type="Button">
@@ -191,39 +191,39 @@
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleProcedureLineSeparator" priority="0x0205" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <Strings>
-          <ButtonText>Procedure Line Separator</ButtonText>
+          <ButtonText>&amp;Procedure Line Separator</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIntelliSensePopUp" priority="0x0206" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <Strings>
-          <ButtonText>IntelliSense Pop-up</ButtonText>
+          <ButtonText>&amp;IntelliSense Pop-up</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleLineEndings" priority="0x0207" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <Strings>
-          <ButtonText>Line Endings</ButtonText>
+          <ButtonText>Line &amp;Endings</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightSymbols" priority="0x0208" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <Strings>
-          <ButtonText>Highlight Matching Symbols</ButtonText>
+          <ButtonText>Highlight &amp;Matching Symbols</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightKeywords" priority="0x0209" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <Strings>
-          <ButtonText>Highlight Related Keywords</ButtonText>
+          <ButtonText>Highlight Related &amp;Keywords</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIntelliSenseSquiggles" priority="0x0210" type="Button">
+      <!--<Button guid="guidHotSettingsCmdSet" id="cmdidToggleIntelliSenseSquiggles" priority="0x0210" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <Strings>
           <ButtonText>IntelliSense Squiggles (VB only)</ButtonText>
         </Strings>
-      </Button>
+      </Button>-->
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->

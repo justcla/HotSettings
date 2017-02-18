@@ -6,7 +6,7 @@
 
 using System;
 using System.ComponentModel.Design;
-using System.Globalization;
+using System.Diagnostics;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.Settings;
@@ -207,7 +207,7 @@ namespace HotSettings
                     UpdateSetting("TextEditor", "General", "IndentGuides", newCheckedState);
                     break;
                 case ToggleHighlightCurrentLineCmdId:
-                    UpdateSetting("TextEditor", "AllLanguages", "HighlightCurrentLine", newCheckedState);
+                    UpdateSetting("TextEditor", "General", "HighlightCurrentLine", newCheckedState);
                     break;
                 case ToggleAutoDelimiterHighlightingCmdId:
                     UpdateSetting("TextEditor", "General", "AutoDelimiterHighlighting", newCheckedState);
@@ -216,7 +216,8 @@ namespace HotSettings
                     UpdateSetting("TextEditor", "CSharp-Specific", "DisplayLineSeparators", newCheckedState);
                     break;
                 case ToggleIntelliSensePopUpCmdId:
-                    UpdateSetting("TextEditor", "General", "TrackChanges", newCheckedState);
+                    UpdateSetting("TextEditor", "AllLanguages", "AutoListMembers", newCheckedState);
+                    UpdateSetting("TextEditor", "AllLanguages", "AutoListParams", newCheckedState);
                     break;
                 case ToggleLineEndingsCmdId:
                     UpdateSetting("TextEditor", "General", "TrackChanges", newCheckedState);
@@ -227,9 +228,9 @@ namespace HotSettings
                 case ToggleHighlightKeywordsCmdId:
                     UpdateSetting("TextEditor", "CSharp-Specific", "EnableHighlightRelatedKeywords", newCheckedState);
                     break;
-                case ToggleIntelliSenseSquigglesCmdId:
-                    UpdateSetting("TextEditor", "Basic", "TrackChanges", newCheckedState);
-                    break;
+                //case ToggleIntelliSenseSquigglesCmdId:
+                    //UpdateSetting("TextEditor", "Basic", "TrackChanges", newCheckedState);
+                    //break;
 
             }
 
@@ -252,13 +253,15 @@ namespace HotSettings
             }
         }
 
-        private void PrintProperties()
+        public void PrintProperties()
         {
-            AlertMsg("===== General =========");
+            Debug.WriteLine("===== General =========");
             PrintItems("TextEditor", "General");
+            Debug.WriteLine("===== CSharp =========");
             PrintItems("TextEditor", "CSharp");
+            Debug.WriteLine("===== CSharp-Specific =========");
             PrintItems("TextEditor", "CSharp-Specific");
-            AlertMsg("===== All Languages =========");
+            Debug.WriteLine("===== All Languages =========");
             PrintItems("TextEditor", "AllLanguages");
         }
 
@@ -271,7 +274,7 @@ namespace HotSettings
             {
                 try
                 {
-                    AlertMsg(prop.Name);
+                    Debug.WriteLine(prop.Name);
                 }
                 catch (Exception ex)
                 {
