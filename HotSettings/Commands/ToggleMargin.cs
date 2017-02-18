@@ -35,6 +35,18 @@ namespace HotSettings
         public const int ToggleOutliningCmdId = 0x1027;
         public const int ToggleLiveUnitTestingCmdId = 0x1028;
         public const int ToggleAnnotateCmdId = 0x1029;
+        // Editor Settings CmdIds
+        public const int ToggleNavigationBarCmdId = 0x1041;
+        public const int ToggleCodeLensCmdId = 0x1042;
+        public const int ToggleIndentGuidesCmdId = 0x1043;
+        public const int ToggleHighlightCurrentLineCmdId = 0x1050;
+        public const int ToggleAutoDelimiterHighlightingCmdId = 0x1051;
+        public const int ToggleProcedureLineSeparatorCmdId = 0x1052;
+        public const int ToggleIntelliSensePopUpCmdId = 0x1053;
+        public const int ToggleLineEndingsCmdId = 0x1054;
+        public const int ToggleHighlightSymbolsCmdId = 0x1055;
+        public const int ToggleHighlightKeywordsCmdId = 0x1056;
+        public const int ToggleIntelliSenseSquigglesCmdId = 0x1057;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -75,6 +87,18 @@ namespace HotSettings
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleOutliningCmdId, this.MenuItemCallback));
                 commandService.AddCommand(CreateToggleLUTCommand());
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleAnnotateCmdId, this.MenuItemCallback));
+                // Editor Settings Commands
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleNavigationBarCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleCodeLensCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleIndentGuidesCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleHighlightCurrentLineCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleAutoDelimiterHighlightingCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleProcedureLineSeparatorCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleIntelliSensePopUpCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleLineEndingsCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleHighlightSymbolsCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleHighlightKeywordsCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleIntelliSenseSquigglesCmdId, this.MenuItemCallback));
             }
 
             SettingsManager  = new ShellSettingsManager(package);
@@ -145,19 +169,19 @@ namespace HotSettings
             switch (command.CommandID.ID)
             {
                 case ToggleIndicatorMarginCmdId:
-                    ToggleSetting("TextEditor", "General", "MarginIndicatorBar", newCheckedState);
+                    UpdateSetting("TextEditor", "General", "MarginIndicatorBar", newCheckedState);
                     break;
                 case ToggleLineNumbersCmdId:
-                    ToggleSetting("TextEditor", "AllLanguages", "ShowLineNumbers", newCheckedState);
+                    UpdateSetting("TextEditor", "AllLanguages", "ShowLineNumbers", newCheckedState);
                     break;
                 case ToggleQuickActionsCmdId:
                     // TODO: Implement this - Not yet available by VS2017
                     break;
                 case ToggleSelectionMarginCmdId:
-                    ToggleSetting("TextEditor", "General", "SelectionMargin", newCheckedState);
+                    UpdateSetting("TextEditor", "General", "SelectionMargin", newCheckedState);
                     break;
                 case ToggleTrackChangesCmdId:
-                    ToggleSetting("TextEditor", "General", "TrackChanges", newCheckedState);
+                    UpdateSetting("TextEditor", "General", "TrackChanges", newCheckedState);
                     break;
                 case ToggleDiffMarginCmdId:
                     // TODO: Implement this
@@ -169,20 +193,63 @@ namespace HotSettings
                     ToggleLiveUnitTesting.ToggleLUT(sender, e);
                     break;
                 case ToggleAnnotateCmdId:
-                    ToggleSetting("TextEditor", "AllLanguages", "ShowAnnotations", newCheckedState); // TODO: Get this working
+                    UpdateSetting("TextEditor", "AllLanguages", "ShowAnnotations", newCheckedState); // TODO: Get this working
                     break;
+
+                // Editor Settings
+                case ToggleNavigationBarCmdId:
+                    UpdateSetting("TextEditor", "AllLanguages", "ShowNavigationBar", newCheckedState);
+                    break;
+                case ToggleCodeLensCmdId:
+                    UpdateSetting("TextEditor", "CodeLens", "EnableCodeLens", newCheckedState);
+                    break;
+                case ToggleIndentGuidesCmdId:
+                    UpdateSetting("TextEditor", "General", "IndentGuides", newCheckedState);
+                    break;
+                case ToggleHighlightCurrentLineCmdId:
+                    UpdateSetting("TextEditor", "AllLanguages", "HighlightCurrentLine", newCheckedState);
+                    break;
+                case ToggleAutoDelimiterHighlightingCmdId:
+                    UpdateSetting("TextEditor", "General", "AutoDelimiterHighlighting", newCheckedState);
+                    break;
+                case ToggleProcedureLineSeparatorCmdId:
+                    UpdateSetting("TextEditor", "CSharp-Specific", "DisplayLineSeparators", newCheckedState);
+                    break;
+                case ToggleIntelliSensePopUpCmdId:
+                    UpdateSetting("TextEditor", "General", "TrackChanges", newCheckedState);
+                    break;
+                case ToggleLineEndingsCmdId:
+                    UpdateSetting("TextEditor", "General", "TrackChanges", newCheckedState);
+                    break;
+                case ToggleHighlightSymbolsCmdId:
+                    UpdateSetting("TextEditor", "CSharp-Specific", "HighlightReferences", newCheckedState);
+                    break;
+                case ToggleHighlightKeywordsCmdId:
+                    UpdateSetting("TextEditor", "CSharp-Specific", "EnableHighlightRelatedKeywords", newCheckedState);
+                    break;
+                case ToggleIntelliSenseSquigglesCmdId:
+                    UpdateSetting("TextEditor", "Basic", "TrackChanges", newCheckedState);
+                    break;
+
             }
 
             // Update state of checkbox
             command.Checked = newCheckedState;
         }
 
-        private void ToggleSetting(string category, string page, string settingName, bool value)
+        private void UpdateSetting(string category, string page, string settingName, bool value)
         {
-            DTE2 _DTE2 = (DTE2)ServiceProvider.GetService(typeof(DTE));
-            // Example: _DTE2.Properties["TextEditor", "General"].Item("TrackChanges").Value = true;
-            Properties properties = _DTE2.Properties[category, page];
-            properties.Item(settingName).Value = value;
+            try
+            {
+                DTE2 _DTE2 = (DTE2)ServiceProvider.GetService(typeof(DTE));
+                // Example: _DTE2.Properties["TextEditor", "General"].Item("TrackChanges").Value = true;
+                Properties properties = _DTE2.Properties[category, page];
+                properties.Item(settingName).Value = value;
+            }
+            catch (Exception)
+            {
+                // Do nothing
+            }
         }
 
         private void PrintProperties()

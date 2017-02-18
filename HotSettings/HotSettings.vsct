@@ -73,7 +73,7 @@
       <Group guid="guidHotSettingsCmdSet" id="EditorMarginSourceControlGroup" priority="0x0002">
         <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
       </Group>
-      <!-- Editor Settings Menu Groups -->
+      <!-- Editor (Main) Context Menu Groups -->
       <Group guid="guidHotSettingsCmdSet" id="EditorContextGroup" priority="0x1000">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
       </Group>
@@ -155,6 +155,73 @@
         <Strings>
           <ButtonText>&amp;Annotate</ButtonText>
           <ToolTipText>View Git Blame / Annotate source control</ToolTipText>
+        </Strings>
+      </Button>
+      <!--Editor Settings Buttons-->
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleNavigationBar" priority="0x0200" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <Strings>
+          <ButtonText>Navigation Bar</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleCodeLens" priority="0x0201" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <Strings>
+          <ButtonText>Code Lens</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIndentGuides" priority="0x0202" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <Strings>
+          <ButtonText>Indent Guides</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightCurrentLine" priority="0x0203" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <Strings>
+          <ButtonText>Highlight Current Line</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleAutoDelimiterHighlighting" priority="0x0204" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <Strings>
+          <ButtonText>Automatic Delimiter Highlighting</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleProcedureLineSeparator" priority="0x0205" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <Strings>
+          <ButtonText>Procedure Line Separator</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIntelliSensePopUp" priority="0x0206" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <Strings>
+          <ButtonText>IntelliSense Pop-up</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleLineEndings" priority="0x0207" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <Strings>
+          <ButtonText>Line Endings</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightSymbols" priority="0x0208" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <Strings>
+          <ButtonText>Highlight Matching Symbols</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightKeywords" priority="0x0209" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <Strings>
+          <ButtonText>Highlight Related Keywords</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIntelliSenseSquiggles" priority="0x0210" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <Strings>
+          <ButtonText>IntelliSense Squiggles (VB only)</ButtonText>
         </Strings>
       </Button>
     </Buttons>
@@ -280,6 +347,18 @@
       <IDSymbol name="cmdidToggleOutlining" value="0x1027" />
       <IDSymbol name="cmdidToggleLiveUnitTesting" value="0x1028" />
       <IDSymbol name="cmdidToggleAnnotate" value="0x1029" />
+      <!-- Editor Settings CmdIds-->
+      <IDSymbol name="cmdidToggleNavigationBar" value="0x1041" />
+      <IDSymbol name="cmdidToggleCodeLens" value="0x1042" />
+      <IDSymbol name="cmdidToggleIndentGuides" value="0x1043" />
+      <IDSymbol name="cmdidToggleHighlightCurrentLine" value="0x1050" />
+      <IDSymbol name="cmdidToggleAutoDelimiterHighlighting" value="0x1051" />
+      <IDSymbol name="cmdidToggleProcedureLineSeparator" value="0x1052" />
+      <IDSymbol name="cmdidToggleIntelliSensePopUp" value="0x1053" />
+      <IDSymbol name="cmdidToggleLineEndings" value="0x1054" />
+      <IDSymbol name="cmdidToggleHighlightSymbols" value="0x1055" />
+      <IDSymbol name="cmdidToggleHighlightKeywords" value="0x1056" />
+      <IDSymbol name="cmdidToggleIntelliSenseSquiggles" value="0x1057" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{6d06c52c-db85-42a5-91c8-a0b6023ad326}">

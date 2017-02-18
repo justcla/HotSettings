@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using EnvDTE;
+using System;
 
 namespace HotSettings
 {
@@ -24,7 +25,18 @@ namespace HotSettings
             => GetGlobalService<SDTE, DTE>();
 
         public static bool IsCommandAvailable(string commandName)
-            => GetDTE().Commands.Item(commandName).IsAvailable;
+        {
+            try
+            {
+                var command = GetDTE().Commands.Item(commandName);
+                if (command == null) return false;
+                return command.IsAvailable;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
 
         public static void ExecuteCommand(string commandName, string args = "")
             => GetDTE().ExecuteCommand(commandName, args);
