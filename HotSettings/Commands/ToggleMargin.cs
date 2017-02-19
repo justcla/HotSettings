@@ -47,6 +47,12 @@ namespace HotSettings
         public const int ToggleHighlightSymbolsCmdId = 0x1055;
         public const int ToggleHighlightKeywordsCmdId = 0x1056;
         public const int ToggleIntelliSenseSquigglesCmdId = 0x1057;
+        // Scrollbar Settings CmdIds
+        public const int ToggleShowChangesCmdId = 0x1071;
+        public const int ToggleShowMarksCmdId = 0x1072;
+        public const int ToggleShowErrorsCmdId = 0x1073;
+        public const int ToggleShowCaretPositionCmdId = 0x1074;
+        public const int ToggleShowDiffsCmdId = 0x1080;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -99,6 +105,12 @@ namespace HotSettings
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleHighlightSymbolsCmdId, this.MenuItemCallback));
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleHighlightKeywordsCmdId, this.MenuItemCallback));
                 commandService.AddCommand(CreateCommand(CommandSet, ToggleIntelliSenseSquigglesCmdId, this.MenuItemCallback));
+                // Scrollbar Settings Commands
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleShowChangesCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleShowMarksCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleShowErrorsCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleShowCaretPositionCmdId, this.MenuItemCallback));
+                commandService.AddCommand(CreateCommand(CommandSet, ToggleShowDiffsCmdId, this.MenuItemCallback));
             }
 
             SettingsManager  = new ShellSettingsManager(package);
@@ -231,7 +243,22 @@ namespace HotSettings
                 //case ToggleIntelliSenseSquigglesCmdId:
                     //UpdateSetting("TextEditor", "Basic", "TrackChanges", newCheckedState);
                     //break;
-
+                // Scrollbar Settings
+                case ToggleShowChangesCmdId:
+                    UpdateSetting("TextEditor", "AllLanguages", "ShowChanges", newCheckedState);
+                    break;
+                case ToggleShowMarksCmdId:
+                    UpdateSetting("TextEditor", "AllLanguages", "ShowMarks", newCheckedState);
+                    break;
+                case ToggleShowErrorsCmdId:
+                    UpdateSetting("TextEditor", "AllLanguages", "ShowErrors", newCheckedState);
+                    break;
+                case ToggleShowCaretPositionCmdId:
+                    UpdateSetting("TextEditor", "AllLanguages", "ShowCaretPosition", newCheckedState);
+                    break;
+                case ToggleShowDiffsCmdId:
+                    // Not implemented yet. Would hook into Git Diff Margin scrollbar setting.
+                    break;
             }
 
             // Update state of checkbox
