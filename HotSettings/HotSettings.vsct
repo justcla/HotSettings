@@ -45,6 +45,11 @@
           <CommandName>EditorMarginContextMenu</CommandName>  <!-- This becomes the Toolbar name. Does not show up as a command in Tools->Options,Keyboard -->
         </Strings>
       </Menu>
+      <Menu guid="guidHotSettingsCmdSet" id="ScrollbarSettingsContextMenu" type="Context">
+        <Strings>
+          <ButtonText>Scrollbar</ButtonText>
+        </Strings>
+      </Menu>
       <Menu guid="guidHotSettingsCmdSet" id="EditorContextMenu" type="Context">
         <Strings>
           <ButtonText>&amp;View</ButtonText>
@@ -85,6 +90,12 @@
         <Parent guid="CMDSETID_HtmEdGrp" id="IDMX_HTM_SOURCE_ASPX" />
       </Group>
       -->
+      <!--Scrollbar Settings Group-->
+      <Group guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" priority="0x0001">
+      </Group>
+      <Group guid="guidHotSettingsCmdSet" id="ScollbarSettingsMenuGroup" priority="0x0001">
+      </Group>
+    
     </Groups>
     
     <!--Buttons section. -->
@@ -224,6 +235,31 @@
           <ButtonText>IntelliSense Squiggles (VB only)</ButtonText>
         </Strings>
       </Button>-->
+      <!--Scrollbar Settings Buttons-->
+      <Button guid="guidHotSettingsCmdSet" id="cmdidShowChanges" priority="0x0301" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" />
+        <Strings>
+          <ButtonText>Show Changes</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidShowMarks" priority="0x0302" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" />
+        <Strings>
+          <ButtonText>Show Marks</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidShowErrors" priority="0x0303" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" />
+        <Strings>
+          <ButtonText>Show Errors</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidShowCaret" priority="0x0304" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" />
+        <Strings>
+          <ButtonText>Show Caret</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -310,6 +346,16 @@
     <CommandPlacement guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" priority="0x0002">
       <Parent guid="guidHotSettingsCmdSet" id="EditorContextMenu" />
     </CommandPlacement>
+    <!--Scrollbar Settings-->
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" priority="0x0001">
+        <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsContextMenu" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="ScrollbarSettingsContextMenu" priority="0x001">
+        <Parent guid="guidHotSettingsCmdSet" id="ScollbarSettingsMenuGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="ScollbarSettingsMenuGroup" priority="0x004">
+        <Parent guid="guidHotSettingsCmdSet" id="EditorContextMenu" />
+    </CommandPlacement>
   </CommandPlacements>
 
   <VisibilityConstraints>
@@ -334,8 +380,9 @@
       <IDSymbol name="ScrollbarSettingsGroup" value="0x1003" />
       <IDSymbol name="EditorMarginContextGroup" value="0x1004" />
       <IDSymbol name="EditorContextGroup" value="0x1005" />
-      <IDSymbol name="EditorSettingsContextGroup" value="0x1006" />
-      <IDSymbol name="EditorMarginSourceControlGroup" value="0x1007" />
+      <IDSymbol name="ScrollbarSettingsGroup" value="0x1006" />
+      <IDSymbol name="ScollbarSettingsMenuGroup" value="0x1007"/>
+      <IDSymbol name="EditorMarginSourceControlGroup" value="0x1008" />
       <!-- Command IDs -->
       <!-- These must be in sync with constant in Command file (eg. ToggleMargin.cs) -->
       <IDSymbol name="cmdidToggleIndicatorMargin" value="0x1021" />
@@ -359,6 +406,11 @@
       <IDSymbol name="cmdidToggleHighlightSymbols" value="0x1055" />
       <IDSymbol name="cmdidToggleHighlightKeywords" value="0x1056" />
       <IDSymbol name="cmdidToggleIntelliSenseSquiggles" value="0x1057" />
+      <!--Scrollbar Settings CmdIds-->
+      <IDSymbol name="cmdidShowChanges" value="0x1071" />
+      <IDSymbol name="cmdidShowMarks" value="0x1072" />
+      <IDSymbol name="cmdidShowErrors" value="0x1073" />
+      <IDSymbol name="cmdidShowCaret" value="0x1074" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{6d06c52c-db85-42a5-91c8-a0b6023ad326}">
