@@ -56,8 +56,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="HotSettingsCommandHandler.cs" />
     <Compile Include="Commands\ToggleLiveUnitTesting.cs" />
-    <Compile Include="Commands\ToggleMargin.cs" />
+    <Compile Include="Common\PropertiesUtil.cs" />
     <Compile Include="Common\ShellUtil.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="HotSettingsPackage.cs" />

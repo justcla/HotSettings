@@ -1,20 +1,7 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="HotSettingsPackage.cs" company="Justin Clareburt">
-//     Copyright (c) Company.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
-using System;
-using System.ComponentModel.Design;
-using System.Diagnostics;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.Win32;
 
 namespace HotSettings
 {
@@ -67,7 +54,7 @@ namespace HotSettings
         protected override void Initialize()
         {
             base.Initialize();
-            ToggleMargin.Initialize(this);
+            HotSettingsCommandHandler.Initialize(this);
         }
 
         #endregion

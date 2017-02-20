@@ -15,12 +15,11 @@ namespace HotSettings
         public static void OnBeforeQueryStatus(object sender, EventArgs e)
         {
             OleMenuCommand command = (OleMenuCommand)sender;
-            switch ((uint)command.CommandID.ID)
-            {
-                case Constants.ToggleLiveUnitTestingCmdId:
-                    command.Checked = IsLiveUnitTestingRunning();
-                    break;
-            }
+
+            // Check correct command
+            if (command.CommandID.ID != Constants.ToggleLiveUnitTestingCmdId) return;
+
+            command.Checked = IsLiveUnitTestingRunning();
         }
 
         public static void ToggleLUT(object sender, EventArgs e)
