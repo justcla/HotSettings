@@ -79,7 +79,7 @@ namespace HotSettings
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleTrackChangesCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleDiffMarginCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleOutliningCmdId));
-                commandService.AddCommand(CreateToggleLUTCommand());
+                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleLiveUnitTestingCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleAnnotateCmdId));
                 // Editor Settings Commands
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleNavigationBarCmdId));
@@ -102,18 +102,11 @@ namespace HotSettings
             }
         }
 
-        private OleMenuCommand CreateToggleLUTCommand()
-        {
-            OleMenuCommand ToggleLiveUnitTestingCommand = CreateHotSettingsCommand(Constants.ToggleLiveUnitTestingCmdId);
-            ToggleLiveUnitTestingCommand.BeforeQueryStatus += ToggleLiveUnitTesting.OnBeforeQueryStatus;
-            return ToggleLiveUnitTestingCommand;
-        }
-
         private OleMenuCommand CreateHotSettingsCommand(int commandId)
         {
             Guid commandSet = Constants.HotSettingsCmdSetGuid;
             EventHandler execHandler = this.MenuItemCallback;
-            EventHandler queryStatusHandler = OnBeforeQueryStatus;
+            EventHandler queryStatusHandler = this.OnBeforeQueryStatus;
 
             OleMenuCommand oleMenuCommand = CreateOleMenuCommand(commandSet, commandId, execHandler);
             oleMenuCommand.BeforeQueryStatus += queryStatusHandler;
@@ -132,14 +125,102 @@ namespace HotSettings
         /// For menu items, it runs it before opening the menu. For toolbar items, it seems to run is frequently.
         /// Here you can change the visibility of a menu item. Also set its Checked state, and other properties (like Enabled).
         /// </summary>
-        public static void OnBeforeQueryStatus(object sender, EventArgs e)
+        public void OnBeforeQueryStatus(object sender, EventArgs e)
         {
             OleMenuCommand command = (OleMenuCommand)sender;
             switch ((uint)command.CommandID.ID)
             {
+                case Constants.ToggleIndicatorMarginCmdId:
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Indicator Margin");
+                    break;
+                case Constants.ToggleLineNumbersCmdId:
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor/All Languages", "Line numbers");     // TODO: Detect language of current file
+                    break;
+                case Constants.ToggleQuickActionsCmdId:
+                    this.HideItem(sender);
+                    break;
+                case Constants.ToggleSelectionMarginCmdId:
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Selection Margin");
+                    break;
+                case Constants.ToggleTrackChangesCmdId:
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Track Changes");
+                    break;
+                case Constants.ToggleDiffMarginCmdId:
+                    this.HideItem(sender);
+                    break;
+                case Constants.ToggleOutliningCmdId:
+                    break;
                 case Constants.ToggleLiveUnitTestingCmdId:
                     ToggleLiveUnitTesting.OnBeforeQueryStatus(sender, e);
                     break;
+                case Constants.ToggleAnnotateCmdId:
+                // Editor Settings
+                case Constants.ToggleNavigationBarCmdId:
+                    break;
+                case Constants.ToggleCodeLensCmdId:
+                    this.HideItem(sender);
+                    break;
+                case Constants.ToggleIndentGuidesCmdId:
+                    this.HideItem(sender);
+                    break;
+                case Constants.ToggleHighlightCurrentLineCmdId:
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Highlight Current Line");
+                    break;
+                case Constants.ToggleAutoDelimiterHighlightingCmdId:
+                    break;
+                case Constants.ToggleProcedureLineSeparatorCmdId:
+                    break;
+                case Constants.ToggleIntelliSensePopUpCmdId:
+                    break;
+                case Constants.ToggleLineEndingsCmdId:
+                    break;
+                case Constants.ToggleHighlightSymbolsCmdId:
+                    break;
+                case Constants.ToggleHighlightKeywordsCmdId:
+                    break;
+                case Constants.ToggleIntelliSenseSquigglesCmdId:
+                // Scrollbar Settings
+                case Constants.ToggleShowChangesCmdId:
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor/All Languages/Scroll Bars", "Show Changes");
+                    break;
+                case Constants.ToggleShowMarksCmdId:
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor/All Languages/Scroll Bars", "Show Marks");
+                    break;
+                case Constants.ToggleShowErrorsCmdId:
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor/All Languages/Scroll Bars", "Show Errors");
+                    break;
+                case Constants.ToggleShowCaretPositionCmdId:
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor/All Languages/Scroll Bars", "Show Caret Position");
+                    break;
+                case Constants.ToggleShowDiffsCmdId:
+                    this.HideItem(sender);
+                    break;
+            }
+        }
+
+        private void HideItem(object sender)
+        {
+            MenuCommand command = (MenuCommand)sender;
+            command.Enabled = false;
+            command.Visible = false;
+        }
+
+        private void HandleQueryStatusCheckedUserProperty(object sender, string collectionPath, string propertyName)
+        {
+            try
+            {
+                // Read property value
+                var value = SettingsStore.GetBoolean(collectionPath, propertyName);
+                // Set Checked state
+                ((MenuCommand)sender).Checked = value;
+
+                // TODO: Set enabled and visible state
+                // command.Enabled = ?
+                // command.Visible = ?
+            }
+            catch (Exception)
+            {
+                // Do nothing
             }
         }
 
