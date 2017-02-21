@@ -110,6 +110,8 @@
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIndicatorMargin" priority="0x0101" type="Button">
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>Breakpoint Margin</ButtonText>  <!-- Appears as tooltip over button when on toolbar -->
           <MenuText>&amp;Breakpoint/Indicator Margin</MenuText>  <!-- Menu item text -->
@@ -117,6 +119,8 @@
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleLineNumbers" priority="0x0112" type="Button">
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>Line Numbers</ButtonText>
           <MenuText>&amp;Line Numbers</MenuText>  <!-- Menu item text -->
@@ -124,6 +128,8 @@
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleQuickActions" priority="0x0113" type="Button">
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>Lightbulb Margin</ButtonText>
           <MenuText>Lightbulb M&amp;argin</MenuText>  <!-- Menu item text -->
@@ -131,30 +137,40 @@
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleSelectionMargin" priority="0x0114" type="Button">
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>&amp;Selection Margin</ButtonText>
           <ToolTipText>Toggle Selection Margin</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleTrackChanges" priority="0x0115" type="Button">
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>&amp;Track Changes</ButtonText>
           <ToolTipText>Start/Stop Track Changes</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleDiffMargin" priority="0x0116" type="Button">
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>&amp;Diff Margin</ButtonText>
           <ToolTipText>Toggle Diff Margin</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleOutlining" priority="0x0117" type="Button">
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>&amp;Outlining</ButtonText>
           <ToolTipText>Toggle Outlining</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleLiveUnitTesting" priority="0x0118" type="Button">
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <CommandName>StartLiveUnitTesting</CommandName>
           <ButtonText>Live Unit Testing</ButtonText>  <!-- Appears as button text if no icon available. Shows as tooltip if no ToolTipText provided. -->
@@ -163,6 +179,8 @@
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleAnnotate" priority="0x0119" type="Button">
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>&amp;Annotate</ButtonText>
           <ToolTipText>View Git Blame / Annotate source control</ToolTipText>
@@ -171,60 +189,80 @@
       <!--Editor Settings Buttons-->
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleNavigationBar" priority="0x0200" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>&amp;Navigation Bar</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleCodeLens" priority="0x0201" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>&amp;Code Lens</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIndentGuides" priority="0x0202" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>Indent &amp;Guides</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightCurrentLine" priority="0x0203" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>&amp;Highlight Current Line</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleAutoDelimiterHighlighting" priority="0x0204" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>Automatic Delimiter Highlighting</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleProcedureLineSeparator" priority="0x0205" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>&amp;Procedure Line Separator</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIntelliSensePopUp" priority="0x0206" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>&amp;IntelliSense Pop-up</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleLineEndings" priority="0x0207" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>Line &amp;Endings</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightSymbols" priority="0x0208" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>Highlight &amp;Matching Symbols</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightKeywords" priority="0x0209" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>Highlight Related &amp;Keywords</ButtonText>
         </Strings>
@@ -238,30 +276,40 @@
       <!--Scrollbar Settings Buttons-->
       <Button guid="guidHotSettingsCmdSet" id="cmdidShowChanges" priority="0x0310" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>Show Changes</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidShowMarks" priority="0x0320" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>Show Marks</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidShowDiffs" priority="0x0330" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>Show Diffs</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidShowErrors" priority="0x0340" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>Show Errors</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidShowCaretPosition" priority="0x0350" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>Show Caret</ButtonText>
         </Strings>
