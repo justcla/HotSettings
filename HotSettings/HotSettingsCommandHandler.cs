@@ -20,6 +20,8 @@ namespace HotSettings
 
         private SettingsStore SettingsStore;
 
+        public static OleMenuCommand ToggleShowMarksCmd;
+
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>
@@ -95,7 +97,8 @@ namespace HotSettings
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIntelliSenseSquigglesCmdId));
                 // Scrollbar Settings Commands
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowChangesCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowMarksCmdId));
+                OleMenuCommand ToggleShowMarksCmd = CreateHotSettingsCommand(Constants.ToggleShowMarksCmdId);
+                commandService.AddCommand(ToggleShowMarksCmd);
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowErrorsCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowCaretPositionCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowDiffsCmdId));
@@ -114,7 +117,7 @@ namespace HotSettings
             return oleMenuCommand;
         }
 
-        private static OleMenuCommand CreateOleMenuCommand(Guid commandSet, int commandId, EventHandler handler)
+        public static OleMenuCommand CreateOleMenuCommand(Guid commandSet, int commandId, EventHandler handler)
         {
             CommandID menuCommandID = new CommandID(commandSet, commandId);
             return new OleMenuCommand(handler, menuCommandID);
@@ -134,7 +137,7 @@ namespace HotSettings
                     this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Indicator Margin");
                     break;
                 case Constants.ToggleLineNumbersCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor/All Languages", "Line numbers");     // TODO: Detect language of current file
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Line Numbers");     // TODO: Detect language of current file
                     break;
                 case Constants.ToggleQuickActionsCmdId:
                     this.HideItem(sender);
@@ -154,8 +157,11 @@ namespace HotSettings
                     ToggleLiveUnitTesting.OnBeforeQueryStatus(sender, e);
                     break;
                 case Constants.ToggleAnnotateCmdId:
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "ShowAnnotations");
+                   break;
                 // Editor Settings
                 case Constants.ToggleNavigationBarCmdId:
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Dropbox Bar");
                     break;
                 case Constants.ToggleCodeLensCmdId:
                     this.HideItem(sender);
@@ -167,10 +173,14 @@ namespace HotSettings
                     this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Highlight Current Line");
                     break;
                 case Constants.ToggleAutoDelimiterHighlightingCmdId:
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Auto Delimiter Highlighting");
                     break;
                 case Constants.ToggleProcedureLineSeparatorCmdId:
                     break;
                 case Constants.ToggleIntelliSensePopUpCmdId:
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Auto List Members");
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Auto List Params");
+                    //this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Hide Advanced Auto List Members");
                     break;
                 case Constants.ToggleLineEndingsCmdId:
                     break;
@@ -178,19 +188,19 @@ namespace HotSettings
                     break;
                 case Constants.ToggleHighlightKeywordsCmdId:
                     break;
-                case Constants.ToggleIntelliSenseSquigglesCmdId:
+                //case Constants.ToggleIntelliSenseSquigglesCmdId:
                 // Scrollbar Settings
                 case Constants.ToggleShowChangesCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor/All Languages/Scroll Bars", "Show Changes");
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "ShowChanges");
                     break;
                 case Constants.ToggleShowMarksCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor/All Languages/Scroll Bars", "Show Marks");
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "ShowMarks");
                     break;
                 case Constants.ToggleShowErrorsCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor/All Languages/Scroll Bars", "Show Errors");
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "ShowErrors");
                     break;
                 case Constants.ToggleShowCaretPositionCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor/All Languages/Scroll Bars", "Show Caret Position");
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "ShowCaretPosition");
                     break;
                 case Constants.ToggleShowDiffsCmdId:
                     this.HideItem(sender);

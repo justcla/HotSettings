@@ -9,6 +9,10 @@ using Microsoft.VisualStudio.Text.Operations;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.VisualStudio.Shell.Interop;
+using System.Windows.Controls;
+using HotSettings;
+using System;
+using System.Diagnostics;
 
 #pragma warning disable 0649
 
@@ -38,14 +42,46 @@ namespace HotCommands
 
             //IWpfTextView textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
             var textViewHost = EditorAdaptersFactoryService.GetWpfTextViewHost(textViewAdapter);
-            var lineNumberMargin = textViewHost.GetTextViewMargin("LineNumber");
-            var glyphMargin = textViewHost.GetTextViewMargin("Glyph");
-            var leftSelectionMargin = textViewHost.GetTextViewMargin("LeftSelection");  // Selection margin - inherited by all left margins
-            var outliningMargin = textViewHost.GetTextViewMargin("Outlining");
-            var spacerMargin = textViewHost.GetTextViewMargin("Spacer");  // Selection margin ?
-            var leftMargin = textViewHost.GetTextViewMargin("Left");
+            //var lineNumberMargin = textViewHost.GetTextViewMargin("LineNumber");
+            //var glyphMargin = textViewHost.GetTextViewMargin("Glyph");
+            //var leftSelectionMargin = textViewHost.GetTextViewMargin("LeftSelection");  // Selection margin - inherited by all left margins
+            //var outliningMargin = textViewHost.GetTextViewMargin("Outlining");
+            //var spacerMargin = textViewHost.GetTextViewMargin("Spacer");  // Selection margin ?
 
+            // Add the Editor Margin Context Menu to the Left Margin
+            var leftMargin = textViewHost.GetTextViewMargin("Left");
             leftMargin.VisualElement.MouseRightButtonUp += OnMouseRightButtonUp;
+
+            //IVsUIShell uiShell = Package.GetGlobalService(typeof(SVsUIShell)) as IVsUIShell;
+            //if (uiShell == null)
+            //{
+            //    // TODO: Log error - Unable to access UIShell
+            //    return;
+            //}
+
+            //// Add the new Scrollbar Settings group to the existing Scoll bar context menu
+            //var rightMargin = textViewHost.GetTextViewMargin(PredefinedMarginNames.VerticalScrollBar);
+
+            //var textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
+            //var contentType = textView.TextDataModel.ContentType;
+            //    //DocumentBuffer.Properties;
+            ////foreach(var )
+            //var scrollbarContextMenu = rightMargin.VisualElement.ContextMenu;
+            //var scrollbarMenuItems = scrollbarContextMenu.Items;
+            //foreach (var scrollMenuItem in scrollbarMenuItems)
+            //{
+            //    Debug.WriteLine(scrollMenuItem.GetType());
+            //}
+            ////var scrollbarSettingsGroup = Shell.GetGroupById(ScrollbarSettingsGroupId);
+            //scrollbarMenuItems.Add(new Separator());
+            ////scrollbarMenuItems.Add(HotSettingsCommandHandler.CreateOleMenuCommand(HotSettings.Constants.HotSettingsCmdSetGuid, HotSettings.Constants.ToggleShowChangesCmdId, handler));
+            //scrollbarMenuItems.Add(HotSettingsCommandHandler.ToggleShowMarksCmd);
+            ////scrollbarMenuItems.Add(new Separator());
+        }
+
+        private void handler(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
