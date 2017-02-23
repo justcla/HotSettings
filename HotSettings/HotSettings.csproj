@@ -74,10 +74,21 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Screenshot - Full.png" />
+    <Content Include="Resources\Screenshot.PNG">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <VSCTCompile Include="HotSettings.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
     </VSCTCompile>
+    <Content Include="Resources\HotSettings_128x.png" />
+    <Content Include="Resources\HotSettings_32x.png" />
+    <Content Include="Resources\HotSettings_90x.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\SampleToolbarIcons.png" />
     <Content Include="Resources\DefaultPackage.ico" />
   </ItemGroup>
