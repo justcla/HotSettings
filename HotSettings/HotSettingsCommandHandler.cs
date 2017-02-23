@@ -1,10 +1,11 @@
-﻿using System;
-using System.ComponentModel.Design;
+﻿using EnvDTE;
+using EnvDTE80;
+using Microsoft.VisualStudio.Settings;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Settings;
-using Microsoft.VisualStudio.Settings;
-using EnvDTE80;
-using EnvDTE;
+using Microsoft.VisualStudio.Text.Editor;
+using System;
+using System.ComponentModel.Design;
 
 namespace HotSettings
 {
@@ -19,6 +20,7 @@ namespace HotSettings
         private readonly Package package;
 
         private SettingsStore SettingsStore;
+        private IEditorOptionsFactoryService OptionsService;
 
         public static OleMenuCommand ToggleShowMarksCmd;
 
@@ -37,7 +39,6 @@ namespace HotSettings
                 return this.package;
             }
         }
-
 
         /// <summary>
         /// Initializes the singleton instance of the command.
@@ -64,6 +65,8 @@ namespace HotSettings
 
             ShellSettingsManager settingsManager = new ShellSettingsManager(package);
             SettingsStore = settingsManager.GetReadOnlySettingsStore(SettingsScope.UserSettings);
+
+            OptionsService = ServicesUtil.GetMefService<IEditorOptionsFactoryService>(this.ServiceProvider);
 
             CreateCommands();
         }
@@ -164,7 +167,7 @@ namespace HotSettings
                     this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Dropbox Bar");
                     break;
                 case Constants.ToggleCodeLensCmdId:
-                    this.HideItem(sender);
+                    this.HandleToggleCodeLensQueryStatus(sender);
                     break;
                 case Constants.ToggleIndentGuidesCmdId:
                     this.HideItem(sender);
@@ -221,17 +224,33 @@ namespace HotSettings
             {
                 // Read property value
                 var value = SettingsStore.GetBoolean(collectionPath, propertyName);
-                // Set Checked state
-                ((MenuCommand)sender).Checked = value;
-
-                // TODO: Set enabled and visible state
-                // command.Enabled = ?
-                // command.Visible = ?
+                UpdateCommandFlags(sender, value);
             }
             catch (Exception)
             {
                 // Do nothing
             }
+        }
+
+        private void HandleToggleCodeLensQueryStatus(object sender)
+        {
+            var enabled = (bool) OptionsService.GlobalOptions.GetOptionValue("IsCodeLensEnabled");
+            UpdateCommandFlags(sender, enabled);
+        }
+
+        private void HandleToggleCodeLensAction(object sender, bool checkedState)
+        {
+            this.OptionsService.GlobalOptions.SetOptionValue("IsCodeLensEnabled", checkedState);
+        }
+
+        private static void UpdateCommandFlags(object sender, bool checkedState)
+        {
+            // Set Checked state
+            ((MenuCommand)sender).Checked = checkedState;
+
+            // TODO: Set enabled and visible state
+            // command.Enabled = ?
+            // command.Visible = ?
         }
 
         /// <summary>
@@ -282,6 +301,7 @@ namespace HotSettings
                     UpdateSetting("TextEditor", "AllLanguages", "ShowNavigationBar", newCheckedState);
                     break;
                 case Constants.ToggleCodeLensCmdId:
+                    HandleToggleCodeLensAction(sender, newCheckedState);
                     UpdateSetting("TextEditor", "CodeLens", "EnableCodeLens", newCheckedState);
                     break;
                 case Constants.ToggleIndentGuidesCmdId:
@@ -331,7 +351,7 @@ namespace HotSettings
             }
 
             // Update state of checkbox
-            command.Checked = newCheckedState;
+            //command.Checked = newCheckedState;
         }
 
         private void UpdateSetting(string category, string page, string settingName, bool value)
