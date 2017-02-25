@@ -99,6 +99,7 @@ namespace HotSettings
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleHighlightKeywordsCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIntelliSenseSquigglesCmdId));
                 // Scrollbar Settings Commands
+                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowScrollbarMarkersCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowChangesCmdId));
                 OleMenuCommand ToggleShowMarksCmd = CreateHotSettingsCommand(Constants.ToggleShowMarksCmdId);
                 commandService.AddCommand(ToggleShowMarksCmd);
@@ -160,8 +161,8 @@ namespace HotSettings
                     ToggleLiveUnitTesting.OnBeforeQueryStatus(sender, e);
                     break;
                 case Constants.ToggleAnnotateCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "ShowAnnotations");
-                   break;
+                    //this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Show Blame");
+                    break;
                 // Editor Settings
                 case Constants.ToggleNavigationBarCmdId:
                     this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Dropbox Bar");
@@ -170,7 +171,9 @@ namespace HotSettings
                     this.HandleToggleCodeLensQueryStatus(sender);
                     break;
                 case Constants.ToggleIndentGuidesCmdId:
-                    this.HideItem(sender);
+                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Indent Guides");
+                    // Hide if not VS2017+
+                    //this.HideItem(sender);
                     break;
                 case Constants.ToggleHighlightCurrentLineCmdId:
                     this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Highlight Current Line");
@@ -193,17 +196,25 @@ namespace HotSettings
                     break;
                 //case Constants.ToggleIntelliSenseSquigglesCmdId:
                 // Scrollbar Settings
+                case Constants.ToggleShowScrollbarMarkersCmdId:
+                    // Turn off all Scrollbar markers with "ShowAnnotations"
+                    //this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "ShowAnnotations");
+                    MenuCommand menuCommand = ((MenuCommand)sender);
+                    menuCommand.Visible = true;
+                    menuCommand.Enabled = true;
+                    menuCommand.Checked = SettingsStore.GetBoolean("Text Editor\\CSharp", "ShowAnnotations");
+                    break;
                 case Constants.ToggleShowChangesCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "ShowChanges");
+                    HandleScrollbarQueryStatus(sender, "ShowChanges");
                     break;
                 case Constants.ToggleShowMarksCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "ShowMarks");
+                    HandleScrollbarQueryStatus(sender, "ShowMarks");
                     break;
                 case Constants.ToggleShowErrorsCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "ShowErrors");
+                    HandleScrollbarQueryStatus(sender, "ShowErrors");
                     break;
                 case Constants.ToggleShowCaretPositionCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "ShowCaretPosition");
+                    HandleScrollbarQueryStatus(sender, "ShowCaretPosition");
                     break;
                 case Constants.ToggleShowDiffsCmdId:
                     this.HideItem(sender);
@@ -218,13 +229,31 @@ namespace HotSettings
             command.Visible = false;
         }
 
+        private void HandleScrollbarQueryStatus(object sender, string markerName)
+        {
+            // Only enable scrollbar options if ShowAnnotations is true.
+            var showScrollbarMarkers = SettingsStore.GetBoolean("Text Editor\\CSharp", "ShowAnnotations");
+            MenuCommand menuCommand = ((MenuCommand)sender);
+            menuCommand.Enabled = showScrollbarMarkers;
+
+            // Update checked state based on state of specific marker
+            if (!showScrollbarMarkers)
+            {
+                UpdateCheckedState(sender, false);
+            }
+            else
+            {
+                this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", markerName);
+            }
+        }
+
         private void HandleQueryStatusCheckedUserProperty(object sender, string collectionPath, string propertyName)
         {
             try
             {
                 // Read property value
                 var value = SettingsStore.GetBoolean(collectionPath, propertyName);
-                UpdateCommandFlags(sender, value);
+                UpdateCheckedState(sender, value);
             }
             catch (Exception)
             {
@@ -234,8 +263,8 @@ namespace HotSettings
 
         private void HandleToggleCodeLensQueryStatus(object sender)
         {
-            var enabled = (bool) OptionsService.GlobalOptions.GetOptionValue("IsCodeLensEnabled");
-            UpdateCommandFlags(sender, enabled);
+            var enabled = (bool)OptionsService.GlobalOptions.GetOptionValue("IsCodeLensEnabled");
+            UpdateCheckedState(sender, enabled);
         }
 
         private void HandleToggleCodeLensAction(object sender, bool checkedState)
@@ -243,14 +272,16 @@ namespace HotSettings
             this.OptionsService.GlobalOptions.SetOptionValue("IsCodeLensEnabled", checkedState);
         }
 
-        private static void UpdateCommandFlags(object sender, bool checkedState)
+        private static void UpdateCheckedState(object sender, bool checkedState)
         {
             // Set Checked state
-            ((MenuCommand)sender).Checked = checkedState;
-
-            // TODO: Set enabled and visible state
-            // command.Enabled = ?
-            // command.Visible = ?
+            MenuCommand menuCommand = ((MenuCommand)sender);
+            if (menuCommand.Checked == checkedState)
+            {
+                // Command is already in correct state. No-op.
+                return;
+            }
+            menuCommand.Checked = checkedState;
         }
 
         /// <summary>
@@ -293,57 +324,66 @@ namespace HotSettings
                     ToggleLiveUnitTesting.ToggleLUT(sender, e);
                     break;
                 case Constants.ToggleAnnotateCmdId:
-                    UpdateSetting("TextEditor", "AllLanguages", "ShowAnnotations", newCheckedState); // TODO: Get this working
+                    //UpdateSetting("TextEditor", "AllLanguages", "ShowBlame", newCheckedState); // TODO: Get this working
                     break;
 
                 // Editor Settings
                 case Constants.ToggleNavigationBarCmdId:
                     UpdateSetting("TextEditor", "AllLanguages", "ShowNavigationBar", newCheckedState);
+                    command.Checked = newCheckedState;
                     break;
                 case Constants.ToggleCodeLensCmdId:
                     HandleToggleCodeLensAction(sender, newCheckedState);
-                    UpdateSetting("TextEditor", "CodeLens", "EnableCodeLens", newCheckedState);
                     break;
                 case Constants.ToggleIndentGuidesCmdId:
                     UpdateSetting("TextEditor", "General", "IndentGuides", newCheckedState);
+                    command.Checked = newCheckedState;
                     break;
                 case Constants.ToggleHighlightCurrentLineCmdId:
                     UpdateSetting("TextEditor", "General", "HighlightCurrentLine", newCheckedState);
                     break;
                 case Constants.ToggleAutoDelimiterHighlightingCmdId:
                     UpdateSetting("TextEditor", "General", "AutoDelimiterHighlighting", newCheckedState);
+                    command.Checked = newCheckedState;
                     break;
                 case Constants.ToggleProcedureLineSeparatorCmdId:
                     UpdateSetting("TextEditor", "CSharp-Specific", "DisplayLineSeparators", newCheckedState);
+                    command.Checked = newCheckedState;
                     break;
                 case Constants.ToggleIntelliSensePopUpCmdId:
                     UpdateSetting("TextEditor", "AllLanguages", "AutoListMembers", newCheckedState);
                     UpdateSetting("TextEditor", "AllLanguages", "AutoListParams", newCheckedState);
                     break;
                 case Constants.ToggleLineEndingsCmdId:
-                    UpdateSetting("TextEditor", "General", "TrackChanges", newCheckedState);
+                    UpdateSetting("TextEditor", "General", "LineEndings", newCheckedState);
+                    command.Checked = newCheckedState;
                     break;
                 case Constants.ToggleHighlightSymbolsCmdId:
                     UpdateSetting("TextEditor", "CSharp-Specific", "HighlightReferences", newCheckedState);
+                    command.Checked = newCheckedState;
                     break;
                 case Constants.ToggleHighlightKeywordsCmdId:
                     UpdateSetting("TextEditor", "CSharp-Specific", "EnableHighlightRelatedKeywords", newCheckedState);
+                    command.Checked = newCheckedState;
                     break;
                 //case Constants.ToggleIntelliSenseSquigglesCmdId:
                 //UpdateSetting("TextEditor", "Basic", "TrackChanges", newCheckedState);
                 //break;
                 // Scrollbar Settings
+                case Constants.ToggleShowScrollbarMarkersCmdId:
+                    UpdateSetting("TextEditor", "CSharp", "ShowAnnotations", newCheckedState); // Turns off all scrollbar markers
+                    break;
                 case Constants.ToggleShowChangesCmdId:
-                    UpdateSetting("TextEditor", "AllLanguages", "ShowChanges", newCheckedState);
+                    UpdateSetting("TextEditor", "CSharp", "ShowChanges", newCheckedState);
                     break;
                 case Constants.ToggleShowMarksCmdId:
-                    UpdateSetting("TextEditor", "AllLanguages", "ShowMarks", newCheckedState);
+                    UpdateSetting("TextEditor", "CSharp", "ShowMarks", newCheckedState);
                     break;
                 case Constants.ToggleShowErrorsCmdId:
-                    UpdateSetting("TextEditor", "AllLanguages", "ShowErrors", newCheckedState);
+                    UpdateSetting("TextEditor", "CSharp", "ShowErrors", newCheckedState);
                     break;
                 case Constants.ToggleShowCaretPositionCmdId:
-                    UpdateSetting("TextEditor", "AllLanguages", "ShowCaretPosition", newCheckedState);
+                    UpdateSetting("TextEditor", "CSharp", "ShowCaretPosition", newCheckedState);
                     break;
                 case Constants.ToggleShowDiffsCmdId:
                     // Not implemented yet. Would hook into Git Diff Margin scrollbar setting.

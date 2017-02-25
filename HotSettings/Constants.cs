@@ -37,6 +37,7 @@ namespace HotSettings
         public const int ToggleHighlightKeywordsCmdId = 0x1056;
         public const int ToggleIntelliSenseSquigglesCmdId = 0x1057;
         // Scrollbar Settings CmdIds
+        public const int ToggleShowScrollbarMarkersCmdId = 0x1070;
         public const int ToggleShowChangesCmdId = 0x1071;
         public const int ToggleShowMarksCmdId = 0x1072;
         public const int ToggleShowErrorsCmdId = 0x1073;

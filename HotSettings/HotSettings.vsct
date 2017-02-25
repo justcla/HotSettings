@@ -274,6 +274,14 @@
         </Strings>
       </Button>-->
       <!--Scrollbar Settings Buttons-->
+      <Button guid="guidHotSettingsCmdSet" id="cmdidShowScrollbarMarkers" priority="0x0300" type="Button">
+        <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" />
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <Strings>
+          <ButtonText>Show Scrollbar Markers</ButtonText>
+        </Strings>
+      </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidShowChanges" priority="0x0310" type="Button">
         <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" />
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -434,7 +442,6 @@
       <IDSymbol name="ScrollbarSettingsGroup" value="0x1003" />
       <IDSymbol name="EditorMarginContextGroup" value="0x1004" />
       <IDSymbol name="EditorContextGroup" value="0x1005" />
-      <IDSymbol name="ScrollbarSettingsGroup" value="0x1006" />
       <IDSymbol name="ScollbarSettingsMenuGroup" value="0x1007"/>
       <IDSymbol name="EditorMarginSourceControlGroup" value="0x1008" />
       <!-- Command IDs -->
@@ -461,6 +468,7 @@
       <IDSymbol name="cmdidToggleHighlightKeywords" value="0x1056" />
       <IDSymbol name="cmdidToggleIntelliSenseSquiggles" value="0x1057" />
       <!--Scrollbar Settings CmdIds-->
+      <IDSymbol name="cmdidShowScrollbarMarkers" value="0x1070" />
       <IDSymbol name="cmdidShowChanges" value="0x1071" />
       <IDSymbol name="cmdidShowMarks" value="0x1072" />
       <IDSymbol name="cmdidShowErrors" value="0x1073" />
