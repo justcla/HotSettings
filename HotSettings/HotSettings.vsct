@@ -33,10 +33,9 @@
 
     <Menus>
       <Menu guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" type="Toolbar">
-        <CommandFlag>DefaultDocked</CommandFlag>
         <Strings>
           <ButtonText>Editor Adornments</ButtonText>  <!-- Not sure where this is used. Might be redundant. -->
-          <CommandName>Hot Settings</CommandName>  <!-- This becomes the Toolbar name. Does not show up as a command in Tools->Options,Keyboard -->
+          <CommandName>Hot &amp;Settings</CommandName>  <!-- This becomes the Toolbar name. Does not show up as a command in Tools->Options,Keyboard -->
         </Strings>
       </Menu>
       <Menu guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" type="Context">
