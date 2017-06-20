@@ -1,7 +1,7 @@
 # HotSettings
 Menus and Toolbars that expose Visual Studio settings.
 
-![Hot Settings screenshot](https://raw.githubusercontent.com/justcla/HotSettings/master/Screenshot.PNG)
+![Hot Settings screenshot](https://raw.githubusercontent.com/justcla/HotSettings/master/HotSettings/Resources/Screenshot.PNG)
 
 ## Intended to expose the following settings:
 
