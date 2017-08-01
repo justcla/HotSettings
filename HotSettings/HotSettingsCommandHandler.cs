@@ -165,7 +165,7 @@ namespace HotSettings
                     break;
                 // Editor Settings
                 case Constants.ToggleNavigationBarCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Dropbox Bar");
+                    this.HandleNavBarQueryStatus(sender);
                     break;
                 case Constants.ToggleCodeLensCmdId:
                     this.HandleToggleCodeLensQueryStatus(sender);
@@ -259,6 +259,12 @@ namespace HotSettings
             {
                 // Do nothing
             }
+        }
+
+        private void HandleNavBarQueryStatus(object sender)
+        {
+            var enabled = (bool)OptionsService.GlobalOptions.GetOptionValue("IsCodeLensEnabled");
+            UpdateCheckedState(sender, enabled);
         }
 
         private void HandleToggleCodeLensQueryStatus(object sender)
