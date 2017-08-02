@@ -156,6 +156,7 @@ namespace HotSettings
                     this.HideItem(sender);
                     break;
                 case Constants.ToggleOutliningCmdId:
+                    this.HandleOutliningQueryStatus(sender);
                     break;
                 case Constants.ToggleLiveUnitTestingCmdId:
                     ToggleLiveUnitTesting.OnBeforeQueryStatus(sender, e);
@@ -263,7 +264,14 @@ namespace HotSettings
 
         private void HandleNavBarQueryStatus(object sender)
         {
-            var enabled = (bool)OptionsService.GlobalOptions.GetOptionValue("IsCodeLensEnabled");
+            // TODO: get this from the view.Options
+            //UpdateCheckedState(sender, outlining);
+        }
+
+        private void HandleOutliningQueryStatus(object sender)
+        {
+            var enabled = ShellUtil.IsCommandAvailable("Edit.StopOutlining");
+            var disabled = ShellUtil.IsCommandAvailable("Edit.StartAutomaticOutlining");
             UpdateCheckedState(sender, enabled);
         }
 
@@ -324,7 +332,10 @@ namespace HotSettings
                     // TODO: Implement this
                     break;
                 case Constants.ToggleOutliningCmdId:
-                    // TODO: Implement this - Like Toggle Live Unit Testing
+                    if (newCheckedState)
+                        ShellUtil.ExecuteCommand("Edit.StartAutomaticOutlining");
+                    else
+                        ShellUtil.ExecuteCommand("Edit.StopOutlining");
                     break;
                 case Constants.ToggleLiveUnitTestingCmdId:
                     ToggleLiveUnitTesting.ToggleLUT(sender, e);
