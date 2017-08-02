@@ -35,8 +35,21 @@ namespace HotCommands
         [Import(typeof(IEditorOperationsFactoryService))]
         private IEditorOperationsFactoryService _editorOperationsFactory;
 
+        [Import]
+        private IVsTextManager _textManager;
+
+        public static IWpfTextView RecentlyActiveView { get; private set; }
+
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
+            // Subscribe to view focus changes, so that we track the active view.
+            var view = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
+            view.GotAggregateFocus += OnViewGotFocus;
+            view.LostAggregateFocus += JustMakeSureThisHappensBeforeAnotherViewGetsFocus;
+            view.Closed += OnViewClosed;
+            var properties = view.TextViewModel.Properties.PropertyList;
+            HotSettingsCommandHandler.Instance.SetTextManager(_textManager);
+
             //System.Windows.Controls.ContextMenu contextMenu = null;
             //lineNumberFrameworkElement.ContextMenu = contextMenu;
 
@@ -77,6 +90,22 @@ namespace HotCommands
             ////scrollbarMenuItems.Add(HotSettingsCommandHandler.CreateOleMenuCommand(HotSettings.Constants.HotSettingsCmdSetGuid, HotSettings.Constants.ToggleShowChangesCmdId, handler));
             //scrollbarMenuItems.Add(HotSettingsCommandHandler.ToggleShowMarksCmd);
             ////scrollbarMenuItems.Add(new Separator());
+        }
+
+        private void JustMakeSureThisHappensBeforeAnotherViewGetsFocus(object sender, EventArgs e)
+        {
+            var x = 1;
+        }
+
+        private void OnViewClosed(object sender, EventArgs e)
+        {
+            ((IWpfTextView)sender).Closed -= OnViewClosed;
+            ((IWpfTextView)sender).GotAggregateFocus -= OnViewGotFocus;
+        }
+
+        private void OnViewGotFocus(object sender, EventArgs e)
+        {
+            RecentlyActiveView = ((IWpfTextView)sender);
         }
 
         private void handler(object sender, EventArgs e)

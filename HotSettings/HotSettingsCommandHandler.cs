@@ -6,6 +6,8 @@ using Microsoft.VisualStudio.Shell.Settings;
 using Microsoft.VisualStudio.Text.Editor;
 using System;
 using System.ComponentModel.Design;
+using Microsoft.VisualStudio.TextManager.Interop;
+using System.Runtime.InteropServices;
 
 namespace HotSettings
 {
@@ -23,6 +25,7 @@ namespace HotSettings
         private IEditorOptionsFactoryService OptionsService;
 
         public static OleMenuCommand ToggleShowMarksCmd;
+        private IVsTextManager _textManager;
 
         /// <summary>
         /// Gets the instance of the command.
@@ -69,6 +72,13 @@ namespace HotSettings
             OptionsService = ServicesUtil.GetMefService<IEditorOptionsFactoryService>(this.ServiceProvider);
 
             CreateCommands();
+        }
+
+        internal void SetTextManager(IVsTextManager textManager)
+        {
+            _textManager = textManager;
+            System.Diagnostics.Debug.WriteLine("::IVsTextManager: " + _textManager.GetHashCode());
+
         }
 
         private void CreateCommands()
@@ -264,6 +274,13 @@ namespace HotSettings
 
         private void HandleNavBarQueryStatus(object sender)
         {
+            LANGPREFERENCES[] langPrefs = new LANGPREFERENCES[] { new LANGPREFERENCES() };
+            VIEWPREFERENCES[] viewPrefs = new VIEWPREFERENCES[] { new VIEWPREFERENCES() };
+            langPrefs[0].guidLang = new Guid(0x8239bec4, 0xee87, 0x11d0, 0x8c, 0x98, 0x0, 0xc0, 0x4f, 0xc2, 0xab, 0x22); // guidDefaultFileType
+
+            Marshal.ThrowExceptionForHR(_textManager.GetUserPreferences(viewPrefs, null, langPrefs, null));
+            LANGPREFERENCES lp = langPrefs[0];
+            var navbarEnabled = lp.fDropdownBar;
             // TODO: get this from the view.Options
             //UpdateCheckedState(sender, outlining);
         }
