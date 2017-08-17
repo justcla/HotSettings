@@ -26,7 +26,6 @@ namespace HotSettings
         private IVsTextManager TextManager;
 
         public static OleMenuCommand ToggleShowMarksCmd;
-        private IVsTextManager _textManager;
 
         /// <summary>
         /// Gets the instance of the command.
@@ -74,13 +73,6 @@ namespace HotSettings
             TextManager = (IVsTextManager)ServiceProvider.GetService(typeof(SVsTextManager));
 
             CreateCommands();
-        }
-
-        internal void SetTextManager(IVsTextManager textManager)
-        {
-            _textManager = textManager;
-            System.Diagnostics.Debug.WriteLine("::IVsTextManager: " + _textManager.GetHashCode());
-
         }
 
         private void CreateCommands()
