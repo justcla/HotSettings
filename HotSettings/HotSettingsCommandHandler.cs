@@ -23,6 +23,7 @@ namespace HotSettings
 
         private SettingsStore SettingsStore;
         private IEditorOptionsFactoryService OptionsService;
+        private IVsTextManager TextManager;
 
         public static OleMenuCommand ToggleShowMarksCmd;
         private IVsTextManager _textManager;
@@ -70,6 +71,7 @@ namespace HotSettings
             SettingsStore = settingsManager.GetReadOnlySettingsStore(SettingsScope.UserSettings);
 
             OptionsService = ServicesUtil.GetMefService<IEditorOptionsFactoryService>(this.ServiceProvider);
+            TextManager = (IVsTextManager)ServiceProvider.GetService(typeof(SVsTextManager));
 
             CreateCommands();
         }
@@ -278,11 +280,10 @@ namespace HotSettings
             VIEWPREFERENCES[] viewPrefs = new VIEWPREFERENCES[] { new VIEWPREFERENCES() };
             langPrefs[0].guidLang = new Guid(0x8239bec4, 0xee87, 0x11d0, 0x8c, 0x98, 0x0, 0xc0, 0x4f, 0xc2, 0xab, 0x22); // guidDefaultFileType
 
-            Marshal.ThrowExceptionForHR(_textManager.GetUserPreferences(viewPrefs, null, langPrefs, null));
+            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences(viewPrefs, null, langPrefs, null));
             LANGPREFERENCES lp = langPrefs[0];
-            var navbarEnabled = lp.fDropdownBar;
-            // TODO: get this from the view.Options
-            //UpdateCheckedState(sender, outlining);
+            bool enabled = lp.fDropdownBar == 1;
+            UpdateCheckedState(sender, enabled);
         }
 
         private void HandleOutliningQueryStatus(object sender)
