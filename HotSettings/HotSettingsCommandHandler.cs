@@ -6,6 +6,8 @@ using Microsoft.VisualStudio.Shell.Settings;
 using Microsoft.VisualStudio.Text.Editor;
 using System;
 using System.ComponentModel.Design;
+using Microsoft.VisualStudio.TextManager.Interop;
+using System.Runtime.InteropServices;
 
 namespace HotSettings
 {
@@ -21,6 +23,7 @@ namespace HotSettings
 
         private SettingsStore SettingsStore;
         private IEditorOptionsFactoryService OptionsService;
+        private IVsTextManager TextManager;
 
         public static OleMenuCommand ToggleShowMarksCmd;
 
@@ -67,6 +70,7 @@ namespace HotSettings
             SettingsStore = settingsManager.GetReadOnlySettingsStore(SettingsScope.UserSettings);
 
             OptionsService = ServicesUtil.GetMefService<IEditorOptionsFactoryService>(this.ServiceProvider);
+            TextManager = (IVsTextManager)ServiceProvider.GetService(typeof(SVsTextManager));
 
             CreateCommands();
         }
@@ -156,6 +160,7 @@ namespace HotSettings
                     this.HideItem(sender);
                     break;
                 case Constants.ToggleOutliningCmdId:
+                    this.HandleOutliningQueryStatus(sender);
                     break;
                 case Constants.ToggleLiveUnitTestingCmdId:
                     ToggleLiveUnitTesting.OnBeforeQueryStatus(sender, e);
@@ -165,7 +170,7 @@ namespace HotSettings
                     break;
                 // Editor Settings
                 case Constants.ToggleNavigationBarCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Dropbox Bar");
+                    this.HandleNavBarQueryStatus(sender);
                     break;
                 case Constants.ToggleCodeLensCmdId:
                     this.HandleToggleCodeLensQueryStatus(sender);
@@ -261,6 +266,25 @@ namespace HotSettings
             }
         }
 
+        private void HandleNavBarQueryStatus(object sender)
+        {
+            LANGPREFERENCES[] langPrefs = new LANGPREFERENCES[] { new LANGPREFERENCES() };
+            VIEWPREFERENCES[] viewPrefs = new VIEWPREFERENCES[] { new VIEWPREFERENCES() };
+            langPrefs[0].guidLang = new Guid(0x8239bec4, 0xee87, 0x11d0, 0x8c, 0x98, 0x0, 0xc0, 0x4f, 0xc2, 0xab, 0x22); // guidDefaultFileType
+
+            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences(viewPrefs, null, langPrefs, null));
+            LANGPREFERENCES lp = langPrefs[0];
+            bool enabled = lp.fDropdownBar == 1;
+            UpdateCheckedState(sender, enabled);
+        }
+
+        private void HandleOutliningQueryStatus(object sender)
+        {
+            var enabled = ShellUtil.IsCommandAvailable("Edit.StopOutlining");
+            var disabled = ShellUtil.IsCommandAvailable("Edit.StartAutomaticOutlining");
+            UpdateCheckedState(sender, enabled);
+        }
+
         private void HandleToggleCodeLensQueryStatus(object sender)
         {
             var enabled = (bool)OptionsService.GlobalOptions.GetOptionValue("IsCodeLensEnabled");
@@ -318,7 +342,10 @@ namespace HotSettings
                     // TODO: Implement this
                     break;
                 case Constants.ToggleOutliningCmdId:
-                    // TODO: Implement this - Like Toggle Live Unit Testing
+                    if (newCheckedState)
+                        ShellUtil.ExecuteCommand("Edit.StartAutomaticOutlining");
+                    else
+                        ShellUtil.ExecuteCommand("Edit.StopOutlining");
                     break;
                 case Constants.ToggleLiveUnitTestingCmdId:
                     ToggleLiveUnitTesting.ToggleLUT(sender, e);
