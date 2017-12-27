@@ -74,6 +74,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ReleaseNotes.txt">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Screenshot - Full.png" />
     <Content Include="Resources\Screenshot.PNG">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

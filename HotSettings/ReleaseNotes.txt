@@ -1,0 +1,4 @@
+﻿Hot Settings
+
+26-Dec-2017 v1.1: Added support for Outling and Navigation Bar
+20-Jun-2017 v1.0: Initial release (very beta!)
