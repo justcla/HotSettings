@@ -90,7 +90,7 @@ namespace HotSettings
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleLiveUnitTestingCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleAnnotateCmdId));
                 // Editor Settings Commands
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleNavigationBarCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleNavigationBarCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleCodeLensCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIndentGuidesCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleHighlightCurrentLineCmdId));
@@ -477,37 +477,35 @@ namespace HotSettings
             //ppEnum.
         }
 
-        public void QueryStatusToggleLineNumbers(Guid langServiceGuid, OLECMD[] prgCmds)
+        private void EnableAndCheckCommand(Guid langServiceGuid, OLECMD[] prgCmds, bool isEnabled)
         {
-            //IWpfTextView textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
-
-            //var something = textView;
-            //IVsTextBuffer vsTextBuffer = null;
-            //vsTextBuffer.GetLanguageServiceID
-
             prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_SUPPORTED;
             prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_ENABLED;
-            bool isEnabledToggleLineNumbers = IsLineNumbersEnabled(langServiceGuid);
-            if (isEnabledToggleLineNumbers)
+            if (isEnabled)
             {
                 prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_LATCHED;
             }
         }
 
-        public int ExecToggleLineNumbers(IWpfTextView textView, Guid langServiceGuid)
+        public void QueryStatusToggleLineNumbers(Guid langServiceGuid, OLECMD[] prgCmds)
+        {
+            EnableAndCheckCommand(langServiceGuid, prgCmds, IsLineNumbersEnabled(langServiceGuid));
+        }
+
+        public void QueryStatusToggleNavigationBar(Guid langServiceGuid, OLECMD[] prgCmds)
+        {
+            EnableAndCheckCommand(langServiceGuid, prgCmds, IsNavBarEnabled(langServiceGuid));
+        }
+
+        public void ExecToggleLineNumbers(IWpfTextView textView, Guid langServiceGuid)
         {
             // Get the language preferences
             LANGPREFERENCES langPrefs = GetLanguagePreferences(langServiceGuid);
-
             bool enabled = IsLineNumbersEnabled(langPrefs);
-
             // Update the Line Numbers state (toggle)
             langPrefs.fLineNumbers = (uint)(enabled ? 0 : 1);
-
             // Save the update to the langPrefs
             SetLangPrefererences(langPrefs);
-
-            return VSConstants.S_OK;
         }
 
         private bool IsLineNumbersEnabled(LANGPREFERENCES langPrefs)
@@ -531,6 +529,27 @@ namespace HotSettings
         private void SetLangPrefererences(LANGPREFERENCES langPrefs)
         {
             Marshal.ThrowExceptionForHR(TextManager.SetUserPreferences(null, null, new LANGPREFERENCES[] { langPrefs }, null));
+        }
+
+        public void ExecToggleNavigationBar(IWpfTextView textView, Guid langServiceGuid)
+        {
+            // Get the language preferences
+            LANGPREFERENCES langPrefs = GetLanguagePreferences(langServiceGuid);
+            bool enabled = IsNavBarEnabled(langPrefs);
+            // Update the state (toggle)
+            langPrefs.fDropdownBar = (uint)(enabled ? 0 : 1);
+            // Save the update to the langPrefs
+            SetLangPrefererences(langPrefs);
+        }
+
+        private bool IsNavBarEnabled(Guid langServiceGuid)
+        {
+            return IsNavBarEnabled(GetLanguagePreferences(langServiceGuid));
+        }
+
+        private static bool IsNavBarEnabled(LANGPREFERENCES langPrefs)
+        {
+            return langPrefs.fDropdownBar == 1;
         }
 
     }
