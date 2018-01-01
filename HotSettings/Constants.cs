@@ -43,6 +43,9 @@ namespace HotSettings
         public const int ToggleShowErrorsCmdId = 0x1073;
         public const int ToggleShowCaretPositionCmdId = 0x1074;
         public const int ToggleShowDiffsCmdId = 0x1080;
+        // Distraction free mode CmdIds
+        public const int ToggleCleanEditorCmdId = 0x1110;
+        public const int ToggleCleanMarginsCmdId = 0x1120;
 
     }
 }

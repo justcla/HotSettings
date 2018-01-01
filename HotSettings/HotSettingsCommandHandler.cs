@@ -8,6 +8,9 @@ using System;
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio.TextManager.Interop;
 using System.Runtime.InteropServices;
+using System.Windows;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.OLE.Interop;
 
 namespace HotSettings
 {
@@ -24,6 +27,7 @@ namespace HotSettings
         private SettingsStore SettingsStore;
         private IEditorOptionsFactoryService OptionsService;
         private IVsTextManager TextManager;
+        //private IVsEditorAdaptersFactoryService EditorAdaptersFactoryService;
 
         public static OleMenuCommand ToggleShowMarksCmd;
 
@@ -59,12 +63,7 @@ namespace HotSettings
         /// <param name="package">Owner package, not null.</param>
         private HotSettingsCommandHandler(Package package)
         {
-            if (package == null)
-            {
-                throw new ArgumentNullException("package");
-            }
-
-            this.package = package;
+            this.package = package ?? throw new ArgumentNullException("package");
 
             ShellSettingsManager settingsManager = new ShellSettingsManager(package);
             SettingsStore = settingsManager.GetReadOnlySettingsStore(SettingsScope.UserSettings);
@@ -72,17 +71,17 @@ namespace HotSettings
             OptionsService = ServicesUtil.GetMefService<IEditorOptionsFactoryService>(this.ServiceProvider);
             TextManager = (IVsTextManager)ServiceProvider.GetService(typeof(SVsTextManager));
 
-            CreateCommands();
+            RegisterGlobalCommands();
         }
 
-        private void CreateCommands()
+    private void RegisterGlobalCommands()
         {
             OleMenuCommandService commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
                 // Editor Margin Settings Commands
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIndicatorMarginCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleLineNumbersCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleLineNumbersCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleQuickActionsCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleSelectionMarginCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleTrackChangesCmdId));
@@ -110,6 +109,9 @@ namespace HotSettings
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowErrorsCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowCaretPositionCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowDiffsCmdId));
+                // Distraction Free mode
+                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleCleanEditorCmdId));
+                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleCleanMarginsCmdId));
             }
         }
 
@@ -205,8 +207,8 @@ namespace HotSettings
                     // Turn off all Scrollbar markers with "ShowAnnotations"
                     //this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "ShowAnnotations");
                     MenuCommand menuCommand = ((MenuCommand)sender);
-                    menuCommand.Visible = true;
-                    menuCommand.Enabled = true;
+                    //menuCommand.Visible = true;
+                    //menuCommand.Enabled = true;
                     menuCommand.Checked = SettingsStore.GetBoolean("Text Editor\\CSharp", "ShowAnnotations");
                     break;
                 case Constants.ToggleShowChangesCmdId:
@@ -224,6 +226,11 @@ namespace HotSettings
                 case Constants.ToggleShowDiffsCmdId:
                     this.HideItem(sender);
                     break;
+                    // Don't need query status for DistractionFree items.
+                    //case Constants.ToggleCleanEditorCmdId:
+                    //    break;
+                    //case Constants.ToggleCleanMarginsCmdId:
+                    //    break;
             }
         }
 
@@ -415,10 +422,24 @@ namespace HotSettings
                 case Constants.ToggleShowDiffsCmdId:
                     // Not implemented yet. Would hook into Git Diff Margin scrollbar setting.
                     break;
+                case Constants.ToggleCleanEditorCmdId:
+                    ExecuteToggleCleanEditor();
+                    break;
+                case Constants.ToggleCleanMarginsCmdId:
+                    MessageBox.Show("Toggle Margins");
+                    // Not implemented yet. Would turn off all visible margins, or restore all previously visible margins
+                    break;
             }
 
             // Update state of checkbox
             //command.Checked = newCheckedState;
+        }
+
+        private void ExecuteToggleCleanEditor()
+        {
+            MessageBox.Show("Toggle Editor");
+            PrintSettings();
+            // Not implemented yet. Would turn off all editor adornments (not margins)
         }
 
         private void UpdateSetting(string category, string page, string settingName, bool value)
@@ -434,6 +455,82 @@ namespace HotSettings
             {
                 // Do nothing
             }
+        }
+
+        private void PrintSettings()
+        {
+            LANGPREFERENCES[] langPrefs = new LANGPREFERENCES[] { new LANGPREFERENCES() };
+            VIEWPREFERENCES[] viewPrefs = new VIEWPREFERENCES[] { new VIEWPREFERENCES() };
+            langPrefs[0].guidLang = new Guid(0x8239bec4, 0xee87, 0x11d0, 0x8c, 0x98, 0x0, 0xc0, 0x4f, 0xc2, 0xab, 0x22); // guidDefaultFileType
+
+            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences(viewPrefs, null, langPrefs, null));
+            LANGPREFERENCES lp = langPrefs[0];
+            bool enabled = lp.fDropdownBar == 1;
+            System.Diagnostics.Debug.WriteLine(lp.guidLang);
+            System.Diagnostics.Debug.WriteLine(lp.fWordWrap);
+            System.Diagnostics.Debug.WriteLine(lp.fLineNumbers);
+            //UpdateCheckedState(sender, enabled);
+
+            int success = TextManager.EnumLanguageServices(out IVsEnumGUID ppEnum);
+            int value = ppEnum.GetCount(out uint pcelCount);
+            System.Diagnostics.Debug.WriteLine(pcelCount);
+            //ppEnum.
+        }
+
+        public void QueryStatusToggleLineNumbers(Guid langServiceGuid, OLECMD[] prgCmds)
+        {
+            //IWpfTextView textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
+
+            //var something = textView;
+            //IVsTextBuffer vsTextBuffer = null;
+            //vsTextBuffer.GetLanguageServiceID
+
+            prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_SUPPORTED;
+            prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_ENABLED;
+            bool isEnabledToggleLineNumbers = IsLineNumbersEnabled(langServiceGuid);
+            if (isEnabledToggleLineNumbers)
+            {
+                prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_LATCHED;
+            }
+        }
+
+        public int ExecToggleLineNumbers(IWpfTextView textView, Guid langServiceGuid)
+        {
+            // Get the language preferences
+            LANGPREFERENCES langPrefs = GetLanguagePreferences(langServiceGuid);
+
+            bool enabled = IsLineNumbersEnabled(langPrefs);
+
+            // Update the Line Numbers state (toggle)
+            langPrefs.fLineNumbers = (uint)(enabled ? 0 : 1);
+
+            // Save the update to the langPrefs
+            SetLangPrefererences(langPrefs);
+
+            return VSConstants.S_OK;
+        }
+
+        private bool IsLineNumbersEnabled(LANGPREFERENCES langPrefs)
+        {
+            return langPrefs.fLineNumbers == 1;
+        }
+
+        private bool IsLineNumbersEnabled(Guid langServiceGuid)
+        {
+            return IsLineNumbersEnabled(GetLanguagePreferences(langServiceGuid));
+        }
+
+        private LANGPREFERENCES GetLanguagePreferences(Guid langServiceGuid)
+        {
+            LANGPREFERENCES[] langPrefs = new LANGPREFERENCES[] { new LANGPREFERENCES() };
+            langPrefs[0].guidLang = langServiceGuid;
+
+            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences(null, null, langPrefs, null));
+            return langPrefs[0];
+        }
+        private void SetLangPrefererences(LANGPREFERENCES langPrefs)
+        {
+            Marshal.ThrowExceptionForHR(TextManager.SetUserPreferences(null, null, new LANGPREFERENCES[] { langPrefs }, null));
         }
 
     }

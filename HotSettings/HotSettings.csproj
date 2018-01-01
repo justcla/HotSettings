@@ -57,14 +57,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Common\ServicesUtil.cs" />
+    <Compile Include="HotSettingsCommandFilter.cs" />
     <Compile Include="HotSettingsCommandHandler.cs" />
     <Compile Include="Commands\ToggleLiveUnitTesting.cs" />
     <Compile Include="Common\PropertiesUtil.cs" />
     <Compile Include="Common\ShellUtil.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="HotSettingsPackage.cs" />
-    <Compile Include="HotSettingsTextViewCreationListener.cs" />
+    <Compile Include="HotSettingsContextMenuTextViewCreationListener.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="HotSettingsCommandsTextViewCreationListener.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />
