@@ -67,6 +67,8 @@
       <Group guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup"/>
       <Group guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup"/>
       <Group guid="guidHotSettingsCmdSet" id="EditorMarginSourceControlGroup"/>
+      <Group guid="guidHotSettingsCmdSet" id="LiveUnitTestingGroup"/>
+      <Group guid="guidHotSettingsCmdSet" id="OutliningGroup"/>
       <!-- Editor (Main) Context Menu Group -->
       <Group guid="guidHotSettingsCmdSet" id="EditorContextGroup" priority="0x1000">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
@@ -382,7 +384,13 @@
     <CommandPlacement guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" priority="0x0002">
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="EditorMarginSourceControlGroup" priority="0x0003">
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="OutliningGroup" priority="0x0003">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="LiveUnitTestingGroup" priority="0x0004">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="EditorMarginSourceControlGroup" priority="0x0005">
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
     </CommandPlacement>
     <!-- Editor Margin Context Group -->
@@ -404,11 +412,13 @@
     <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleDiffMargin" priority="0x0006">
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleOutlining" priority="0x0007">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
+    <!-- Outlining Group -->
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleOutlining" priority="0x0010">
+      <Parent guid="guidHotSettingsCmdSet" id="OutliningGroup" />
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleLiveUnitTesting" priority="0x0008">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
+    <!-- Live Unit Testing -->
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleLiveUnitTesting" priority="0x0010">
+      <Parent guid="guidHotSettingsCmdSet" id="LiveUnitTestingGroup" />
     </CommandPlacement>
     <!-- Editor Margin Source Control group -->
     <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleAnnotate" priority="0x0001">
@@ -438,12 +448,19 @@
         <Parent guid="guidHotSettingsCmdSet" id="ScollbarSettingsMenuGroup" />
     </CommandPlacement>
     <!-- Distraction Free -->
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleCleanEditor" priority="0x0001">
+    <CommandPlacement guid="guidVSStd97" id="cmdidFullScreen" priority="0x0010">
       <Parent guid="guidHotSettingsCmdSet" id="DistractionFreeGroup" />
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleCleanMargins" priority="0x0001">
+    <CommandPlacement guid="guidVSStd97" id="cmdidAutoHideAllWindows" priority="0x0020">
       <Parent guid="guidHotSettingsCmdSet" id="DistractionFreeGroup" />
     </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleCleanEditor" priority="0x0030">
+      <Parent guid="guidHotSettingsCmdSet" id="DistractionFreeGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleCleanMargins" priority="0x0040">
+      <Parent guid="guidHotSettingsCmdSet" id="DistractionFreeGroup" />
+    </CommandPlacement>
+
 
   </CommandPlacements>
 
@@ -472,6 +489,8 @@
       <IDSymbol name="ScollbarSettingsMenuGroup" value="0x1007"/>
       <IDSymbol name="EditorMarginSourceControlGroup" value="0x1008" />
       <IDSymbol name="DistractionFreeGroup" value="0x1009" />
+      <IDSymbol name="LiveUnitTestingGroup" value="0x1010" />
+      <IDSymbol name="OutliningGroup" value="0x1011" />
       <!-- Command IDs -->
       <!-- These must be in sync with constant in Command file (eg. ToggleMargin.cs) -->
       <IDSymbol name="cmdidToggleIndicatorMargin" value="0x1021" />
