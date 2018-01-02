@@ -23,6 +23,38 @@ namespace HotSettings
 
         public IOleCommandTarget Next { get; internal set; }
 
+        public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
+        {
+            // Command handling registration
+            if (pguidCmdGroup == Constants.HotSettingsCmdSetGuid && cCmds == 1)
+            {
+                switch (prgCmds[0].cmdID)
+                {
+                    case Constants.ToggleIndicatorMarginCmdId:
+                        HotSettingsCommandHandler.Instance.QueryStatusToggleIndicatorMargin(prgCmds);
+                        return VSConstants.S_OK;
+                    case Constants.ToggleLineNumbersCmdId:
+                        HotSettingsCommandHandler.Instance.QueryStatusToggleLineNumbers(languageServiceGuid, prgCmds);
+                        return VSConstants.S_OK;
+                    case Constants.ToggleSelectionMarginCmdId:
+                        HotSettingsCommandHandler.Instance.QueryStatusToggleSelectionMargin(prgCmds);
+                        return VSConstants.S_OK;
+                    case Constants.ToggleTrackChangesCmdId:
+                        HotSettingsCommandHandler.Instance.QueryStatusToggleTrackChanges(prgCmds);
+                        return VSConstants.S_OK;
+                    case Constants.ToggleNavigationBarCmdId:
+                        HotSettingsCommandHandler.Instance.QueryStatusToggleNavigationBar(languageServiceGuid, prgCmds);
+                        return VSConstants.S_OK;
+                }
+            }
+
+            if (Next != null)
+            {
+                return Next.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
+            }
+            return (int)OLEConstants.OLECMDERR_E_UNKNOWNGROUP;
+        }
+
         public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
             // Command handling
@@ -31,8 +63,17 @@ namespace HotSettings
                 // Dispatch to the correct command handler
                 switch (nCmdID)
                 {
+                    case Constants.ToggleIndicatorMarginCmdId:
+                        HotSettingsCommandHandler.Instance.ExecToggleIndicatorMargin(textView);
+                        return VSConstants.S_OK;
                     case Constants.ToggleLineNumbersCmdId:
                         HotSettingsCommandHandler.Instance.ExecToggleLineNumbers(textView, languageServiceGuid);
+                        return VSConstants.S_OK;
+                    case Constants.ToggleSelectionMarginCmdId:
+                        HotSettingsCommandHandler.Instance.ExecToggleSelectionMargin(textView);
+                        return VSConstants.S_OK;
+                    case Constants.ToggleTrackChangesCmdId:
+                        HotSettingsCommandHandler.Instance.ExecToggleTrackChanges(textView);
                         return VSConstants.S_OK;
                     case Constants.ToggleNavigationBarCmdId:
                         HotSettingsCommandHandler.Instance.ExecToggleNavigationBar(textView, languageServiceGuid);
@@ -44,29 +85,6 @@ namespace HotSettings
             if (Next != null)
             {
                 return Next.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
-            }
-            return (int)OLEConstants.OLECMDERR_E_UNKNOWNGROUP;
-        }
-
-        public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
-        {
-            // Command handling registration
-            if (pguidCmdGroup == Constants.HotSettingsCmdSetGuid && cCmds == 1)
-            {
-                switch (prgCmds[0].cmdID)
-                {
-                    case Constants.ToggleLineNumbersCmdId:
-                        HotSettingsCommandHandler.Instance.QueryStatusToggleLineNumbers(languageServiceGuid, prgCmds);
-                        return VSConstants.S_OK;
-                    case Constants.ToggleNavigationBarCmdId:
-                        HotSettingsCommandHandler.Instance.QueryStatusToggleNavigationBar(languageServiceGuid, prgCmds);
-                        return VSConstants.S_OK;
-                }
-            }
-
-            if (Next != null)
-            {
-                return Next.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
             }
             return (int)OLEConstants.OLECMDERR_E_UNKNOWNGROUP;
         }

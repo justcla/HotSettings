@@ -9,7 +9,6 @@ using System.ComponentModel.Design;
 using Microsoft.VisualStudio.TextManager.Interop;
 using System.Runtime.InteropServices;
 using System.Windows;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 
 namespace HotSettings
@@ -26,7 +25,7 @@ namespace HotSettings
 
         private SettingsStore SettingsStore;
         private IEditorOptionsFactoryService OptionsService;
-        private IVsTextManager TextManager;
+        private IVsTextManager2 TextManager;
         //private IVsEditorAdaptersFactoryService EditorAdaptersFactoryService;
 
         public static OleMenuCommand ToggleShowMarksCmd;
@@ -69,22 +68,21 @@ namespace HotSettings
             SettingsStore = settingsManager.GetReadOnlySettingsStore(SettingsScope.UserSettings);
 
             OptionsService = ServicesUtil.GetMefService<IEditorOptionsFactoryService>(this.ServiceProvider);
-            TextManager = (IVsTextManager)ServiceProvider.GetService(typeof(SVsTextManager));
+            TextManager = (IVsTextManager2)ServiceProvider.GetService(typeof(SVsTextManager));
 
             RegisterGlobalCommands();
         }
 
-    private void RegisterGlobalCommands()
+        private void RegisterGlobalCommands()
         {
-            OleMenuCommandService commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if (commandService != null)
+            if (ServiceProvider.GetService(typeof(IMenuCommandService)) is OleMenuCommandService commandService)
             {
                 // Editor Margin Settings Commands
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIndicatorMarginCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIndicatorMarginCmdId));
                 //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleLineNumbersCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleQuickActionsCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleSelectionMarginCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleTrackChangesCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleSelectionMarginCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleTrackChangesCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleDiffMarginCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleOutliningCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleLiveUnitTestingCmdId));
@@ -104,8 +102,7 @@ namespace HotSettings
                 // Scrollbar Settings Commands
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowScrollbarMarkersCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowChangesCmdId));
-                OleMenuCommand ToggleShowMarksCmd = CreateHotSettingsCommand(Constants.ToggleShowMarksCmdId);
-                commandService.AddCommand(ToggleShowMarksCmd);
+                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowMarksCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowErrorsCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowCaretPositionCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowDiffsCmdId));
@@ -143,21 +140,21 @@ namespace HotSettings
             OleMenuCommand command = (OleMenuCommand)sender;
             switch ((uint)command.CommandID.ID)
             {
-                case Constants.ToggleIndicatorMarginCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Indicator Margin");
-                    break;
-                case Constants.ToggleLineNumbersCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Line Numbers");     // TODO: Detect language of current file
-                    break;
+                //case Constants.ToggleIndicatorMarginCmdId:
+                //    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Indicator Margin");
+                //    break;
+                //case Constants.ToggleLineNumbersCmdId:
+                //    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Line Numbers");
+                //    break;
                 case Constants.ToggleQuickActionsCmdId:
                     this.HideItem(sender);
                     break;
-                case Constants.ToggleSelectionMarginCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Selection Margin");
-                    break;
-                case Constants.ToggleTrackChangesCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Track Changes");
-                    break;
+                //case Constants.ToggleSelectionMarginCmdId:
+                //    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Selection Margin");
+                //    break;
+                //case Constants.ToggleTrackChangesCmdId:
+                //    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Track Changes");
+                //    break;
                 case Constants.ToggleDiffMarginCmdId:
                     this.HideItem(sender);
                     break;
@@ -275,12 +272,12 @@ namespace HotSettings
 
         private void HandleNavBarQueryStatus(object sender)
         {
-            LANGPREFERENCES[] langPrefs = new LANGPREFERENCES[] { new LANGPREFERENCES() };
-            VIEWPREFERENCES[] viewPrefs = new VIEWPREFERENCES[] { new VIEWPREFERENCES() };
+            LANGPREFERENCES2[] langPrefs = new LANGPREFERENCES2[] { new LANGPREFERENCES2() };
+            VIEWPREFERENCES2[] viewPrefs = new VIEWPREFERENCES2[] { new VIEWPREFERENCES2() };
             langPrefs[0].guidLang = new Guid(0x8239bec4, 0xee87, 0x11d0, 0x8c, 0x98, 0x0, 0xc0, 0x4f, 0xc2, 0xab, 0x22); // guidDefaultFileType
 
-            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences(viewPrefs, null, langPrefs, null));
-            LANGPREFERENCES lp = langPrefs[0];
+            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences2(viewPrefs, null, langPrefs, null));
+            LANGPREFERENCES2 lp = langPrefs[0];
             bool enabled = lp.fDropdownBar == 1;
             UpdateCheckedState(sender, enabled);
         }
@@ -438,7 +435,6 @@ namespace HotSettings
         private void ExecuteToggleCleanEditor()
         {
             MessageBox.Show("Toggle Editor");
-            PrintSettings();
             // Not implemented yet. Would turn off all editor adornments (not margins)
         }
 
@@ -457,27 +453,7 @@ namespace HotSettings
             }
         }
 
-        private void PrintSettings()
-        {
-            LANGPREFERENCES[] langPrefs = new LANGPREFERENCES[] { new LANGPREFERENCES() };
-            VIEWPREFERENCES[] viewPrefs = new VIEWPREFERENCES[] { new VIEWPREFERENCES() };
-            langPrefs[0].guidLang = new Guid(0x8239bec4, 0xee87, 0x11d0, 0x8c, 0x98, 0x0, 0xc0, 0x4f, 0xc2, 0xab, 0x22); // guidDefaultFileType
-
-            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences(viewPrefs, null, langPrefs, null));
-            LANGPREFERENCES lp = langPrefs[0];
-            bool enabled = lp.fDropdownBar == 1;
-            System.Diagnostics.Debug.WriteLine(lp.guidLang);
-            System.Diagnostics.Debug.WriteLine(lp.fWordWrap);
-            System.Diagnostics.Debug.WriteLine(lp.fLineNumbers);
-            //UpdateCheckedState(sender, enabled);
-
-            int success = TextManager.EnumLanguageServices(out IVsEnumGUID ppEnum);
-            int value = ppEnum.GetCount(out uint pcelCount);
-            System.Diagnostics.Debug.WriteLine(pcelCount);
-            //ppEnum.
-        }
-
-        private void EnableAndCheckCommand(Guid langServiceGuid, OLECMD[] prgCmds, bool isEnabled)
+        private void EnableAndCheckCommand(OLECMD[] prgCmds, bool isEnabled)
         {
             prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_SUPPORTED;
             prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_ENABLED;
@@ -487,20 +463,45 @@ namespace HotSettings
             }
         }
 
+        public void QueryStatusToggleIndicatorMargin(OLECMD[] prgCmds)
+        {
+            EnableAndCheckCommand(prgCmds, IsIndicatorMarginEnabled());
+        }
+
         public void QueryStatusToggleLineNumbers(Guid langServiceGuid, OLECMD[] prgCmds)
         {
-            EnableAndCheckCommand(langServiceGuid, prgCmds, IsLineNumbersEnabled(langServiceGuid));
+            EnableAndCheckCommand(prgCmds, IsLineNumbersEnabled(langServiceGuid));
+        }
+
+        public void QueryStatusToggleSelectionMargin(OLECMD[] prgCmds)
+        {
+            EnableAndCheckCommand(prgCmds, IsSelectionMarginEnabled());
+        }
+
+        public void QueryStatusToggleTrackChanges(OLECMD[] prgCmds)
+        {
+            //EnableAndCheckCommand(prgCmds, IsSelectionMarginEnabled());
+            prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_SUPPORTED;
+            VIEWPREFERENCES2 viewPrefs = GetViewPreferences();
+            if (IsSelectionMarginEnabled(viewPrefs))
+            {
+                prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_ENABLED;
+            }
+            if (IsTrackChangesEnabled(viewPrefs))
+            {
+                prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_LATCHED;
+            }
         }
 
         public void QueryStatusToggleNavigationBar(Guid langServiceGuid, OLECMD[] prgCmds)
         {
-            EnableAndCheckCommand(langServiceGuid, prgCmds, IsNavBarEnabled(langServiceGuid));
+            EnableAndCheckCommand(prgCmds, IsNavBarEnabled(langServiceGuid));
         }
 
         public void ExecToggleLineNumbers(IWpfTextView textView, Guid langServiceGuid)
         {
             // Get the language preferences
-            LANGPREFERENCES langPrefs = GetLanguagePreferences(langServiceGuid);
+            LANGPREFERENCES2 langPrefs = GetLanguagePreferences(langServiceGuid);
             bool enabled = IsLineNumbersEnabled(langPrefs);
             // Update the Line Numbers state (toggle)
             langPrefs.fLineNumbers = (uint)(enabled ? 0 : 1);
@@ -508,7 +509,67 @@ namespace HotSettings
             SetLangPrefererences(langPrefs);
         }
 
-        private bool IsLineNumbersEnabled(LANGPREFERENCES langPrefs)
+        public void ExecToggleIndicatorMargin(IWpfTextView textView)
+        {
+            // Get the view preferences
+            VIEWPREFERENCES2 viewPrefs = GetViewPreferences();
+            bool enabled = IsIndicatorMarginEnabled(viewPrefs);
+            viewPrefs.fWidgetMargin = (uint)(enabled ? 0 : 1);
+            // Save the update to the viewPrefs
+            SetViewPrefererences(viewPrefs);
+        }
+
+        public void ExecToggleSelectionMargin(IWpfTextView textView)
+        {
+            // Get the view preferences
+            VIEWPREFERENCES2 viewPrefs = GetViewPreferences();
+            bool enabled = IsSelectionMarginEnabled(viewPrefs);
+            viewPrefs.fSelectionMargin = (uint)(enabled ? 0 : 1);
+            // Save the update to the viewPrefs
+            SetViewPrefererences(viewPrefs);
+        }
+
+        private bool IsSelectionMarginEnabled()
+        {
+            return IsSelectionMarginEnabled(GetViewPreferences());
+        }
+
+        private bool IsSelectionMarginEnabled(VIEWPREFERENCES2 viewPrefs)
+        {
+            return viewPrefs.fSelectionMargin == 1;
+        }
+
+        public void ExecToggleTrackChanges(IWpfTextView textView)
+        {
+            // Get the view preferences
+            var viewPrefs = GetViewPreferences();
+            bool enabled = IsTrackChangesEnabled(viewPrefs);
+            viewPrefs.fTrackChanges = (uint)(enabled ? 0 : 1);
+            // Save the update to the viewPrefs
+            SetViewPrefererences(viewPrefs);
+        }
+
+        private bool IsTrackChangesEnabled()
+        {
+            return IsTrackChangesEnabled(GetViewPreferences());
+        }
+
+        private bool IsTrackChangesEnabled(VIEWPREFERENCES2 viewPrefs)
+        {
+            return viewPrefs.fTrackChanges == 1;
+        }
+
+        private bool IsIndicatorMarginEnabled()
+        {
+            return IsIndicatorMarginEnabled(GetViewPreferences());
+        }
+
+        private bool IsIndicatorMarginEnabled(VIEWPREFERENCES2 viewPrefs)
+        {
+            return viewPrefs.fWidgetMargin == 1;
+        }
+
+        private bool IsLineNumbersEnabled(LANGPREFERENCES2 langPrefs)
         {
             return langPrefs.fLineNumbers == 1;
         }
@@ -518,23 +579,34 @@ namespace HotSettings
             return IsLineNumbersEnabled(GetLanguagePreferences(langServiceGuid));
         }
 
-        private LANGPREFERENCES GetLanguagePreferences(Guid langServiceGuid)
+        private VIEWPREFERENCES2 GetViewPreferences()
         {
-            LANGPREFERENCES[] langPrefs = new LANGPREFERENCES[] { new LANGPREFERENCES() };
-            langPrefs[0].guidLang = langServiceGuid;
+            VIEWPREFERENCES2[] viewPrefs = new VIEWPREFERENCES2[] { new VIEWPREFERENCES2() };
+            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences2(viewPrefs, null, null, null));
+            return viewPrefs[0];
+        }
 
-            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences(null, null, langPrefs, null));
+        private void SetViewPrefererences(VIEWPREFERENCES2 viewPrefs)
+        {
+            Marshal.ThrowExceptionForHR(TextManager.SetUserPreferences2(new VIEWPREFERENCES2[] { viewPrefs }, null, null, null));
+        }
+
+        private LANGPREFERENCES2 GetLanguagePreferences(Guid langServiceGuid)
+        {
+            LANGPREFERENCES2[] langPrefs = new LANGPREFERENCES2[] { new LANGPREFERENCES2() };
+            langPrefs[0].guidLang = langServiceGuid;
+            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences2(null, null, langPrefs, null));
             return langPrefs[0];
         }
-        private void SetLangPrefererences(LANGPREFERENCES langPrefs)
+        private void SetLangPrefererences(LANGPREFERENCES2 langPrefs)
         {
-            Marshal.ThrowExceptionForHR(TextManager.SetUserPreferences(null, null, new LANGPREFERENCES[] { langPrefs }, null));
+            Marshal.ThrowExceptionForHR(TextManager.SetUserPreferences2(null, null, new LANGPREFERENCES2[] { langPrefs }, null));
         }
 
         public void ExecToggleNavigationBar(IWpfTextView textView, Guid langServiceGuid)
         {
             // Get the language preferences
-            LANGPREFERENCES langPrefs = GetLanguagePreferences(langServiceGuid);
+            LANGPREFERENCES2 langPrefs = GetLanguagePreferences(langServiceGuid);
             bool enabled = IsNavBarEnabled(langPrefs);
             // Update the state (toggle)
             langPrefs.fDropdownBar = (uint)(enabled ? 0 : 1);
@@ -547,7 +619,7 @@ namespace HotSettings
             return IsNavBarEnabled(GetLanguagePreferences(langServiceGuid));
         }
 
-        private static bool IsNavBarEnabled(LANGPREFERENCES langPrefs)
+        private static bool IsNavBarEnabled(LANGPREFERENCES2 langPrefs)
         {
             return langPrefs.fDropdownBar == 1;
         }

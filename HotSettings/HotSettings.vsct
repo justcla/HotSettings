@@ -386,9 +386,6 @@
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
     </CommandPlacement>
     <!-- Editor Margin Context Group -->
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleCleanMargins" priority="0x0001">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
-    </CommandPlacement>
     <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleIndicatorMargin" priority="0x0001">
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
     </CommandPlacement>
@@ -413,6 +410,7 @@
     <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleLiveUnitTesting" priority="0x0008">
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
     </CommandPlacement>
+    <!-- Editor Margin Source Control group -->
     <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleAnnotate" priority="0x0001">
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginSourceControlGroup" />
     </CommandPlacement>
