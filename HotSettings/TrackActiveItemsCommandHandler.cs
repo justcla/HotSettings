@@ -5,6 +5,8 @@ using Microsoft.VisualStudio.Text.Editor;
 using System;
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio.TextManager.Interop;
+using EnvDTE;
+using System.Windows;
 
 namespace HotSettings
 {
@@ -21,9 +23,6 @@ namespace HotSettings
         private const string SOLUTION_NAVIGATOR_GROUP = @"ApplicationPrivateSettings\SolutionNavigator";
         private const string TRACK_ACTIVE_ITEM_IN_SOLN_EXP = "TrackSelCtxInSlnExp";
 
-        // TODO: Remove this when we can get the property
-        private bool lastCheckedState = true;
-
         /// <summary>
         /// VS Package that provides this command, not null.
         /// </summary>
@@ -33,8 +32,6 @@ namespace HotSettings
         private IEditorOptionsFactoryService OptionsService;
         private IVsTextManager2 TextManager;
         //private IVsEditorAdaptersFactoryService EditorAdaptersFactoryService;
-
-        public static OleMenuCommand ToggleShowMarksCmd;
 
         /// <summary>
         /// Gets the instance of the command.
@@ -124,7 +121,6 @@ namespace HotSettings
         private void MenuItemCallback(object sender, EventArgs e)
         {
             MenuCommand command = (MenuCommand)sender;
-
             // Dispatch the action
             switch (command.CommandID.ID)
             {
@@ -132,7 +128,6 @@ namespace HotSettings
                     HandleToggleTrackActiveItem(command);
                     break;
             }
-
         }
 
         private void QueryStatusToggleTrackActiveItems(OleMenuCommand command)
@@ -142,14 +137,6 @@ namespace HotSettings
             command.Checked = IsTrackActiveItemInSolnExpEnabled();
         }
 
-        private void HandleToggleTrackActiveItem(MenuCommand command)
-        {
-            // Optimisation: Don't check the UserSettingStore. It has just been checked during QueryStatus.
-            // Instead, set new value based on current checked state of MenuCommand.
-            bool newCheckedState = !command.Checked;
-            SetTrackActiveItemInSolnExpEnabled(newCheckedState);
-        }
-
         private bool IsTrackActiveItemInSolnExpEnabled()
         {
             // The value is 0*System.Boolean*True or 0*System.Boolean*False
@@ -157,12 +144,55 @@ namespace HotSettings
             return trackActiveString.ToLower().Contains("true");
         }
 
-        private void SetTrackActiveItemInSolnExpEnabled(bool bNewValue)
+        private void HandleToggleTrackActiveItem(MenuCommand command)
         {
-            // The value is 0*System.Boolean*True or 0*System.Boolean*False
-            string trackActiveString = $"0*System.Boolean*{(bNewValue ? "True" : "False")}";
-            UserSettingsStore.SetString(SOLUTION_NAVIGATOR_GROUP, TRACK_ACTIVE_ITEM_IN_SOLN_EXP, trackActiveString);
+            // Optimisation: Don't check the UserSettingStore. It has just been checked during QueryStatus.
+            // Instead, set new value based on current checked state of MenuCommand.
+            bool newCheckedState = !command.Checked;
+            if (newCheckedState)
+            {
+                EnableTrackActiveItemInSolnExp();
+            } else
+            {
+                MessageBox.Show("I'm sorry - I haven't figured out how to turn this off yet. :-(");
+            }
         }
+
+        private void EnableTrackActiveItemInSolnExp()
+        {
+            DTE dte = (DTE)ServiceProvider.GetService(typeof(DTE));
+            dte.ExecuteCommand("View.TrackActivityinSolutionExplorer");
+        }
+
+        //private void SetTrackActiveItemInSolnExpEnabled(bool bNewValue)
+        //{
+        //    // The value is 0*System.Boolean*True or 0*System.Boolean*False
+        //    string trackActiveString = $"0*System.Boolean*{(bNewValue ? "True" : "False")}";
+        //    UserSettingsStore.SetString(SOLUTION_NAVIGATOR_GROUP, TRACK_ACTIVE_ITEM_IN_SOLN_EXP, trackActiveString);
+        //}
+
+        //private void SetTrackActiveItemInSolnExpEnabled(bool bNewValue)
+        //{
+        //    // The value is 0*System.Boolean*True or 0*System.Boolean*False
+        //    string trackActiveString = $"0*System.Boolean*{(bNewValue ? "True" : "False")}";
+
+        //    IntPtr inArgPtr = Marshal.AllocCoTaskMem(200);
+        //    Marshal.GetNativeVariantForObject(trackActiveString, inArgPtr);
+
+        //    Guid cmdGroup = default(Guid); // TODO: Find Guid for View.TrackActivityinSolutionExplorer
+        //    uint cmdID = 0;     // TODO: Find cmdId for View.TrackActivityinSolutionExplorer
+
+        //    IOleCommandTarget commandTarget = Package.GetGlobalService(typeof(SUIHostCommandDispatcher)) as IOleCommandTarget;
+        //    int hr = commandTarget.Exec(ref cmdGroup, cmdID, (uint)OLECMDEXECOPT.OLECMDEXECOPT_DODEFAULT, inArgPtr, IntPtr.Zero);
+        //}
+
+        //private void SetTrackActiveItemInSolnExp(bool bNewValue)
+        //{
+        //    DTE dte = (DTE)ServiceProvider.GetService(typeof(DTE));
+        //    dte.ExecuteCommand("View.TrackActivityinSolutionExplorer", bNewValue ? "true" : "fasle");
+        //    // Returns error: Command "View.TrackActivityinSolutionExplorer" does not accept arguments or switches.
+        //}
+
 
     }
 }
