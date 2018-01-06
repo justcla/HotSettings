@@ -60,6 +60,7 @@ namespace HotSettings
         {
             base.Initialize();
             HotSettingsCommandHandler.Initialize(this);
+            TrackActiveItemsCommandHandler.Initialize(this);
         }
 
         #endregion

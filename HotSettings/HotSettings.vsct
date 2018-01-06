@@ -16,9 +16,10 @@
 
   <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
   <Extern href="stdidcmd.h"/>
-
   <!--This header contains the command ids for the menus provided by the shell. -->
   <Extern href="vsshlids.h"/>
+  <!--  Include the definitions for images included in the VS image catalog -->  
+  <Include href="KnownImageIds.vsct"/> 
 
   <!--The Commands section is where commands, menus, and menu groups are defined.
       This section uses a Guid to identify the package that provides the command defined inside it. -->
@@ -304,6 +305,16 @@
           <ButtonText>Hide Editor &amp;Margins</ButtonText>
         </Strings>
       </Button>
+      <!--Solution Explorer-->
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleTrackActiveItems" priority="0x0200" type="Button">
+        <Icon guid="ImageCatalogGuid" id="SyncContent" />  
+        <CommandFlag>IconIsMoniker</CommandFlag>  
+        <CommandFlag>DynamicVisibility</CommandFlag>  
+        <CommandFlag>DefaultInvisible</CommandFlag>  
+        <Strings>  
+          <ButtonText>Sync with Doc</ButtonText>
+        </Strings>  
+      </Button>
 
     </Buttons>
 
@@ -337,9 +348,9 @@
     <CommandPlacement guid="guidHotSettingsCmdSet" id="LiveUnitTestingGroup" priority="0x0004">
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="SourceControlGroup" priority="0x0005">
+    <!--<CommandPlacement guid="guidHotSettingsCmdSet" id="SourceControlGroup" priority="0x0005">
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
-    </CommandPlacement>
+    </CommandPlacement>-->
 
     <!-- Editor (Main) Context menu placements -->
     <CommandPlacement guid="guidHotSettingsCmdSet" id="EditorContextMenu" priority="0x0001">
@@ -458,6 +469,11 @@
       <Parent guid="guidHotSettingsCmdSet" id="ScollbarSettingsMenuGroup" />
     </CommandPlacement>
 
+    <!--Solution Explorer-->
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleTrackActiveItems" priority="0x0401">
+      <Parent guid="guidSHLMainMenu" id="IDG_VS_PROJ_TOOLBAR3" />
+    </CommandPlacement>
+
   </CommandPlacements>
 
   <!--<VisibilityConstraints>
@@ -521,6 +537,8 @@
       <!--Distraction Free -->
       <IDSymbol name="cmdidToggleCleanEditor" value="0x1110" />
       <IDSymbol name="cmdidToggleCleanMargins" value="0x1120" />
+      <!--Solution Explorer-->
+      <IDSymbol name="cmdidToggleTrackActiveItems" value="0x1210" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{6d06c52c-db85-42a5-91c8-a0b6023ad326}">

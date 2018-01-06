@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Common\ServicesUtil.cs" />
     <Compile Include="HotSettingsCommandFilter.cs" />
+    <Compile Include="TrackActiveItemsCommandHandler.cs" />
     <Compile Include="HotSettingsCommandHandler.cs" />
     <Compile Include="Commands\ToggleLiveUnitTesting.cs" />
     <Compile Include="Common\PropertiesUtil.cs" />

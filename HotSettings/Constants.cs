@@ -47,5 +47,8 @@ namespace HotSettings
         public const int ToggleCleanEditorCmdId = 0x1110;
         public const int ToggleCleanMarginsCmdId = 0x1120;
 
+        // Solution Explorer Commands
+        public const int ToggleTrackActiveItemCmdId = 0x1210;
+
     }
 }
