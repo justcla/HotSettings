@@ -37,7 +37,7 @@ namespace HotSettings
                 {
                     // Editor Margins
                     case Constants.ToggleCleanMarginsCmdId:
-                        QueryStatusToggleCleanMargins(prgCmds);
+                        QueryStatusToggleCleanMargins(prgCmds, pCmdText);
                         return VSConstants.S_OK;
                     case Constants.ToggleIndicatorMarginCmdId:
                         QueryStatusToggleIndicatorMargin(prgCmds);
@@ -125,10 +125,35 @@ namespace HotSettings
             }
         }
 
-        internal void QueryStatusToggleCleanMargins(OLECMD[] prgCmds)
+        internal void QueryStatusToggleCleanMargins(OLECMD[] prgCmds, IntPtr pCmdText)
         {
             prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_SUPPORTED;
             prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_ENABLED;
+
+            // Toggle the text on the menu command - Hide/Restore editor margins
+            GetAllUserPreferences(languageServiceGuid, out var viewPrefs, out var langPrefs);
+            if (AllMarginsAreHidden(viewPrefs, langPrefs))
+            {
+                SetOleCmdText(pCmdText, "Restore Hidden &Margins");
+            } else
+            {
+                SetOleCmdText(pCmdText, "Hide Editor &Margins");
+            }
+        }
+
+        public void SetOleCmdText(IntPtr pCmdText, string text)
+        {
+            OLECMDTEXT CmdText = (OLECMDTEXT)Marshal.PtrToStructure(pCmdText, typeof(OLECMDTEXT));
+            char[] buffer = text.ToCharArray();
+            IntPtr pText = (IntPtr)((long)pCmdText + (long)Marshal.OffsetOf(typeof(OLECMDTEXT), "rgwz"));
+            IntPtr pCwActual = (IntPtr)((long)pCmdText + (long)Marshal.OffsetOf(typeof(OLECMDTEXT), "cwActual"));
+            // The max chars we copy is our string, or one less than the buffer size, since we need a null at the end.
+            int maxChars = (int)Math.Min(CmdText.cwBuf - 1, buffer.Length);
+            Marshal.Copy(buffer, 0, pText, maxChars);
+            // append a null
+            Marshal.WriteInt16((IntPtr)((long)pText + (long)maxChars * 2), (Int16)0);
+            // write out the length + null char
+            Marshal.WriteInt32(pCwActual, maxChars + 1);
         }
 
         public void QueryStatusToggleIndicatorMargin(OLECMD[] prgCmds)
@@ -173,8 +198,7 @@ namespace HotSettings
 
         internal void ExecToggleCleanMargins(IWpfTextView textView)
         {
-            var viewPrefs = GetViewPreferences();
-            var langPrefs = GetLanguagePreferences(languageServiceGuid);
+            GetAllUserPreferences(languageServiceGuid, out var viewPrefs, out var langPrefs);
             if (AllMarginsAreHidden(viewPrefs, langPrefs))
             {
                 RestoreMargins();

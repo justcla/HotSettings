@@ -301,6 +301,9 @@
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleCleanMargins" priority="0x0200" type="Button">
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
         <Strings>
           <ButtonText>Hide Editor &amp;Margins</ButtonText>
         </Strings>
