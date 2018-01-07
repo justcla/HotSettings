@@ -131,14 +131,24 @@ namespace HotSettings
             prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_ENABLED;
 
             // Toggle the text on the menu command - Hide/Restore editor margins
-            GetAllUserPreferences(languageServiceGuid, out var viewPrefs, out var langPrefs);
-            if (AllMarginsAreHidden(viewPrefs, langPrefs))
+            if (CanRestoreEditorMargins())
             {
                 SetOleCmdText(pCmdText, "Restore Hidden &Margins");
-            } else
+            }
+            else
             {
                 SetOleCmdText(pCmdText, "Hide Editor &Margins");
             }
+        }
+
+        private bool CanRestoreEditorMargins()
+        {
+            // Check that there are restore settings saved and that all margins are hidden
+            if (!RestoreSettingsMap.ContainsKey(languageServiceGuid)) return false;
+            // Note: Checking if all margins are hidden is more costly (involves reading from UserPreferences),
+            // so only call that if we have settings stored.
+            GetAllUserPreferences(languageServiceGuid, out var viewPrefs, out var langPrefs);
+            return AllMarginsAreHidden(viewPrefs, langPrefs);
         }
 
         public void SetOleCmdText(IntPtr pCmdText, string text)
@@ -244,8 +254,8 @@ namespace HotSettings
         private void RestoreMargins()
         {
             // Get old user settings
-            Dictionary<string, object> restoreSettings = RestoreSettingsMap[languageServiceGuid];
-            if (restoreSettings == null) return;    // TODO: Check this
+            RestoreSettingsMap.TryGetValue(languageServiceGuid, out Dictionary<string, object> restoreSettings);
+            if (restoreSettings == null) return; // No previous settings found. Exit out.
             VIEWPREFERENCES3 oldViewPrefs = (VIEWPREFERENCES3)restoreSettings["ViewPrefs"];
             LANGPREFERENCES3 oldLangPrefs = (LANGPREFERENCES3)restoreSettings["LangPrefs"];
             // Fetch the latest settings
@@ -256,10 +266,6 @@ namespace HotSettings
             langPrefs.fLineNumbers = oldLangPrefs.fLineNumbers;
             // Save the new settings
             SaveAllUserPreferences(viewPrefs, langPrefs);
-
-            //if (!(bool)RestoreSettingsMap.TryGetValue(languageServiceGuid, out List<Action> restoreActions)) return;
-            // Execute each action in the RestoreActions set
-            //restoreActions.ForEach(x => x());
         }
 
         private void SaveAllUserPreferences(VIEWPREFERENCES3 viewPrefs, LANGPREFERENCES3 langPrefs)
