@@ -29,17 +29,26 @@ namespace HotSettings
         [Import(typeof(IEditorOperationsFactoryService))]
         private IEditorOperationsFactoryService _editorOperationsFactory;
 
+        private IVsTextManager4 TextManager;
+
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
             IWpfTextView textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
-            IVsTextBuffer textBuffer = EditorAdaptersFactoryService.GetBufferAdapter(textView.TextBuffer);
-            textBuffer.GetLanguageServiceID(out Guid langServiceGuid);
+            Guid langServiceGuid = GetLanguageServiceGuid(textView);
 
-            HotSettingsCommandFilter commandFilter = new HotSettingsCommandFilter(textView, langServiceGuid);
-            IOleCommandTarget next;
-            textViewAdapter.AddCommandFilter(commandFilter, out next);
+            TextManager = (IVsTextManager4)_globalServiceProvider.GetService(typeof(SVsTextManager));
+
+            HotSettingsCommandFilter commandFilter = new HotSettingsCommandFilter(textView, langServiceGuid, TextManager);
+            textViewAdapter.AddCommandFilter(commandFilter, out IOleCommandTarget next);
 
             commandFilter.Next = next;
+        }
+
+        private Guid GetLanguageServiceGuid(IWpfTextView textView)
+        {
+            IVsTextBuffer textBuffer = EditorAdaptersFactoryService.GetBufferAdapter(textView.TextBuffer);
+            textBuffer.GetLanguageServiceID(out Guid langServiceGuid);
+            return langServiceGuid;
         }
     }
 }

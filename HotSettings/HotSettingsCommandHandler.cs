@@ -25,7 +25,7 @@ namespace HotSettings
 
         private SettingsStore SettingsStore;
         private IEditorOptionsFactoryService OptionsService;
-        private IVsTextManager2 TextManager;
+        //private IVsTextManager4 TextManager;
         //private IVsEditorAdaptersFactoryService EditorAdaptersFactoryService;
 
         public static OleMenuCommand ToggleShowMarksCmd;
@@ -68,7 +68,6 @@ namespace HotSettings
             SettingsStore = settingsManager.GetReadOnlySettingsStore(SettingsScope.UserSettings);
 
             OptionsService = ServicesUtil.GetMefService<IEditorOptionsFactoryService>(this.ServiceProvider);
-            TextManager = (IVsTextManager2)ServiceProvider.GetService(typeof(SVsTextManager));
 
             RegisterGlobalCommands();
         }
@@ -80,35 +79,35 @@ namespace HotSettings
                 // Editor Margin Settings Commands
                 //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIndicatorMarginCmdId));
                 //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleLineNumbersCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleQuickActionsCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleQuickActionsCmdId));
                 //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleSelectionMarginCmdId));
                 //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleTrackChangesCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleDiffMarginCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleDiffMarginCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleOutliningCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleLiveUnitTestingCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleAnnotateCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleAnnotateCmdId));
                 // Editor Settings Commands
                 //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleNavigationBarCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleCodeLensCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIndentGuidesCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIndentGuidesCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleHighlightCurrentLineCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleAutoDelimiterHighlightingCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleProcedureLineSeparatorCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIntelliSensePopUpCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleLineEndingsCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleHighlightSymbolsCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleHighlightKeywordsCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIntelliSenseSquigglesCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleAutoDelimiterHighlightingCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleProcedureLineSeparatorCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIntelliSensePopUpCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleLineEndingsCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleHighlightSymbolsCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleHighlightKeywordsCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIntelliSenseSquigglesCmdId));
                 // Scrollbar Settings Commands
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowScrollbarMarkersCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowChangesCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowMarksCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowErrorsCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowCaretPositionCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowDiffsCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowDiffsCmdId));
                 // Distraction Free mode
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleCleanEditorCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleCleanMarginsCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleCleanEditorCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleCleanMarginsCmdId));
             }
         }
 
@@ -168,9 +167,9 @@ namespace HotSettings
                     //this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Show Blame");
                     break;
                 // Editor Settings
-                case Constants.ToggleNavigationBarCmdId:
-                    this.HandleNavBarQueryStatus(sender);
-                    break;
+                //case Constants.ToggleNavigationBarCmdId:
+                //    this.HandleNavBarQueryStatus(sender);
+                //    break;
                 case Constants.ToggleCodeLensCmdId:
                     this.HandleToggleCodeLensQueryStatus(sender);
                     break;
@@ -270,18 +269,6 @@ namespace HotSettings
             }
         }
 
-        private void HandleNavBarQueryStatus(object sender)
-        {
-            LANGPREFERENCES2[] langPrefs = new LANGPREFERENCES2[] { new LANGPREFERENCES2() };
-            VIEWPREFERENCES2[] viewPrefs = new VIEWPREFERENCES2[] { new VIEWPREFERENCES2() };
-            langPrefs[0].guidLang = new Guid(0x8239bec4, 0xee87, 0x11d0, 0x8c, 0x98, 0x0, 0xc0, 0x4f, 0xc2, 0xab, 0x22); // guidDefaultFileType
-
-            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences2(viewPrefs, null, langPrefs, null));
-            LANGPREFERENCES2 lp = langPrefs[0];
-            bool enabled = lp.fDropdownBar == 1;
-            UpdateCheckedState(sender, enabled);
-        }
-
         private void HandleOutliningQueryStatus(object sender)
         {
             var enabled = ShellUtil.IsCommandAvailable("Edit.StopOutlining");
@@ -359,10 +346,10 @@ namespace HotSettings
                     break;
 
                 // Editor Settings
-                case Constants.ToggleNavigationBarCmdId:
-                    UpdateSetting("TextEditor", "AllLanguages", "ShowNavigationBar", newCheckedState);
-                    command.Checked = newCheckedState;
-                    break;
+                //case Constants.ToggleNavigationBarCmdId:
+                //    UpdateSetting("TextEditor", "AllLanguages", "ShowNavigationBar", newCheckedState);
+                //    command.Checked = newCheckedState;
+                //    break;
                 case Constants.ToggleCodeLensCmdId:
                     HandleToggleCodeLensAction(sender, newCheckedState);
                     break;
@@ -451,177 +438,6 @@ namespace HotSettings
             {
                 // Do nothing
             }
-        }
-
-        private void EnableAndCheckCommand(OLECMD[] prgCmds, bool isEnabled)
-        {
-            prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_SUPPORTED;
-            prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_ENABLED;
-            if (isEnabled)
-            {
-                prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_LATCHED;
-            }
-        }
-
-        public void QueryStatusToggleIndicatorMargin(OLECMD[] prgCmds)
-        {
-            EnableAndCheckCommand(prgCmds, IsIndicatorMarginEnabled());
-        }
-
-        public void QueryStatusToggleLineNumbers(Guid langServiceGuid, OLECMD[] prgCmds)
-        {
-            EnableAndCheckCommand(prgCmds, IsLineNumbersEnabled(langServiceGuid));
-        }
-
-        public void QueryStatusToggleSelectionMargin(OLECMD[] prgCmds)
-        {
-            EnableAndCheckCommand(prgCmds, IsSelectionMarginEnabled());
-        }
-
-        public void QueryStatusToggleTrackChanges(OLECMD[] prgCmds)
-        {
-            //EnableAndCheckCommand(prgCmds, IsSelectionMarginEnabled());
-            prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_SUPPORTED;
-            VIEWPREFERENCES2 viewPrefs = GetViewPreferences();
-            if (IsSelectionMarginEnabled(viewPrefs))
-            {
-                prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_ENABLED;
-            }
-            if (IsTrackChangesEnabled(viewPrefs))
-            {
-                prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_LATCHED;
-            }
-        }
-
-        public void QueryStatusToggleNavigationBar(Guid langServiceGuid, OLECMD[] prgCmds)
-        {
-            EnableAndCheckCommand(prgCmds, IsNavBarEnabled(langServiceGuid));
-        }
-
-        public void ExecToggleLineNumbers(IWpfTextView textView, Guid langServiceGuid)
-        {
-            // Get the language preferences
-            LANGPREFERENCES2 langPrefs = GetLanguagePreferences(langServiceGuid);
-            bool enabled = IsLineNumbersEnabled(langPrefs);
-            // Update the Line Numbers state (toggle)
-            langPrefs.fLineNumbers = (uint)(enabled ? 0 : 1);
-            // Save the update to the langPrefs
-            SetLangPrefererences(langPrefs);
-        }
-
-        public void ExecToggleIndicatorMargin(IWpfTextView textView)
-        {
-            // Get the view preferences
-            VIEWPREFERENCES2 viewPrefs = GetViewPreferences();
-            bool enabled = IsIndicatorMarginEnabled(viewPrefs);
-            viewPrefs.fWidgetMargin = (uint)(enabled ? 0 : 1);
-            // Save the update to the viewPrefs
-            SetViewPrefererences(viewPrefs);
-        }
-
-        public void ExecToggleSelectionMargin(IWpfTextView textView)
-        {
-            // Get the view preferences
-            VIEWPREFERENCES2 viewPrefs = GetViewPreferences();
-            bool enabled = IsSelectionMarginEnabled(viewPrefs);
-            viewPrefs.fSelectionMargin = (uint)(enabled ? 0 : 1);
-            // Save the update to the viewPrefs
-            SetViewPrefererences(viewPrefs);
-        }
-
-        private bool IsSelectionMarginEnabled()
-        {
-            return IsSelectionMarginEnabled(GetViewPreferences());
-        }
-
-        private bool IsSelectionMarginEnabled(VIEWPREFERENCES2 viewPrefs)
-        {
-            return viewPrefs.fSelectionMargin == 1;
-        }
-
-        public void ExecToggleTrackChanges(IWpfTextView textView)
-        {
-            // Get the view preferences
-            var viewPrefs = GetViewPreferences();
-            bool enabled = IsTrackChangesEnabled(viewPrefs);
-            viewPrefs.fTrackChanges = (uint)(enabled ? 0 : 1);
-            // Save the update to the viewPrefs
-            SetViewPrefererences(viewPrefs);
-        }
-
-        private bool IsTrackChangesEnabled()
-        {
-            return IsTrackChangesEnabled(GetViewPreferences());
-        }
-
-        private bool IsTrackChangesEnabled(VIEWPREFERENCES2 viewPrefs)
-        {
-            return viewPrefs.fTrackChanges == 1;
-        }
-
-        private bool IsIndicatorMarginEnabled()
-        {
-            return IsIndicatorMarginEnabled(GetViewPreferences());
-        }
-
-        private bool IsIndicatorMarginEnabled(VIEWPREFERENCES2 viewPrefs)
-        {
-            return viewPrefs.fWidgetMargin == 1;
-        }
-
-        private bool IsLineNumbersEnabled(LANGPREFERENCES2 langPrefs)
-        {
-            return langPrefs.fLineNumbers == 1;
-        }
-
-        private bool IsLineNumbersEnabled(Guid langServiceGuid)
-        {
-            return IsLineNumbersEnabled(GetLanguagePreferences(langServiceGuid));
-        }
-
-        private VIEWPREFERENCES2 GetViewPreferences()
-        {
-            VIEWPREFERENCES2[] viewPrefs = new VIEWPREFERENCES2[] { new VIEWPREFERENCES2() };
-            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences2(viewPrefs, null, null, null));
-            return viewPrefs[0];
-        }
-
-        private void SetViewPrefererences(VIEWPREFERENCES2 viewPrefs)
-        {
-            Marshal.ThrowExceptionForHR(TextManager.SetUserPreferences2(new VIEWPREFERENCES2[] { viewPrefs }, null, null, null));
-        }
-
-        private LANGPREFERENCES2 GetLanguagePreferences(Guid langServiceGuid)
-        {
-            LANGPREFERENCES2[] langPrefs = new LANGPREFERENCES2[] { new LANGPREFERENCES2() };
-            langPrefs[0].guidLang = langServiceGuid;
-            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences2(null, null, langPrefs, null));
-            return langPrefs[0];
-        }
-        private void SetLangPrefererences(LANGPREFERENCES2 langPrefs)
-        {
-            Marshal.ThrowExceptionForHR(TextManager.SetUserPreferences2(null, null, new LANGPREFERENCES2[] { langPrefs }, null));
-        }
-
-        public void ExecToggleNavigationBar(IWpfTextView textView, Guid langServiceGuid)
-        {
-            // Get the language preferences
-            LANGPREFERENCES2 langPrefs = GetLanguagePreferences(langServiceGuid);
-            bool enabled = IsNavBarEnabled(langPrefs);
-            // Update the state (toggle)
-            langPrefs.fDropdownBar = (uint)(enabled ? 0 : 1);
-            // Save the update to the langPrefs
-            SetLangPrefererences(langPrefs);
-        }
-
-        private bool IsNavBarEnabled(Guid langServiceGuid)
-        {
-            return IsNavBarEnabled(GetLanguagePreferences(langServiceGuid));
-        }
-
-        private static bool IsNavBarEnabled(LANGPREFERENCES2 langPrefs)
-        {
-            return langPrefs.fDropdownBar == 1;
         }
 
     }
