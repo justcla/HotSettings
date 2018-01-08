@@ -146,7 +146,7 @@ namespace HotSettings
                 //    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Line Numbers");
                 //    break;
                 case Constants.ToggleQuickActionsCmdId:
-                    this.HideItem(sender);
+                    HandleToggleLightbulbMarginQueryStatus(sender);
                     break;
                 //case Constants.ToggleSelectionMarginCmdId:
                 //    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Selection Margin");
@@ -276,6 +276,17 @@ namespace HotSettings
             UpdateCheckedState(sender, enabled);
         }
 
+        private void HandleToggleLightbulbMarginQueryStatus(object sender)
+        {
+            var enabled = (bool)OptionsService.GlobalOptions.GetOptionValue("TextViewHost/SuggestionMargin");
+            UpdateCheckedState(sender, enabled);
+        }
+
+        private void HandleToggleLightbulbMarginAction(object sender, bool checkedState)
+        {
+            OptionsService.GlobalOptions.SetOptionValue("TextViewHost/SuggestionMargin", checkedState);
+        }
+
         private void HandleToggleCodeLensQueryStatus(object sender)
         {
             var enabled = (bool)OptionsService.GlobalOptions.GetOptionValue("IsCodeLensEnabled");
@@ -321,7 +332,7 @@ namespace HotSettings
                     UpdateSetting("TextEditor", "AllLanguages", "ShowLineNumbers", newCheckedState);
                     break;
                 case Constants.ToggleQuickActionsCmdId:
-                    // TODO: Implement this - Not yet available by VS2017
+                    HandleToggleLightbulbMarginAction(sender, newCheckedState);
                     break;
                 case Constants.ToggleSelectionMarginCmdId:
                     UpdateSetting("TextEditor", "General", "SelectionMargin", newCheckedState);
