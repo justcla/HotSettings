@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="HotSettings.Justin Clareburt.9d7d4a40-2b7c-4177-82bf-1876951e6b24" Version="1.1" Language="en-US" Publisher="Justin Clareburt" />
+        <Identity Id="HotSettings.Justin Clareburt.9d7d4a40-2b7c-4177-82bf-1876951e6b24" Version="1.1.1" Language="en-US" Publisher="Justin Clareburt" />
         <DisplayName> Hot Settings</DisplayName>
         <Description xml:space="preserve">Menus and Toolbars that expose Visual Studio settings</Description>
         <MoreInfo>https://marketplace.visualstudio.com/items?itemName=JustinClareburtMSFT.HotSettings</MoreInfo>
