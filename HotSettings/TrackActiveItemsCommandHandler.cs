@@ -5,8 +5,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using System;
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio.TextManager.Interop;
-using EnvDTE;
-using System.Windows;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace HotSettings
 {
@@ -137,6 +136,20 @@ namespace HotSettings
             command.Checked = IsTrackActiveItemInSolnExpEnabled();
         }
 
+        private void HandleToggleTrackActiveItem(MenuCommand command)
+        {
+            // Optimisation: Don't check the UserSettingStore. It has just been checked during QueryStatus.
+            // Instead, set new value based on current checked state of MenuCommand.
+            bool newCheckedState = !command.Checked;
+            SetTrackActiveItem(newCheckedState);
+        }
+
+        public void ToggleTrackActiveItem()
+        {
+            bool enabled = IsTrackActiveItemInSolnExpEnabled();
+            SetTrackActiveItem(!enabled);
+        }
+
         private bool IsTrackActiveItemInSolnExpEnabled()
         {
             // The value is 0*System.Boolean*True or 0*System.Boolean*False
@@ -144,55 +157,23 @@ namespace HotSettings
             return trackActiveString.ToLower().Contains("true");
         }
 
-        private void HandleToggleTrackActiveItem(MenuCommand command)
+        private void SetTrackActiveItem(bool newValue)
         {
-            // Optimisation: Don't check the UserSettingStore. It has just been checked during QueryStatus.
-            // Instead, set new value based on current checked state of MenuCommand.
-            bool newCheckedState = !command.Checked;
-            if (newCheckedState)
-            {
-                EnableTrackActiveItemInSolnExp();
-            } else
-            {
-                MessageBox.Show("I'm sorry - I haven't figured out how to turn this off yet. :-(");
-            }
+            object solutionExplorerDocView = GetSolutionExplorerDocView();
+            solutionExplorerDocView
+                .GetType()
+                .GetMethod("SetProperty")
+                .Invoke(solutionExplorerDocView, new object[] { 2, newValue ? 1 : 0 });
         }
 
-        private void EnableTrackActiveItemInSolnExp()
+        private object GetSolutionExplorerDocView()
         {
-            DTE dte = (DTE)ServiceProvider.GetService(typeof(DTE));
-            dte.ExecuteCommand("View.TrackActivityinSolutionExplorer");
+            // TODO: Consider if we can get the Solution Explorer frame from the command - since it's already docked on the Solution Exp window toolbar.
+            IVsUIShell vsuiShell = this.ServiceProvider.GetService(typeof(IVsUIShell)) as IVsUIShell;
+            vsuiShell.FindToolWindow(0, new Guid("3AE79031-E1BC-11D0-8F78-00A0C9110057"), out IVsWindowFrame solutionExplorerFrame);
+            solutionExplorerFrame.GetProperty((int)__VSFPROPID.VSFPROPID_DocView, out object solutionExplorerDocView);
+            return solutionExplorerDocView;
         }
-
-        //private void SetTrackActiveItemInSolnExpEnabled(bool bNewValue)
-        //{
-        //    // The value is 0*System.Boolean*True or 0*System.Boolean*False
-        //    string trackActiveString = $"0*System.Boolean*{(bNewValue ? "True" : "False")}";
-        //    UserSettingsStore.SetString(SOLUTION_NAVIGATOR_GROUP, TRACK_ACTIVE_ITEM_IN_SOLN_EXP, trackActiveString);
-        //}
-
-        //private void SetTrackActiveItemInSolnExpEnabled(bool bNewValue)
-        //{
-        //    // The value is 0*System.Boolean*True or 0*System.Boolean*False
-        //    string trackActiveString = $"0*System.Boolean*{(bNewValue ? "True" : "False")}";
-
-        //    IntPtr inArgPtr = Marshal.AllocCoTaskMem(200);
-        //    Marshal.GetNativeVariantForObject(trackActiveString, inArgPtr);
-
-        //    Guid cmdGroup = default(Guid); // TODO: Find Guid for View.TrackActivityinSolutionExplorer
-        //    uint cmdID = 0;     // TODO: Find cmdId for View.TrackActivityinSolutionExplorer
-
-        //    IOleCommandTarget commandTarget = Package.GetGlobalService(typeof(SUIHostCommandDispatcher)) as IOleCommandTarget;
-        //    int hr = commandTarget.Exec(ref cmdGroup, cmdID, (uint)OLECMDEXECOPT.OLECMDEXECOPT_DODEFAULT, inArgPtr, IntPtr.Zero);
-        //}
-
-        //private void SetTrackActiveItemInSolnExp(bool bNewValue)
-        //{
-        //    DTE dte = (DTE)ServiceProvider.GetService(typeof(DTE));
-        //    dte.ExecuteCommand("View.TrackActivityinSolutionExplorer", bNewValue ? "true" : "fasle");
-        //    // Returns error: Command "View.TrackActivityinSolutionExplorer" does not accept arguments or switches.
-        //}
-
 
     }
 }

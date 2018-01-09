@@ -315,7 +315,7 @@
         <CommandFlag>DynamicVisibility</CommandFlag>  
         <CommandFlag>DefaultInvisible</CommandFlag>  
         <Strings>  
-          <ButtonText>Sync with Doc</ButtonText>
+          <ButtonText>Sync with Current File</ButtonText>
         </Strings>  
       </Button>
 
@@ -473,7 +473,8 @@
     </CommandPlacement>
 
     <!--Solution Explorer-->
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleTrackActiveItems" priority="0x0401">
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleTrackActiveItems" priority="0x0550">
+      <!-- Command placement set between 200 (Properties) and 600 (Preview Selected Items) -->
       <Parent guid="guidSHLMainMenu" id="IDG_VS_PROJ_TOOLBAR3" />
     </CommandPlacement>
 
