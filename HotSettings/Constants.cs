@@ -27,7 +27,7 @@ namespace HotSettings
         // Editor Settings CmdIds
         public const int ToggleNavigationBarCmdId = 0x1041;
         public const int ToggleCodeLensCmdId = 0x1042;
-        public const int ToggleIndentGuidesCmdId = 0x1043;
+        public const int ToggleStructureGuideLinesCmdId = 0x1043;
         public const int ToggleHighlightCurrentLineCmdId = 0x1050;
         public const int ToggleAutoDelimiterHighlightingCmdId = 0x1051;
         public const int ToggleProcedureLineSeparatorCmdId = 0x1052;

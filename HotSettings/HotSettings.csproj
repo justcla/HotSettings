@@ -46,7 +46,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>HotSettings.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,7 +56,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>HotSettings.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Common\ServicesUtil.cs" />
@@ -74,7 +76,6 @@
     <Compile Include="VSInternal\VIEWPREFERENCES5.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="HotSettings.ruleset" />
     <None Include="Key.snk" />
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">

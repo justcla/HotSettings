@@ -6,10 +6,7 @@ using Microsoft.VisualStudio.Shell.Settings;
 using Microsoft.VisualStudio.Text.Editor;
 using System;
 using System.ComponentModel.Design;
-using Microsoft.VisualStudio.TextManager.Interop;
-using System.Runtime.InteropServices;
 using System.Windows;
-using Microsoft.VisualStudio.OLE.Interop;
 
 namespace HotSettings
 {
@@ -173,11 +170,11 @@ namespace HotSettings
                 case Constants.ToggleCodeLensCmdId:
                     this.HandleToggleCodeLensQueryStatus(sender);
                     break;
-                case Constants.ToggleIndentGuidesCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Indent Guides");
-                    // Hide if not VS2017+
-                    //this.HideItem(sender);
-                    break;
+                //case Constants.ToggleStructureGuideLinesCmdId:
+                //    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Indent Guides");
+                //    // Hide if not VS2017+
+                //    //this.HideItem(sender);
+                    //break;
                 case Constants.ToggleHighlightCurrentLineCmdId:
                     this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Highlight Current Line");
                     break;
@@ -364,10 +361,10 @@ namespace HotSettings
                 case Constants.ToggleCodeLensCmdId:
                     HandleToggleCodeLensAction(sender, newCheckedState);
                     break;
-                case Constants.ToggleIndentGuidesCmdId:
-                    UpdateSetting("TextEditor", "General", "IndentGuides", newCheckedState);
-                    command.Checked = newCheckedState;
-                    break;
+                //case Constants.ToggleStructureGuideLinesCmdId:
+                //    UpdateSetting("TextEditor", "General", "IndentGuides", newCheckedState);
+                //    command.Checked = newCheckedState;
+                //    break;
                 case Constants.ToggleHighlightCurrentLineCmdId:
                     UpdateSetting("TextEditor", "General", "HighlightCurrentLine", newCheckedState);
                     break;

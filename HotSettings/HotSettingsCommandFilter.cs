@@ -59,8 +59,8 @@ namespace HotSettings
                     //case Constants.ToggleCodeLensCmdId:
                     //    QueryStatusToggleCodeLens(languageServiceGuid, prgCmds);
                     //    return VSConstants.S_OK;
-                    case Constants.ToggleIndentGuidesCmdId:
-                        QueryStatusToggleIndentGuides(prgCmds);
+                    case Constants.ToggleStructureGuideLinesCmdId:
+                        QueryStatusToggleStructureGuideLines(prgCmds);
                         return VSConstants.S_OK;
                 }
             }
@@ -101,8 +101,8 @@ namespace HotSettings
                     case Constants.ToggleNavigationBarCmdId:
                         ExecToggleNavigationBar(textView, languageServiceGuid);
                         return VSConstants.S_OK;
-                    case Constants.ToggleIndentGuidesCmdId:
-                        ExecToggleIndentGuides(textView);
+                    case Constants.ToggleStructureGuideLinesCmdId:
+                        ExecToggleStructureGuideLines(textView);
                         return VSConstants.S_OK;
                 }
             }
@@ -201,9 +201,9 @@ namespace HotSettings
             EnableAndCheckCommand(prgCmds, IsNavBarEnabled(langServiceGuid));
         }
 
-        internal void QueryStatusToggleIndentGuides(OLECMD[] prgCmds)
+        internal void QueryStatusToggleStructureGuideLines(OLECMD[] prgCmds)
         {
-            EnableAndCheckCommand(prgCmds, IsIndentGuidesEnabled());
+            EnableAndCheckCommand(prgCmds, IsStructureGuideLinesEnabled());
         }
 
         internal void ExecToggleCleanMargins(IWpfTextView textView)
@@ -394,12 +394,17 @@ namespace HotSettings
             SetViewPrefererences(viewPrefs);
         }
 
-        public void ExecToggleIndentGuides(IWpfTextView textView)
+        public void ExecToggleStructureGuideLines(IWpfTextView textView)
         {
             // Get the view preferences
             var viewPrefs = GetViewPreferences();
-            bool enabled = IsIndentGuidesEnabled();
-            viewPrefs.fShowBlockStructure = (uint)(enabled ? 0 : 1);
+            bool enabled = IsStructureGuideLinesEnabled(viewPrefs);
+            SetStructureGuideLinesEnabled(viewPrefs, !enabled);
+        }
+
+        private void SetStructureGuideLinesEnabled(VIEWPREFERENCES5 viewPrefs, bool enabled)
+        {
+            viewPrefs.fShowBlockStructure = (uint)(enabled ? 1 : 0);
             // Save the update to the viewPrefs
             SetViewPrefererences(viewPrefs);
         }
@@ -434,9 +439,14 @@ namespace HotSettings
             return IsLineNumbersEnabled(GetLanguagePreferences(langServiceGuid));
         }
 
-        private bool IsIndentGuidesEnabled()
+        private bool IsStructureGuideLinesEnabled()
         {
-            var viewPrefs = GetViewPreferences();
+            VIEWPREFERENCES5 viewPrefs = GetViewPreferences();
+            return IsStructureGuideLinesEnabled(viewPrefs);
+        }
+
+        private bool IsStructureGuideLinesEnabled(VIEWPREFERENCES5 viewPrefs)
+        {
             return viewPrefs.fShowBlockStructure == 1;
         }
 
