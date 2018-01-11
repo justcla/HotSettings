@@ -14,12 +14,12 @@ namespace HotSettings
         private readonly IWpfTextView textView;
         private Guid languageServiceGuid;
 
-        private IVsTextManager4 TextManager;
+        private IVsTextManager6 TextManager;
 
         // Map<LanguageGuid, RestoreActions>
         private static Dictionary<Guid, Dictionary<string, object>> RestoreSettingsMap = new Dictionary<Guid, Dictionary<string, object>>();
 
-        public HotSettingsCommandFilter(IWpfTextView textView, Guid languageServiceGuid, IVsTextManager4 textManager)
+        public HotSettingsCommandFilter(IWpfTextView textView, Guid languageServiceGuid, IVsTextManager6 textManager)
         {
             this.textView = textView;
             this.languageServiceGuid = languageServiceGuid;
@@ -185,7 +185,7 @@ namespace HotSettings
         {
             //EnableAndCheckCommand(prgCmds, IsSelectionMarginEnabled());
             prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_SUPPORTED;
-            VIEWPREFERENCES3 viewPrefs = GetViewPreferences();
+            VIEWPREFERENCES5 viewPrefs = GetViewPreferences();
             if (IsSelectionMarginEnabled(viewPrefs))
             {
                 prgCmds[0].cmdf |= (uint)OLECMDF.OLECMDF_ENABLED;
@@ -219,7 +219,7 @@ namespace HotSettings
             }
         }
 
-        private bool AllMarginsAreHidden(VIEWPREFERENCES3 viewPrefs, LANGPREFERENCES3 langPrefs)
+        private bool AllMarginsAreHidden(VIEWPREFERENCES5 viewPrefs, LANGPREFERENCES3 langPrefs)
         {
             // Check for BreakPoint, LineNumbers, SelectionMargin, TrackChanges
             if (IsIndicatorMarginEnabled(viewPrefs)) return false;
@@ -228,7 +228,7 @@ namespace HotSettings
             return true;
         }
 
-        private void HideAllEditorMargins(VIEWPREFERENCES3 viewPrefs, LANGPREFERENCES3 langPrefs)
+        private void HideAllEditorMargins(VIEWPREFERENCES5 viewPrefs, LANGPREFERENCES3 langPrefs)
         {
             // Mark all editor margins as hidden
             viewPrefs.fWidgetMargin = 0;
@@ -237,7 +237,7 @@ namespace HotSettings
             SaveAllUserPreferences(viewPrefs, langPrefs);
         }
 
-        private void SaveCurrentViewAndLangPrefs(VIEWPREFERENCES3 viewPrefs, LANGPREFERENCES3 langPrefs)
+        private void SaveCurrentViewAndLangPrefs(VIEWPREFERENCES5 viewPrefs, LANGPREFERENCES3 langPrefs)
         {
             // Create a Map of settings to restore to
             Dictionary<string, object> restoreSettings = new Dictionary<string, object>
@@ -256,10 +256,10 @@ namespace HotSettings
             // Get old user settings
             RestoreSettingsMap.TryGetValue(languageServiceGuid, out Dictionary<string, object> restoreSettings);
             if (restoreSettings == null) return; // No previous settings found. Exit out.
-            VIEWPREFERENCES3 oldViewPrefs = (VIEWPREFERENCES3)restoreSettings["ViewPrefs"];
+            VIEWPREFERENCES5 oldViewPrefs = (VIEWPREFERENCES5)restoreSettings["ViewPrefs"];
             LANGPREFERENCES3 oldLangPrefs = (LANGPREFERENCES3)restoreSettings["LangPrefs"];
             // Fetch the latest settings
-            GetAllUserPreferences(languageServiceGuid, out VIEWPREFERENCES3 viewPrefs, out LANGPREFERENCES3 langPrefs);
+            GetAllUserPreferences(languageServiceGuid, out VIEWPREFERENCES5 viewPrefs, out LANGPREFERENCES3 langPrefs);
             // Update all the margins to be the same as the restore settings
             viewPrefs.fWidgetMargin = oldViewPrefs.fWidgetMargin;
             viewPrefs.fSelectionMargin = oldViewPrefs.fSelectionMargin;
@@ -268,9 +268,9 @@ namespace HotSettings
             SaveAllUserPreferences(viewPrefs, langPrefs);
         }
 
-        private void SaveAllUserPreferences(VIEWPREFERENCES3 viewPrefs, LANGPREFERENCES3 langPrefs)
+        private void SaveAllUserPreferences(VIEWPREFERENCES5 viewPrefs, LANGPREFERENCES3 langPrefs)
         {
-            Marshal.ThrowExceptionForHR(TextManager.SetUserPreferences4(new VIEWPREFERENCES3[] { viewPrefs }, new LANGPREFERENCES3[] { langPrefs }, null));
+            Marshal.ThrowExceptionForHR(TextManager.SetUserPreferences6(new VIEWPREFERENCES5[] { viewPrefs }, new LANGPREFERENCES3[] { langPrefs }, null));
         }
 
         private void EnableIndicatorMargin()
@@ -312,7 +312,7 @@ namespace HotSettings
         public void ExecToggleSelectionMargin(IWpfTextView textView)
         {
             // Get the view preferences
-            VIEWPREFERENCES3 viewPrefs = GetViewPreferences();
+            VIEWPREFERENCES5 viewPrefs = GetViewPreferences();
             bool enabled = IsSelectionMarginEnabled(viewPrefs);
             SetSelectionMarginEnabled(viewPrefs, !enabled);
         }
@@ -343,7 +343,7 @@ namespace HotSettings
         public void ExecToggleIndicatorMargin()
         {
             // Get the view preferences
-            VIEWPREFERENCES3 viewPrefs = GetViewPreferences();
+            VIEWPREFERENCES5 viewPrefs = GetViewPreferences();
             bool enabled = IsIndicatorMarginEnabled(viewPrefs);
             SetIndicatorMarginEnabled(!enabled);
         }
@@ -354,7 +354,7 @@ namespace HotSettings
             SetIndicatorMarginEnabled(GetViewPreferences(), bShow);
         }
 
-        public void SetIndicatorMarginEnabled(VIEWPREFERENCES3 viewPrefs, bool bShow)
+        public void SetIndicatorMarginEnabled(VIEWPREFERENCES5 viewPrefs, bool bShow)
         {
             // Set the value
             viewPrefs.fWidgetMargin = (uint)(bShow ? 1 : 0);
@@ -362,7 +362,7 @@ namespace HotSettings
             SetViewPrefererences(viewPrefs);
         }
 
-        private void SetSelectionMarginEnabled(VIEWPREFERENCES3 viewPrefs, bool enabled)
+        private void SetSelectionMarginEnabled(VIEWPREFERENCES5 viewPrefs, bool enabled)
         {
             viewPrefs.fSelectionMargin = (uint)(enabled ? 1 : 0);
             // Save the update to the viewPrefs
@@ -374,7 +374,7 @@ namespace HotSettings
             return IsSelectionMarginEnabled(GetViewPreferences());
         }
 
-        private bool IsSelectionMarginEnabled(VIEWPREFERENCES3 viewPrefs)
+        private bool IsSelectionMarginEnabled(VIEWPREFERENCES5 viewPrefs)
         {
             return viewPrefs.fSelectionMargin == 1;
         }
@@ -387,7 +387,7 @@ namespace HotSettings
             SetTrackChangesEnabled(viewPrefs, !enabled);
         }
 
-        private void SetTrackChangesEnabled(VIEWPREFERENCES3 viewPrefs, bool enabled)
+        private void SetTrackChangesEnabled(VIEWPREFERENCES5 viewPrefs, bool enabled)
         {
             viewPrefs.fTrackChanges = (uint)(enabled ? 1 : 0);
             // Save the update to the viewPrefs
@@ -399,8 +399,7 @@ namespace HotSettings
             // Get the view preferences
             var viewPrefs = GetViewPreferences();
             bool enabled = IsIndentGuidesEnabled();
-            // TODO: Find property to update indent guides setting
-            //viewPrefs.fStructureGuidelines = (uint)(enabled ? 0 : 1);
+            viewPrefs.fShowBlockStructure = (uint)(enabled ? 0 : 1);
             // Save the update to the viewPrefs
             SetViewPrefererences(viewPrefs);
         }
@@ -410,7 +409,7 @@ namespace HotSettings
             return IsTrackChangesEnabled(GetViewPreferences());
         }
 
-        private bool IsTrackChangesEnabled(VIEWPREFERENCES3 viewPrefs)
+        private bool IsTrackChangesEnabled(VIEWPREFERENCES5 viewPrefs)
         {
             return viewPrefs.fTrackChanges == 1;
         }
@@ -420,7 +419,7 @@ namespace HotSettings
             return IsIndicatorMarginEnabled(GetViewPreferences());
         }
 
-        private bool IsIndicatorMarginEnabled(VIEWPREFERENCES3 viewPrefs)
+        private bool IsIndicatorMarginEnabled(VIEWPREFERENCES5 viewPrefs)
         {
             return viewPrefs.fWidgetMargin == 1;
         }
@@ -438,28 +437,27 @@ namespace HotSettings
         private bool IsIndentGuidesEnabled()
         {
             var viewPrefs = GetViewPreferences();
-            // TODO: Read value of Show Structure Guides / Indent Guidelines
-            return true;
+            return viewPrefs.fShowBlockStructure == 1;
         }
 
-        private VIEWPREFERENCES3 GetViewPreferences()
+        private VIEWPREFERENCES5 GetViewPreferences()
         {
-            VIEWPREFERENCES3[] viewPrefs = new VIEWPREFERENCES3[] { new VIEWPREFERENCES3() };
-            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences4(viewPrefs, null, null));
+            VIEWPREFERENCES5[] viewPrefs = new VIEWPREFERENCES5[] { new VIEWPREFERENCES5() };
+            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences6(viewPrefs, null, null));
             return viewPrefs[0];
         }
 
-        private void SetViewPrefererences(VIEWPREFERENCES3 viewPrefs)
+        private void SetViewPrefererences(VIEWPREFERENCES5 viewPrefs)
         {
-            Marshal.ThrowExceptionForHR(TextManager.SetUserPreferences4(new VIEWPREFERENCES3[] { viewPrefs }, null, null));
+            Marshal.ThrowExceptionForHR(TextManager.SetUserPreferences6(new VIEWPREFERENCES5[] { viewPrefs }, null, null));
         }
 
-        private void GetAllUserPreferences(Guid langServiceGuid, out VIEWPREFERENCES3 viewPrefs, out LANGPREFERENCES3 langPrefs)
+        private void GetAllUserPreferences(Guid langServiceGuid, out VIEWPREFERENCES5 viewPrefs, out LANGPREFERENCES3 langPrefs)
         {
             LANGPREFERENCES3[] langPrefsArr = new LANGPREFERENCES3[] { new LANGPREFERENCES3() };
-            VIEWPREFERENCES3[] viewPrefsArr = new VIEWPREFERENCES3[] { new VIEWPREFERENCES3() };
+            VIEWPREFERENCES5[] viewPrefsArr = new VIEWPREFERENCES5[] { new VIEWPREFERENCES5() };
             langPrefsArr[0].guidLang = langServiceGuid;
-            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences4(viewPrefsArr, langPrefsArr, null));
+            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences6(viewPrefsArr, langPrefsArr, null));
             langPrefs = langPrefsArr[0];
             viewPrefs = viewPrefsArr[0];
         }
@@ -468,13 +466,13 @@ namespace HotSettings
         {
             LANGPREFERENCES3[] langPrefs = new LANGPREFERENCES3[] { new LANGPREFERENCES3() };
             langPrefs[0].guidLang = langServiceGuid;
-            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences4(null, langPrefs, null));
+            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences6(null, langPrefs, null));
             return langPrefs[0];
         }
 
         private void SetLangPrefererences(LANGPREFERENCES3 langPrefs)
         {
-            Marshal.ThrowExceptionForHR(TextManager.SetUserPreferences4(null, new LANGPREFERENCES3[] { langPrefs }, null));
+            Marshal.ThrowExceptionForHR(TextManager.SetUserPreferences6(null, new LANGPREFERENCES3[] { langPrefs }, null));
         }
 
         public void ExecToggleNavigationBar(IWpfTextView textView, Guid langServiceGuid)

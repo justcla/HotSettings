@@ -246,3 +246,6 @@ ModelManifest.xml
 
 #JetBrains
 .idea
+
+#Dlls provided by Visual Studio
+Microsoft.VisualStudio.TextManager.Interop.15.1.DesignTime.dll

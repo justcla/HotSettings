@@ -29,14 +29,14 @@ namespace HotSettings
         [Import(typeof(IEditorOperationsFactoryService))]
         private IEditorOperationsFactoryService _editorOperationsFactory;
 
-        private IVsTextManager4 TextManager;
+        private IVsTextManager6 TextManager;
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
             IWpfTextView textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
             Guid langServiceGuid = GetLanguageServiceGuid(textView);
 
-            TextManager = (IVsTextManager4)_globalServiceProvider.GetService(typeof(SVsTextManager));
+            TextManager = (IVsTextManager6)_globalServiceProvider.GetService(typeof(SVsTextManager));
 
             HotSettingsCommandFilter commandFilter = new HotSettingsCommandFilter(textView, langServiceGuid, TextManager);
             textViewAdapter.AddCommandFilter(commandFilter, out IOleCommandTarget next);
