@@ -27,7 +27,7 @@ namespace HotSettings
         // Editor Settings CmdIds
         public const int ToggleNavigationBarCmdId = 0x1041;
         public const int ToggleCodeLensCmdId = 0x1042;
-        public const int ToggleIndentGuidesCmdId = 0x1043;
+        public const int ToggleStructureGuideLinesCmdId = 0x1043;
         public const int ToggleHighlightCurrentLineCmdId = 0x1050;
         public const int ToggleAutoDelimiterHighlightingCmdId = 0x1051;
         public const int ToggleProcedureLineSeparatorCmdId = 0x1052;
@@ -43,6 +43,12 @@ namespace HotSettings
         public const int ToggleShowErrorsCmdId = 0x1073;
         public const int ToggleShowCaretPositionCmdId = 0x1074;
         public const int ToggleShowDiffsCmdId = 0x1080;
+        // Distraction free mode CmdIds
+        public const int ToggleCleanEditorCmdId = 0x1110;
+        public const int ToggleCleanMarginsCmdId = 0x1120;
+
+        // Solution Explorer Commands
+        public const int ToggleTrackActiveItemCmdId = 0x1210;
 
     }
 }

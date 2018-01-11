@@ -6,8 +6,7 @@ using Microsoft.VisualStudio.Shell.Settings;
 using Microsoft.VisualStudio.Text.Editor;
 using System;
 using System.ComponentModel.Design;
-using Microsoft.VisualStudio.TextManager.Interop;
-using System.Runtime.InteropServices;
+using System.Windows;
 
 namespace HotSettings
 {
@@ -23,7 +22,8 @@ namespace HotSettings
 
         private SettingsStore SettingsStore;
         private IEditorOptionsFactoryService OptionsService;
-        private IVsTextManager TextManager;
+        //private IVsTextManager4 TextManager;
+        //private IVsEditorAdaptersFactoryService EditorAdaptersFactoryService;
 
         public static OleMenuCommand ToggleShowMarksCmd;
 
@@ -59,57 +59,52 @@ namespace HotSettings
         /// <param name="package">Owner package, not null.</param>
         private HotSettingsCommandHandler(Package package)
         {
-            if (package == null)
-            {
-                throw new ArgumentNullException("package");
-            }
-
-            this.package = package;
+            this.package = package ?? throw new ArgumentNullException("package");
 
             ShellSettingsManager settingsManager = new ShellSettingsManager(package);
             SettingsStore = settingsManager.GetReadOnlySettingsStore(SettingsScope.UserSettings);
 
             OptionsService = ServicesUtil.GetMefService<IEditorOptionsFactoryService>(this.ServiceProvider);
-            TextManager = (IVsTextManager)ServiceProvider.GetService(typeof(SVsTextManager));
 
-            CreateCommands();
+            RegisterGlobalCommands();
         }
 
-        private void CreateCommands()
+        private void RegisterGlobalCommands()
         {
-            OleMenuCommandService commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if (commandService != null)
+            if (ServiceProvider.GetService(typeof(IMenuCommandService)) is OleMenuCommandService commandService)
             {
                 // Editor Margin Settings Commands
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIndicatorMarginCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleLineNumbersCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleQuickActionsCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleSelectionMarginCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleTrackChangesCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleDiffMarginCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIndicatorMarginCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleLineNumbersCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleQuickActionsCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleSelectionMarginCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleTrackChangesCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleDiffMarginCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleOutliningCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleLiveUnitTestingCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleAnnotateCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleAnnotateCmdId));
                 // Editor Settings Commands
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleNavigationBarCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleNavigationBarCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleCodeLensCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIndentGuidesCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIndentGuidesCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleHighlightCurrentLineCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleAutoDelimiterHighlightingCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleProcedureLineSeparatorCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIntelliSensePopUpCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleLineEndingsCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleHighlightSymbolsCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleHighlightKeywordsCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIntelliSenseSquigglesCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleAutoDelimiterHighlightingCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleProcedureLineSeparatorCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIntelliSensePopUpCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleLineEndingsCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleHighlightSymbolsCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleHighlightKeywordsCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleIntelliSenseSquigglesCmdId));
                 // Scrollbar Settings Commands
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowScrollbarMarkersCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowChangesCmdId));
-                OleMenuCommand ToggleShowMarksCmd = CreateHotSettingsCommand(Constants.ToggleShowMarksCmdId);
-                commandService.AddCommand(ToggleShowMarksCmd);
+                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowMarksCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowErrorsCmdId));
                 commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowCaretPositionCmdId));
-                commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowDiffsCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleShowDiffsCmdId));
+                // Distraction Free mode
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleCleanEditorCmdId));
+                //commandService.AddCommand(CreateHotSettingsCommand(Constants.ToggleCleanMarginsCmdId));
             }
         }
 
@@ -141,21 +136,21 @@ namespace HotSettings
             OleMenuCommand command = (OleMenuCommand)sender;
             switch ((uint)command.CommandID.ID)
             {
-                case Constants.ToggleIndicatorMarginCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Indicator Margin");
-                    break;
-                case Constants.ToggleLineNumbersCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Line Numbers");     // TODO: Detect language of current file
-                    break;
-                case Constants.ToggleQuickActionsCmdId:
-                    this.HideItem(sender);
-                    break;
-                case Constants.ToggleSelectionMarginCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Selection Margin");
-                    break;
-                case Constants.ToggleTrackChangesCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Track Changes");
-                    break;
+                //case Constants.ToggleIndicatorMarginCmdId:
+                //    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Indicator Margin");
+                //    break;
+                //case Constants.ToggleLineNumbersCmdId:
+                //    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Line Numbers");
+                //    break;
+                //case Constants.ToggleQuickActionsCmdId:
+                //    HandleToggleLightbulbMarginQueryStatus(sender);
+                //    break;
+                //case Constants.ToggleSelectionMarginCmdId:
+                //    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Selection Margin");
+                //    break;
+                //case Constants.ToggleTrackChangesCmdId:
+                //    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Track Changes");
+                //    break;
                 case Constants.ToggleDiffMarginCmdId:
                     this.HideItem(sender);
                     break;
@@ -169,17 +164,17 @@ namespace HotSettings
                     //this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Show Blame");
                     break;
                 // Editor Settings
-                case Constants.ToggleNavigationBarCmdId:
-                    this.HandleNavBarQueryStatus(sender);
-                    break;
+                //case Constants.ToggleNavigationBarCmdId:
+                //    this.HandleNavBarQueryStatus(sender);
+                //    break;
                 case Constants.ToggleCodeLensCmdId:
                     this.HandleToggleCodeLensQueryStatus(sender);
                     break;
-                case Constants.ToggleIndentGuidesCmdId:
-                    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Indent Guides");
-                    // Hide if not VS2017+
-                    //this.HideItem(sender);
-                    break;
+                //case Constants.ToggleStructureGuideLinesCmdId:
+                //    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Indent Guides");
+                //    // Hide if not VS2017+
+                //    //this.HideItem(sender);
+                    //break;
                 case Constants.ToggleHighlightCurrentLineCmdId:
                     this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Highlight Current Line");
                     break;
@@ -205,8 +200,8 @@ namespace HotSettings
                     // Turn off all Scrollbar markers with "ShowAnnotations"
                     //this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "ShowAnnotations");
                     MenuCommand menuCommand = ((MenuCommand)sender);
-                    menuCommand.Visible = true;
-                    menuCommand.Enabled = true;
+                    //menuCommand.Visible = true;
+                    //menuCommand.Enabled = true;
                     menuCommand.Checked = SettingsStore.GetBoolean("Text Editor\\CSharp", "ShowAnnotations");
                     break;
                 case Constants.ToggleShowChangesCmdId:
@@ -224,6 +219,11 @@ namespace HotSettings
                 case Constants.ToggleShowDiffsCmdId:
                     this.HideItem(sender);
                     break;
+                    // Don't need query status for DistractionFree items.
+                    //case Constants.ToggleCleanEditorCmdId:
+                    //    break;
+                    //case Constants.ToggleCleanMarginsCmdId:
+                    //    break;
             }
         }
 
@@ -266,23 +266,22 @@ namespace HotSettings
             }
         }
 
-        private void HandleNavBarQueryStatus(object sender)
-        {
-            LANGPREFERENCES[] langPrefs = new LANGPREFERENCES[] { new LANGPREFERENCES() };
-            VIEWPREFERENCES[] viewPrefs = new VIEWPREFERENCES[] { new VIEWPREFERENCES() };
-            langPrefs[0].guidLang = new Guid(0x8239bec4, 0xee87, 0x11d0, 0x8c, 0x98, 0x0, 0xc0, 0x4f, 0xc2, 0xab, 0x22); // guidDefaultFileType
-
-            Marshal.ThrowExceptionForHR(TextManager.GetUserPreferences(viewPrefs, null, langPrefs, null));
-            LANGPREFERENCES lp = langPrefs[0];
-            bool enabled = lp.fDropdownBar == 1;
-            UpdateCheckedState(sender, enabled);
-        }
-
         private void HandleOutliningQueryStatus(object sender)
         {
             var enabled = ShellUtil.IsCommandAvailable("Edit.StopOutlining");
             var disabled = ShellUtil.IsCommandAvailable("Edit.StartAutomaticOutlining");
             UpdateCheckedState(sender, enabled);
+        }
+
+        private void HandleToggleLightbulbMarginQueryStatus(object sender)
+        {
+            var enabled = (bool)OptionsService.GlobalOptions.GetOptionValue("TextViewHost/SuggestionMargin");
+            UpdateCheckedState(sender, enabled);
+        }
+
+        private void HandleToggleLightbulbMarginAction(object sender, bool checkedState)
+        {
+            OptionsService.GlobalOptions.SetOptionValue("TextViewHost/SuggestionMargin", checkedState);
         }
 
         private void HandleToggleCodeLensQueryStatus(object sender)
@@ -329,9 +328,9 @@ namespace HotSettings
                 case Constants.ToggleLineNumbersCmdId:
                     UpdateSetting("TextEditor", "AllLanguages", "ShowLineNumbers", newCheckedState);
                     break;
-                case Constants.ToggleQuickActionsCmdId:
-                    // TODO: Implement this - Not yet available by VS2017
-                    break;
+                //case Constants.ToggleQuickActionsCmdId:
+                //    HandleToggleLightbulbMarginAction(sender, newCheckedState);
+                //    break;
                 case Constants.ToggleSelectionMarginCmdId:
                     UpdateSetting("TextEditor", "General", "SelectionMargin", newCheckedState);
                     break;
@@ -355,17 +354,17 @@ namespace HotSettings
                     break;
 
                 // Editor Settings
-                case Constants.ToggleNavigationBarCmdId:
-                    UpdateSetting("TextEditor", "AllLanguages", "ShowNavigationBar", newCheckedState);
-                    command.Checked = newCheckedState;
-                    break;
+                //case Constants.ToggleNavigationBarCmdId:
+                //    UpdateSetting("TextEditor", "AllLanguages", "ShowNavigationBar", newCheckedState);
+                //    command.Checked = newCheckedState;
+                //    break;
                 case Constants.ToggleCodeLensCmdId:
                     HandleToggleCodeLensAction(sender, newCheckedState);
                     break;
-                case Constants.ToggleIndentGuidesCmdId:
-                    UpdateSetting("TextEditor", "General", "IndentGuides", newCheckedState);
-                    command.Checked = newCheckedState;
-                    break;
+                //case Constants.ToggleStructureGuideLinesCmdId:
+                //    UpdateSetting("TextEditor", "General", "IndentGuides", newCheckedState);
+                //    command.Checked = newCheckedState;
+                //    break;
                 case Constants.ToggleHighlightCurrentLineCmdId:
                     UpdateSetting("TextEditor", "General", "HighlightCurrentLine", newCheckedState);
                     break;
@@ -415,10 +414,23 @@ namespace HotSettings
                 case Constants.ToggleShowDiffsCmdId:
                     // Not implemented yet. Would hook into Git Diff Margin scrollbar setting.
                     break;
+                case Constants.ToggleCleanEditorCmdId:
+                    ExecuteToggleCleanEditor();
+                    break;
+                case Constants.ToggleCleanMarginsCmdId:
+                    MessageBox.Show("Toggle Margins");
+                    // Not implemented yet. Would turn off all visible margins, or restore all previously visible margins
+                    break;
             }
 
             // Update state of checkbox
             //command.Checked = newCheckedState;
+        }
+
+        private void ExecuteToggleCleanEditor()
+        {
+            MessageBox.Show("Toggle Editor");
+            // Not implemented yet. Would turn off all editor adornments (not margins)
         }
 
         private void UpdateSetting(string category, string page, string settingName, bool value)

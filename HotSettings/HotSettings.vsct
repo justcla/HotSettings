@@ -16,9 +16,10 @@
 
   <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
   <Extern href="stdidcmd.h"/>
-
   <!--This header contains the command ids for the menus provided by the shell. -->
   <Extern href="vsshlids.h"/>
+  <!--  Include the definitions for images included in the VS image catalog -->  
+  <Include href="KnownImageIds.vsct"/> 
 
   <!--The Commands section is where commands, menus, and menu groups are defined.
       This section uses a Guid to identify the package that provides the command defined inside it. -->
@@ -61,39 +62,23 @@
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
     <Groups>
-      <Group guid="guidHotSettingsCmdSet" id="EditorMarginGroup" priority="0x0001">
-        <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
-      </Group>
-      <Group guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" priority="0x0002">
-        <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
-      </Group>
-      <Group guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" priority="0x0003">
-        <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
-      </Group>
-      <!-- Editor Margin Context Menu Groups -->
-      <Group guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" priority="0x0001">
-        <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
-      </Group>
-      <Group guid="guidHotSettingsCmdSet" id="EditorMarginSourceControlGroup" priority="0x0002">
-        <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
-      </Group>
-      <!-- Editor (Main) Context Menu Groups -->
+      <Group guid="guidHotSettingsCmdSet" id="DistractionFreeGroup"/>
+      <Group guid="guidHotSettingsCmdSet" id="HideAllMarginsGroup"/>
+      <Group guid="guidHotSettingsCmdSet" id="CodeNavigationGroup"/>
+      <Group guid="guidHotSettingsCmdSet" id="EditorSettingsGroup"/>
+      <Group guid="guidHotSettingsCmdSet" id="EditorHighlightingGroup"/>
+      <Group guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup"/>
+      <Group guid="guidHotSettingsCmdSet" id="EditorMarginGroup"/>
+      <Group guid="guidHotSettingsCmdSet" id="SourceControlGroup"/>
+      <Group guid="guidHotSettingsCmdSet" id="LiveUnitTestingGroup"/>
+      <Group guid="guidHotSettingsCmdSet" id="OutliningGroup"/>
+      <!-- Editor (Main) Context Menu Group -->
       <Group guid="guidHotSettingsCmdSet" id="EditorContextGroup" priority="0x1000">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
       </Group>
-      <!--
-      <Group guid="guidHotSettingsCmdSet" id="EditorContextGroup" priority="0x2000">
-        <Parent guid="CMDSETID_HtmEdGrp" id="IDMX_HTM_SOURCE_HTML" />
-      </Group>
-      <Group guid="guidHotSettingsCmdSet" id="EditorContextGroup" priority="0x2000">
-        <Parent guid="CMDSETID_HtmEdGrp" id="IDMX_HTM_SOURCE_ASPX" />
-      </Group>
-      -->
       <!--Scrollbar Settings Group-->
-      <Group guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" priority="0x0001">
-      </Group>
-      <Group guid="guidHotSettingsCmdSet" id="ScollbarSettingsMenuGroup" priority="0x0001">
-      </Group>
+      <Group guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup"/>
+      <Group guid="guidHotSettingsCmdSet" id="ScollbarSettingsMenuGroup"/>
     
     </Groups>
     
@@ -187,7 +172,6 @@
       </Button>
       <!--Editor Settings Buttons-->
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleNavigationBar" priority="0x0200" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
@@ -195,23 +179,20 @@
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleCodeLens" priority="0x0201" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <ButtonText>&amp;Code Lens</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIndentGuides" priority="0x0202" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleStructureGuideLines" priority="0x0202" type="Button">
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <ButtonText>Indent &amp;Guides</ButtonText>
+          <ButtonText>Structure &amp;Guide Lines</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightCurrentLine" priority="0x0203" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
@@ -219,15 +200,13 @@
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleAutoDelimiterHighlighting" priority="0x0204" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <ButtonText>Automatic Delimiter Highlighting</ButtonText>
+          <ButtonText>Highlight Delimiters</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleProcedureLineSeparator" priority="0x0205" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
@@ -235,7 +214,6 @@
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleIntelliSensePopUp" priority="0x0206" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
@@ -243,7 +221,6 @@
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleLineEndings" priority="0x0207" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
@@ -251,7 +228,6 @@
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightSymbols" priority="0x0208" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
@@ -259,7 +235,6 @@
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightKeywords" priority="0x0209" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
@@ -267,7 +242,6 @@
         </Strings>
       </Button>
       <!--<Button guid="guidHotSettingsCmdSet" id="cmdidToggleIntelliSenseSquiggles" priority="0x0210" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
         <Strings>
           <ButtonText>IntelliSense Squiggles (VB only)</ButtonText>
         </Strings>
@@ -321,6 +295,31 @@
           <ButtonText>Show Caret</ButtonText>
         </Strings>
       </Button>
+      <!-- Distraction Free buttons -->
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleCleanEditor" priority="0x0200" type="Button">
+        <Strings>
+          <ButtonText>Hide Editor &amp;Distractions</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleCleanMargins" priority="0x0200" type="Button">
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <ButtonText>Hide Editor &amp;Margins</ButtonText>
+        </Strings>
+      </Button>
+      <!--Solution Explorer-->
+      <Button guid="guidHotSettingsCmdSet" id="cmdidToggleTrackActiveItems" priority="0x0200" type="Button">
+        <Icon guid="ImageCatalogGuid" id="SyncContent" />  
+        <CommandFlag>IconIsMoniker</CommandFlag>  
+        <CommandFlag>DynamicVisibility</CommandFlag>  
+        <CommandFlag>DefaultInvisible</CommandFlag>  
+        <Strings>  
+          <ButtonText>Sync with Current File</ButtonText>
+        </Strings>  
+      </Button>
+
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -336,92 +335,160 @@
 
   <CommandPlacements>
     <!-- Toolbar placement -->
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleIndicatorMargin" priority="0x0001">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="DistractionFreeGroup" priority="0x0001">
+      <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleLineNumbers" priority="0x0002">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleQuickActions" priority="0x0003">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleSelectionMargin" priority="0x0004">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleTrackChanges" priority="0x0005">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleDiffMargin" priority="0x0006">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleLiveUnitTesting" priority="0x0008">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidVSStd2K" id="ECMD_OUTLN_STOP_HIDING_ALL" priority="0x0130">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidVSStd2K" id="ECMD_OUTLN_START_AUTOHIDING" priority="0x0135">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidVSStd2K" id="ECMD_TOGGLEVISSPACE" priority="0x0100">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidVSStd2K" id="ECMD_TOGGLEWORDWRAP" priority="0x0110">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
-    </CommandPlacement>
+
     <!-- Editor Margin Context menu placements -->
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleIndicatorMargin" priority="0x0001">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="HideAllMarginsGroup" priority="0x0001">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleLineNumbers" priority="0x0002">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="EditorMarginGroup" priority="0x0002">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleQuickActions" priority="0x0003">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="OutliningGroup" priority="0x0003">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleSelectionMargin" priority="0x0004">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="LiveUnitTestingGroup" priority="0x0004">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleTrackChanges" priority="0x0005">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleDiffMargin" priority="0x0006">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleOutlining" priority="0x0007">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleLiveUnitTesting" priority="0x0008">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleAnnotate" priority="0x0001">
-      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginSourceControlGroup" />
-    </CommandPlacement>
+    <!--<CommandPlacement guid="guidHotSettingsCmdSet" id="SourceControlGroup" priority="0x0005">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginContextMenu" />
+    </CommandPlacement>-->
+
     <!-- Editor (Main) Context menu placements -->
     <CommandPlacement guid="guidHotSettingsCmdSet" id="EditorContextMenu" priority="0x0001">
       <Parent guid="guidHotSettingsCmdSet" id="EditorContextGroup"/>
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" priority="0x0001">
+    <!-- Define the items in the Editor Context Menu -->
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="DistractionFreeGroup" priority="0x0010">
       <Parent guid="guidHotSettingsCmdSet" id="EditorContextMenu" />
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="EditorMarginContextGroup" priority="0x0002">
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="CodeNavigationGroup" priority="0x0020">
       <Parent guid="guidHotSettingsCmdSet" id="EditorContextMenu" />
     </CommandPlacement>
-    <!--Scrollbar Settings-->
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" priority="0x0001">
-        <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsContextMenu" />
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" priority="0x0030">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorContextMenu" />
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="ScrollbarSettingsContextMenu" priority="0x001">
-        <Parent guid="guidHotSettingsCmdSet" id="ScollbarSettingsMenuGroup" />
+    <!--<CommandPlacement guid="guidHotSettingsCmdSet" id="EditorHighlightingGroup" priority="0x0040">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorContextMenu" />
+    </CommandPlacement>-->
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="EditorMarginGroup" priority="0x0050">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorContextMenu" />
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="ScollbarSettingsMenuGroup" priority="0x004">
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="ScollbarSettingsMenuGroup" priority="0x060">
         <Parent guid="guidHotSettingsCmdSet" id="EditorContextMenu" />
     </CommandPlacement>
+
+    <!-- Editor Margin Group -->
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleIndicatorMargin" priority="0x0001">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleLineNumbers" priority="0x0002">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleQuickActions" priority="0x0003">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleSelectionMargin" priority="0x0004">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleTrackChanges" priority="0x0005">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleDiffMargin" priority="0x0006">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
+    </CommandPlacement>
+
+    <!-- Outlining Group -->
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleOutlining" priority="0x0010">
+      <Parent guid="guidHotSettingsCmdSet" id="OutliningGroup" />
+    </CommandPlacement>
+
+    <!-- Live Unit Testing -->
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleLiveUnitTesting" priority="0x0010">
+      <Parent guid="guidHotSettingsCmdSet" id="LiveUnitTestingGroup" />
+    </CommandPlacement>
+
+    <!-- Source Control group -->
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleAnnotate" priority="0x0001">
+      <Parent guid="guidHotSettingsCmdSet" id="SourceControlGroup" />
+    </CommandPlacement>
+
+    <!-- Distraction Free -->
+    <CommandPlacement guid="guidVSStd97" id="cmdidFullScreen" priority="0x0010">
+      <Parent guid="guidHotSettingsCmdSet" id="DistractionFreeGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSStd97" id="cmdidAutoHideAllWindows" priority="0x0020">
+      <Parent guid="guidHotSettingsCmdSet" id="DistractionFreeGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleCleanEditor" priority="0x0030">
+      <Parent guid="guidHotSettingsCmdSet" id="DistractionFreeGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleCleanMargins" priority="0x0040">
+      <Parent guid="guidHotSettingsCmdSet" id="DistractionFreeGroup" />
+    </CommandPlacement>
+    
+    <!-- Hide All Margins group -->
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleCleanMargins" priority="0x0040">
+      <Parent guid="guidHotSettingsCmdSet" id="HideAllMarginsGroup" />
+    </CommandPlacement>
+
+    <!-- Code Navigation group -->
+    <CommandPlacement guid="guidVSStd2K" id="ECMD_TOGGLEWORDWRAP" priority="0x0010">
+      <Parent guid="guidHotSettingsCmdSet" id="CodeNavigationGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleNavigationBar" priority="0x0020" >
+      <Parent guid="guidHotSettingsCmdSet" id="CodeNavigationGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleCodeLens" priority="0x0030" >
+      <Parent guid="guidHotSettingsCmdSet" id="CodeNavigationGroup" />
+    </CommandPlacement>
+
+    <!--Editor Settings group -->
+    <CommandPlacement guid="guidVSStd2K" id="ECMD_TOGGLEVISSPACE" priority="0x0010">
+      <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleStructureGuideLines" priority="0x0020" >
+      <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightCurrentLine" priority="0x0030" >
+      <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleProcedureLineSeparator" priority="0x0040" >
+      <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
+    </CommandPlacement>
+
+    <!--Editor Highlighting group -->
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightSymbols" priority="0x0010" >
+      <Parent guid="guidHotSettingsCmdSet" id="EditorHighlightingGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightKeywords" priority="0x0020" >
+      <Parent guid="guidHotSettingsCmdSet" id="EditorHighlightingGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleAutoDelimiterHighlighting" priority="0x0030" >
+      <Parent guid="guidHotSettingsCmdSet" id="EditorHighlightingGroup" />
+    </CommandPlacement>
+
+    <!--Scrollbar Settings-->
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" priority="0x0001">
+      <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsContextMenu" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="ScrollbarSettingsContextMenu" priority="0x001">
+      <Parent guid="guidHotSettingsCmdSet" id="ScollbarSettingsMenuGroup" />
+    </CommandPlacement>
+
+    <!--Solution Explorer-->
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleTrackActiveItems" priority="0x0550">
+      <!-- Command placement set between 200 (Properties) and 600 (Preview Selected Items) -->
+      <Parent guid="guidSHLMainMenu" id="IDG_VS_PROJ_TOOLBAR3" />
+    </CommandPlacement>
+
   </CommandPlacements>
 
-  <VisibilityConstraints>
+  <!--<VisibilityConstraints>
     <VisibilityItem guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" context="GUID_TextEditorFactory"/>
-  </VisibilityConstraints>
+  </VisibilityConstraints>-->
 
   <Symbols>
     <!-- This is the package guid. -->
@@ -436,13 +503,18 @@
       <IDSymbol name="EditorContextMenu" value="0x1200" />
       <IDSymbol name="ScrollbarSettingsContextMenu" value="0x1300" />
       <!-- Group IDs -->
-      <IDSymbol name="EditorMarginGroup" value="0x1001" />
       <IDSymbol name="EditorSettingsGroup" value="0x1002" />
       <IDSymbol name="ScrollbarSettingsGroup" value="0x1003" />
-      <IDSymbol name="EditorMarginContextGroup" value="0x1004" />
+      <IDSymbol name="EditorMarginGroup" value="0x1004" />
       <IDSymbol name="EditorContextGroup" value="0x1005" />
       <IDSymbol name="ScollbarSettingsMenuGroup" value="0x1007"/>
-      <IDSymbol name="EditorMarginSourceControlGroup" value="0x1008" />
+      <IDSymbol name="SourceControlGroup" value="0x1008" />
+      <IDSymbol name="DistractionFreeGroup" value="0x1009" />
+      <IDSymbol name="LiveUnitTestingGroup" value="0x1010" />
+      <IDSymbol name="OutliningGroup" value="0x1011" />
+      <IDSymbol name="EditorHighlightingGroup" value="0x1012" />
+      <IDSymbol name="CodeNavigationGroup" value="0x1013" />
+      <IDSymbol name="HideAllMarginsGroup" value="0x1014" />
       <!-- Command IDs -->
       <!-- These must be in sync with constant in Command file (eg. ToggleMargin.cs) -->
       <IDSymbol name="cmdidToggleIndicatorMargin" value="0x1021" />
@@ -457,7 +529,7 @@
       <!-- Editor Settings CmdIds-->
       <IDSymbol name="cmdidToggleNavigationBar" value="0x1041" />
       <IDSymbol name="cmdidToggleCodeLens" value="0x1042" />
-      <IDSymbol name="cmdidToggleIndentGuides" value="0x1043" />
+      <IDSymbol name="cmdidToggleStructureGuideLines" value="0x1043" />
       <IDSymbol name="cmdidToggleHighlightCurrentLine" value="0x1050" />
       <IDSymbol name="cmdidToggleAutoDelimiterHighlighting" value="0x1051" />
       <IDSymbol name="cmdidToggleProcedureLineSeparator" value="0x1052" />
@@ -473,6 +545,11 @@
       <IDSymbol name="cmdidShowErrors" value="0x1073" />
       <IDSymbol name="cmdidShowCaretPosition" value="0x1074" />
       <IDSymbol name="cmdidShowDiffs" value="0x1080" />
+      <!--Distraction Free -->
+      <IDSymbol name="cmdidToggleCleanEditor" value="0x1110" />
+      <IDSymbol name="cmdidToggleCleanMargins" value="0x1120" />
+      <!--Solution Explorer-->
+      <IDSymbol name="cmdidToggleTrackActiveItems" value="0x1210" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{6d06c52c-db85-42a5-91c8-a0b6023ad326}">
