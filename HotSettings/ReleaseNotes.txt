@@ -1,4 +1,5 @@
 ﻿Hot Settings
 
+11-Jan-2017 v1.1.4: Completed all margins and most editor adornments
 26-Dec-2017 v1.1: Added support for Outling and Navigation Bar
 20-Jun-2017 v1.0: Initial release (very beta!)
