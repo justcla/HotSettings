@@ -397,7 +397,7 @@ namespace HotSettings
         public void ExecToggleStructureGuideLines(IWpfTextView textView)
         {
             // Get the view preferences
-            var viewPrefs = GetViewPreferences();
+            VIEWPREFERENCES5 viewPrefs = GetViewPreferences();
             bool enabled = IsStructureGuideLinesEnabled(viewPrefs);
             SetStructureGuideLinesEnabled(viewPrefs, !enabled);
         }
