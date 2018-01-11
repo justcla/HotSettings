@@ -45,6 +45,9 @@ namespace HotSettings
                     case Constants.ToggleLineNumbersCmdId:
                         QueryStatusToggleLineNumbers(languageServiceGuid, prgCmds);
                         return VSConstants.S_OK;
+                    case Constants.ToggleQuickActionsCmdId:
+                        QueryStatusToggleLightbulbMargin(prgCmds);
+                        return VSConstants.S_OK;
                     case Constants.ToggleSelectionMarginCmdId:
                         QueryStatusToggleSelectionMargin(prgCmds);
                         return VSConstants.S_OK;
@@ -89,6 +92,9 @@ namespace HotSettings
                         return VSConstants.S_OK;
                     case Constants.ToggleLineNumbersCmdId:
                         ExecToggleLineNumbers(languageServiceGuid);
+                        return VSConstants.S_OK;
+                    case Constants.ToggleQuickActionsCmdId:
+                        ExecToggleLightbulbMargin(textView);
                         return VSConstants.S_OK;
                     case Constants.ToggleSelectionMarginCmdId:
                         ExecToggleSelectionMargin(textView);
@@ -174,6 +180,11 @@ namespace HotSettings
         public void QueryStatusToggleLineNumbers(Guid langServiceGuid, OLECMD[] prgCmds)
         {
             EnableAndCheckCommand(prgCmds, IsLineNumbersEnabled(langServiceGuid));
+        }
+
+        private void QueryStatusToggleLightbulbMargin(OLECMD[] prgCmds)
+        {
+            EnableAndCheckCommand(prgCmds, IsLightbulbMarginEnabled());
         }
 
         public void QueryStatusToggleSelectionMargin(OLECMD[] prgCmds)
@@ -309,6 +320,12 @@ namespace HotSettings
             }
         }
 
+        private void ExecToggleLightbulbMargin(IWpfTextView textView)
+        {
+            bool enabled = (bool)textView.Options.GetOptionValue("TextViewHost/SuggestionMargin");
+            textView.Options.SetOptionValue("TextViewHost/SuggestionMargin", !enabled);
+        }
+
         public void ExecToggleSelectionMargin(IWpfTextView textView)
         {
             // Get the view preferences
@@ -367,6 +384,11 @@ namespace HotSettings
             viewPrefs.fSelectionMargin = (uint)(enabled ? 1 : 0);
             // Save the update to the viewPrefs
             SetViewPrefererences(viewPrefs);
+        }
+
+        private bool IsLightbulbMarginEnabled()
+        {
+            return (bool)textView.Options.GetOptionValue("TextViewHost/SuggestionMargin");
         }
 
         private bool IsSelectionMarginEnabled()

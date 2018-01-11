@@ -142,9 +142,9 @@ namespace HotSettings
                 //case Constants.ToggleLineNumbersCmdId:
                 //    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor\\CSharp", "Line Numbers");
                 //    break;
-                case Constants.ToggleQuickActionsCmdId:
-                    HandleToggleLightbulbMarginQueryStatus(sender);
-                    break;
+                //case Constants.ToggleQuickActionsCmdId:
+                //    HandleToggleLightbulbMarginQueryStatus(sender);
+                //    break;
                 //case Constants.ToggleSelectionMarginCmdId:
                 //    this.HandleQueryStatusCheckedUserProperty(sender, "Text Editor", "Selection Margin");
                 //    break;
@@ -328,9 +328,9 @@ namespace HotSettings
                 case Constants.ToggleLineNumbersCmdId:
                     UpdateSetting("TextEditor", "AllLanguages", "ShowLineNumbers", newCheckedState);
                     break;
-                case Constants.ToggleQuickActionsCmdId:
-                    HandleToggleLightbulbMarginAction(sender, newCheckedState);
-                    break;
+                //case Constants.ToggleQuickActionsCmdId:
+                //    HandleToggleLightbulbMarginAction(sender, newCheckedState);
+                //    break;
                 case Constants.ToggleSelectionMarginCmdId:
                     UpdateSetting("TextEditor", "General", "SelectionMargin", newCheckedState);
                     break;
