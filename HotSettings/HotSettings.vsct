@@ -62,6 +62,7 @@
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
     <Groups>
+      <Group guid="guidHotSettingsCmdSet" id="ToolbarHideAllGroup"/>
       <Group guid="guidHotSettingsCmdSet" id="DistractionFreeGroup"/>
       <Group guid="guidHotSettingsCmdSet" id="HideAllMarginsGroup"/>
       <Group guid="guidHotSettingsCmdSet" id="CodeNavigationGroup"/>
@@ -124,7 +125,8 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <ButtonText>&amp;Selection Margin</ButtonText>
+          <ButtonText>Selection Margin</ButtonText>
+          <MenuText>&amp;Selection Margin</MenuText>
           <ToolTipText>Toggle Selection Margin</ToolTipText>
         </Strings>
       </Button>
@@ -132,7 +134,8 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <ButtonText>&amp;Track Changes</ButtonText>
+          <ButtonText>Track Changes</ButtonText>
+          <MenuText>&amp;Track Changes</MenuText>
           <ToolTipText>Start/Stop Track Changes</ToolTipText>
         </Strings>
       </Button>
@@ -175,28 +178,35 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <ButtonText>&amp;Navigation Bar</ButtonText>
+          <ButtonText>NavBar</ButtonText>
+          <MenuText>&amp;Navigation Bar</MenuText>
+          <ToolTipText>Show/Hide the Navigation Bar</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleCodeLens" priority="0x0201" type="Button">
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <ButtonText>&amp;Code Lens</ButtonText>
+          <ButtonText>Code Lens</ButtonText>
+          <MenuText>&amp;Code Lens</MenuText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleStructureGuideLines" priority="0x0202" type="Button">
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <ButtonText>Structure &amp;Guide Lines</ButtonText>
+          <ButtonText>SGL</ButtonText>
+          <MenuText>Structure &amp;Guide Lines</MenuText>
+          <ToolTipText>Structure Guide Lines</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightCurrentLine" priority="0x0203" type="Button">
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <ButtonText>&amp;Highlight Current Line</ButtonText>
+          <ButtonText>HCL</ButtonText>
+          <MenuText>&amp;Highlight Current Line</MenuText>
+          <ToolTipText>Highlight Current Line</ToolTipText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidToggleAutoDelimiterHighlighting" priority="0x0204" type="Button">
@@ -335,7 +345,22 @@
 
   <CommandPlacements>
     <!-- Toolbar placement -->
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="DistractionFreeGroup" priority="0x0001">
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="ToolbarHideAllGroup" priority="0x0010">
+      <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="EditorMarginGroup" priority="0x0020">
+      <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="CodeNavigationGroup" priority="0x0040">
+      <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" priority="0x0050">
+      <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="OutliningGroup" priority="0x0030">
+      <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="ScollbarSettingsMenuGroup" priority="0x0060">
       <Parent guid="guidHotSettingsCmdSet" id="HotSettingsToolbar" />
     </CommandPlacement>
 
@@ -396,9 +421,9 @@
     <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleTrackChanges" priority="0x0005">
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleDiffMargin" priority="0x0006">
+    <!--<CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleDiffMargin" priority="0x0006">
       <Parent guid="guidHotSettingsCmdSet" id="EditorMarginGroup" />
-    </CommandPlacement>
+    </CommandPlacement>-->
 
     <!-- Outlining Group -->
     <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleOutlining" priority="0x0010">
@@ -429,6 +454,14 @@
       <Parent guid="guidHotSettingsCmdSet" id="DistractionFreeGroup" />
     </CommandPlacement>
     
+    <!-- Toolbar Hide All Group -->
+    <CommandPlacement guid="guidVSStd97" id="cmdidFullScreen" priority="0x0010">
+      <Parent guid="guidHotSettingsCmdSet" id="ToolbarHideAllGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidVSStd97" id="cmdidAutoHideAllWindows" priority="0x0020">
+      <Parent guid="guidHotSettingsCmdSet" id="ToolbarHideAllGroup" />
+    </CommandPlacement>
+
     <!-- Hide All Margins group -->
     <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleCleanMargins" priority="0x0040">
       <Parent guid="guidHotSettingsCmdSet" id="HideAllMarginsGroup" />
@@ -455,9 +488,9 @@
     <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightCurrentLine" priority="0x0030" >
       <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
     </CommandPlacement>
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleProcedureLineSeparator" priority="0x0040" >
+    <!--<CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleProcedureLineSeparator" priority="0x0040" >
       <Parent guid="guidHotSettingsCmdSet" id="EditorSettingsGroup" />
-    </CommandPlacement>
+    </CommandPlacement>-->
 
     <!--Editor Highlighting group -->
     <CommandPlacement guid="guidHotSettingsCmdSet" id="cmdidToggleHighlightSymbols" priority="0x0010" >
@@ -515,6 +548,7 @@
       <IDSymbol name="EditorHighlightingGroup" value="0x1012" />
       <IDSymbol name="CodeNavigationGroup" value="0x1013" />
       <IDSymbol name="HideAllMarginsGroup" value="0x1014" />
+      <IDSymbol name="ToolbarHideAllGroup" value="0x1015" />
       <!-- Command IDs -->
       <!-- These must be in sync with constant in Command file (eg. ToggleMargin.cs) -->
       <IDSymbol name="cmdidToggleIndicatorMargin" value="0x1021" />
