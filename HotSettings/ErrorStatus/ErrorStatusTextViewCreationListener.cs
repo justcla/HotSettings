@@ -49,5 +49,8 @@
 
         internal IVsStatusbar StatusBarService => this.statusBarService
             ?? (this.statusBarService = this.ServiceProvider.GetService(typeof(SVsStatusbar)) as IVsStatusbar);
+
+        // Keep track of the last error message added to the status bar so we don't clear other messages.
+        internal string LastErrorText { get; set; }
     }
 }

@@ -30,7 +30,7 @@ namespace HotSettings.ErrorStatus
 
             textView.Closed += OnTextViewClosed;
             textView.Caret.PositionChanged += this.OnCaretPositionChanged;
-            textView.VisualElement.GotKeyboardFocus += this.OnGotKeyboardFocus;
+            //textView.VisualElement.GotKeyboardFocus += this.OnGotKeyboardFocus;
         }
 
         private void OnBatchedTagsChanged(object sender, BatchedTagsChangedEventArgs e) => this.ShowErrorTagContentAtCaret();
@@ -84,17 +84,39 @@ namespace HotSettings.ErrorStatus
             if (errorTagContent != null)
             {
                 SetStatusBarText(errorTagContent);
+            } else
+            {
+                // Handle the case of a Suggestion tag with no tooltip content
+                ClearStatusBarText();
             }
+            // Always update the Last Error Text - even if it is null
+            this.factory.LastErrorText = errorTagContent;
         }
 
         private void SetStatusBarText(string errorTagContent)
         {
+            // Don't set the status bar text if it's already set.
+            // Note: Costs a GetText operation. Is this faster than SetText?
+            Marshal.ThrowExceptionForHR(this.factory.StatusBarService.GetText(out string currentStatusBarText));
+            if (currentStatusBarText.Equals(errorTagContent)) return;
+
             Marshal.ThrowExceptionForHR(this.factory.StatusBarService.SetText(errorTagContent));
+            this.factory.LastErrorText = errorTagContent;
         }
 
         private void ClearStatusBarText()
         {
+            // Don't bother clearing the status bar if we didn't set anything
+            if (string.IsNullOrEmpty(this.factory.LastErrorText)) return;
+
+            // Don't clear the status bar if there's nothing in it or if it's not the last error text
+            Marshal.ThrowExceptionForHR(this.factory.StatusBarService.GetText(out string currentStatusBarText));
+            if (string.IsNullOrEmpty(currentStatusBarText) || 
+                !string.Equals(currentStatusBarText, this.factory.LastErrorText)) return;
+
+            // The text in the status bar is the text last set. Can safely clear it.
             Marshal.ThrowExceptionForHR(this.factory.StatusBarService.Clear());
+            this.factory.LastErrorText = null;
         }
 
         private void OnTextViewClosed(object sender, System.EventArgs e)
@@ -104,7 +126,7 @@ namespace HotSettings.ErrorStatus
 
             this.textView.Closed -= this.OnTextViewClosed;
             this.textView.Caret.PositionChanged -= this.OnCaretPositionChanged;
-            textView.VisualElement.GotKeyboardFocus -= this.OnGotKeyboardFocus;
+            //textView.VisualElement.GotKeyboardFocus -= this.OnGotKeyboardFocus;
         }
     }
 }
