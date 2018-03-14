@@ -61,6 +61,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Common\ServicesUtil.cs" />
+    <Compile Include="ErrorMarginNavigator\ErrorInteractionMargin.cs" />
+    <Compile Include="ErrorMarginNavigator\ErrorInteractionMarginProvider.cs" />
     <Compile Include="HotSettingsCommandFilter.cs" />
     <Compile Include="TrackActiveItemsCommandHandler.cs" />
     <Compile Include="HotSettingsCommandHandler.cs" />
