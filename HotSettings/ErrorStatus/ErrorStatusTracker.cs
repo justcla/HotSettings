@@ -1,4 +1,6 @@
-﻿namespace HotSettings.ErrorStatus
+﻿using System.Collections.Generic;
+
+namespace HotSettings.ErrorStatus
 {
     using System;
     using System.Linq;
@@ -39,31 +41,60 @@
 
         private void ShowErrorTagContentAtCaret()
         {
-            var caretPosition = this.textView.Caret.Position.BufferPosition;
-
             // Get all error tags that intersect with the caret.
+            var caretPosition = this.textView.Caret.Position.BufferPosition;
             var errorTagsAtCaret = this.errorTagAggregator.GetTags(new SnapshotSpan(caretPosition, 0));
 
-            // Get first, highest priority error tag.
-            foreach (var errorTypeDefinition in this.factory.OrderedErrorTypeDefinitions)
+            // Optimisation: ErrorTags list is usually empty (or one). List of known error types is 6+ items.
+            // Therefore, avoid iterating through the error type list where possible.
+            // Convert the enum to list so we can easily see if it's empty or one.
+            // Only where there are more than one ErrorTag do we need to sort by priority.
+            var errorTagList = errorTagsAtCaret.ToList();
+            switch (errorTagList.Count)
             {
-                var firstMatchingTag = errorTagsAtCaret.FirstOrDefault(
-                    tag => string.Equals(tag.Tag.ErrorType, errorTypeDefinition.Metadata.Name, StringComparison.OrdinalIgnoreCase));
-                if (firstMatchingTag != null)
-                {
-                    this.UpdateStatusBarFromErrorTag(firstMatchingTag);
-
+                case 0:
+                    // No error tag at caret location. Clear the status bar.
+                    ClearStatusBarText();
                     return;
-                }
+                case 1:
+                    // Only one error tag at this location. Show it on the status bar.
+                    this.UpdateStatusBarFromErrorTag(errorTagList[0]);
+                    return;
+                default:
+                    // More than one error tag. Show highest priority error.
+                    var highestPriorityErrorTag = GetHighestPriorityErrorTag(errorTagList);
+                    this.UpdateStatusBarFromErrorTag(highestPriorityErrorTag);
+                    return;
             }
+        }
 
-            Marshal.ThrowExceptionForHR(this.factory.StatusBarService.Clear());
+        private IMappingTagSpan<IErrorTag> GetHighestPriorityErrorTag(List<IMappingTagSpan<IErrorTag>> mappingTagSpans)
+        {
+            // Get first, highest priority error tag.
+            return this.factory.OrderedErrorTypeDefinitions
+                .Select(errorTypeDefinition => mappingTagSpans.FirstOrDefault(tag =>
+                    string.Equals(tag.Tag.ErrorType, errorTypeDefinition.Metadata.Name,
+                        StringComparison.OrdinalIgnoreCase)))
+                .FirstOrDefault(firstMatchingTag => firstMatchingTag != null);
         }
 
         private void UpdateStatusBarFromErrorTag(IMappingTagSpan<IErrorTag> mappingTagSpan)
         {
-            var errorTagContent = mappingTagSpan.Tag.ToolTipContent.ToString();
+            var errorTagContent = mappingTagSpan?.Tag?.ToolTipContent?.ToString();
+            if (errorTagContent != null)
+            {
+                SetStatusBarText(errorTagContent);
+            }
+        }
+
+        private void SetStatusBarText(string errorTagContent)
+        {
             Marshal.ThrowExceptionForHR(this.factory.StatusBarService.SetText(errorTagContent));
+        }
+
+        private void ClearStatusBarText()
+        {
+            Marshal.ThrowExceptionForHR(this.factory.StatusBarService.Clear());
         }
 
         private void OnTextViewClosed(object sender, System.EventArgs e)
