@@ -75,7 +75,8 @@
             if (this.TryGetErrorTagsAtLineUnderCursor(e, out var lineTags))
             {
                 this.marginContainer.VisualElement.Cursor = Cursors.Hand;
-                this.tooltip.Content = string.Join("\r\n", lineTags.Select(tag => tag.Tag.ToolTipContent.ToString()));
+                this.tooltip.Content = string.Join("\r\n",
+                    lineTags.Select(tag => tag.Tag.ToolTipContent?.ToString()).Where(tag => tag != null));
                 this.tooltip.PlacementRectangle = new Rect(
                     e.GetPosition(this.marginContainer.VisualElement),
                     new Size(0, 0));
