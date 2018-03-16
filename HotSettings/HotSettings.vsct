@@ -47,7 +47,7 @@
       </Menu>
       <Menu guid="guidHotSettingsCmdSet" id="ScrollbarSettingsContextMenu" type="Context">
         <Strings>
-          <ButtonText>Scrollbar</ButtonText>
+          <ButtonText>Scr&amp;ollbar</ButtonText>
         </Strings>
       </Menu>
       <Menu guid="guidHotSettingsCmdSet" id="EditorContextMenu" type="Context">
@@ -79,6 +79,8 @@
       </Group>
       <!--Scrollbar Settings Group-->
       <Group guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup"/>
+      <Group guid="guidHotSettingsCmdSet" id="ScrollbarEnableMarkersGroup"/>
+      <Group guid="guidHotSettingsCmdSet" id="ScrollbarCaretGroup"/>
       <Group guid="guidHotSettingsCmdSet" id="ScollbarSettingsMenuGroup"/>
     
     </Groups>
@@ -258,11 +260,11 @@
       </Button>-->
       <!--Scrollbar Settings Buttons-->
       <Button guid="guidHotSettingsCmdSet" id="cmdidShowScrollbarMarkers" priority="0x0300" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" />
+        <Parent guid="guidHotSettingsCmdSet" id="ScrollbarEnableMarkersGroup" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <ButtonText>Show Scrollbar Markers</ButtonText>
+          <ButtonText>&amp;Show Scrollbar Markers</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidShowChanges" priority="0x0310" type="Button">
@@ -270,7 +272,7 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <ButtonText>Show Changes</ButtonText>
+          <ButtonText>Show &amp;Changes</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidShowMarks" priority="0x0320" type="Button">
@@ -278,7 +280,7 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <ButtonText>Show Marks</ButtonText>
+          <ButtonText>Show &amp;Marks</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidShowDiffs" priority="0x0330" type="Button">
@@ -286,7 +288,7 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <ButtonText>Show Diffs</ButtonText>
+          <ButtonText>Show &amp;Diffs</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidShowErrors" priority="0x0340" type="Button">
@@ -294,15 +296,15 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <ButtonText>Show Errors</ButtonText>
+          <ButtonText>Show &amp;Errors</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidHotSettingsCmdSet" id="cmdidShowCaretPosition" priority="0x0350" type="Button">
-        <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" />
+        <Parent guid="guidHotSettingsCmdSet" id="ScrollbarCaretGroup" />
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <ButtonText>Show Caret</ButtonText>
+          <ButtonText>Show Caret &amp;Location</ButtonText>
         </Strings>
       </Button>
       <!-- Distraction Free buttons -->
@@ -504,11 +506,17 @@
     </CommandPlacement>
 
     <!--Scrollbar Settings-->
-    <CommandPlacement guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" priority="0x0001">
-      <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsContextMenu" />
-    </CommandPlacement>
     <CommandPlacement guid="guidHotSettingsCmdSet" id="ScrollbarSettingsContextMenu" priority="0x001">
       <Parent guid="guidHotSettingsCmdSet" id="ScollbarSettingsMenuGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="ScrollbarEnableMarkersGroup" priority="0x0010">
+      <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsContextMenu" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="ScrollbarSettingsGroup" priority="0x0020">
+      <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsContextMenu" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidHotSettingsCmdSet" id="ScrollbarCaretGroup" priority="0x0030">
+      <Parent guid="guidHotSettingsCmdSet" id="ScrollbarSettingsContextMenu" />
     </CommandPlacement>
 
     <!--Solution Explorer-->
@@ -538,6 +546,8 @@
       <!-- Group IDs -->
       <IDSymbol name="EditorSettingsGroup" value="0x1002" />
       <IDSymbol name="ScrollbarSettingsGroup" value="0x1003" />
+      <IDSymbol name="ScrollbarEnableMarkersGroup" value="0x1016" />
+      <IDSymbol name="ScrollbarCaretGroup" value="0x1017" />
       <IDSymbol name="EditorMarginGroup" value="0x1004" />
       <IDSymbol name="EditorContextGroup" value="0x1005" />
       <IDSymbol name="ScollbarSettingsMenuGroup" value="0x1007"/>

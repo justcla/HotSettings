@@ -63,6 +63,8 @@
     <Compile Include="Common\ServicesUtil.cs" />
     <Compile Include="ErrorMarginNavigator\ErrorInteractionMargin.cs" />
     <Compile Include="ErrorMarginNavigator\ErrorInteractionMarginProvider.cs" />
+    <Compile Include="ErrorStatus\ErrorStatusTextViewCreationListener.cs" />
+    <Compile Include="ErrorStatus\ErrorStatusTracker.cs" />
     <Compile Include="HotSettingsCommandFilter.cs" />
     <Compile Include="TrackActiveItemsCommandHandler.cs" />
     <Compile Include="HotSettingsCommandHandler.cs" />

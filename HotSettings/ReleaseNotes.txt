@@ -1,5 +1,8 @@
 ﻿Hot Settings
 
+15-Mar-2018 v1.1.8: Added keyboard accelerators and grouping for Scrollbar menu items
+14-Mar-2018 v1.1.7: Performance optimisations for Error Info on status bar
+13-Mar-2018 v1.1.6: New feature - Error info on status bar (from Christian Gunderman)
 20-Jan-2018 v1.1.5: Restored all toolbar buttons
 11-Jan-2017 v1.1.4: Completed all margins and most editor adornments
 26-Dec-2017 v1.1: Added support for Outling and Navigation Bar
