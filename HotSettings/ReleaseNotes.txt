@@ -1,5 +1,6 @@
 ﻿Hot Settings
 
+06-Apr-2018 v1.1.9: Corrected mistake with extenstion name (space at the beginning)
 15-Mar-2018 v1.1.8: Added keyboard accelerators and grouping for Scrollbar menu items
 14-Mar-2018 v1.1.7: Performance optimisations for Error Info on status bar
 13-Mar-2018 v1.1.6: New feature - Error info on status bar (from Christian Gunderman)
