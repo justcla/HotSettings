@@ -89,6 +89,10 @@
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\HotSettings_Icon_128x.png">
+      <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Screenshot - Full.png" />
     <Content Include="Resources\Screenshot.PNG">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -102,7 +106,6 @@
     <Content Include="Resources\HotSettings_32x.png" />
     <Content Include="Resources\HotSettings_90x.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\SampleToolbarIcons.png" />
     <Content Include="Resources\DefaultPackage.ico" />

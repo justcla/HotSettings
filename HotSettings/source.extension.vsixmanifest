@@ -1,26 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-  <Metadata>
-    <Identity Id="HotSettings.Justin Clareburt.9d7d4a40-2b7c-4177-82bf-1876951e6b24" Version="1.1.9" Language="en-US" Publisher="Justin Clareburt" />
-    <DisplayName>Hot Settings</DisplayName>
-    <Description xml:space="preserve">Menus and Toolbars that expose Visual Studio settings</Description>
-    <MoreInfo>https://marketplace.visualstudio.com/items?itemName=JustinClareburtMSFT.HotSettings</MoreInfo>
-    <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
-    <Icon>Resources\HotSettings_90x.png</Icon>
-    <PreviewImage>Resources\Screenshot.PNG</PreviewImage>
-  </Metadata>
-  <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0, 15.0]" />
-  </Installation>
-  <Dependencies>
-    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
-    <Dependency Id="Microsoft.VisualStudio.MPF.14.0" DisplayName="Visual Studio MPF 14.0" d:Source="Installed" Version="[14.0]" />
-  </Dependencies>
-  <Assets>
-    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
-  </Assets>
-  <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0.26004.1,16.0)" DisplayName="Visual Studio core editor" />
-  </Prerequisites>
+    <Metadata>
+        <Identity Id="HotSettings.Justin Clareburt.9d7d4a40-2b7c-4177-82bf-1876951e6b24" Version="1.1.9" Language="en-US" Publisher="Justin Clareburt" />
+        <DisplayName>Hot Settings</DisplayName>
+        <Description xml:space="preserve">Menus and Toolbars that expose Visual Studio settings</Description>
+        <MoreInfo>https://marketplace.visualstudio.com/items?itemName=JustinClareburtMSFT.HotSettings</MoreInfo>
+        <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
+        <Icon>Resources\HotSettings_Icon_128x.png</Icon>
+        <PreviewImage>Resources\Screenshot.PNG</PreviewImage>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0, 15.0]" />
+    </Installation>
+    <Dependencies>
+        <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+        <Dependency Id="Microsoft.VisualStudio.MPF.14.0" DisplayName="Visual Studio MPF 14.0" d:Source="Installed" Version="[14.0]" />
+    </Dependencies>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
+    </Assets>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0.26004.1,16.0)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
 </PackageManifest>
