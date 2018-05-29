@@ -326,7 +326,7 @@
         <Icon guid="ImageCatalogGuid" id="SyncContent" />  
         <CommandFlag>IconIsMoniker</CommandFlag>  
         <CommandFlag>DynamicVisibility</CommandFlag>  
-        <CommandFlag>DefaultInvisible</CommandFlag>  
+        <!--<CommandFlag>DefaultInvisible</CommandFlag>-->  
         <Strings>  
           <ButtonText>Sync with Current File</ButtonText>
         </Strings>  

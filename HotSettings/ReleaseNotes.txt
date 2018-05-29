@@ -1,5 +1,7 @@
 ﻿Hot Settings
+by Justin Clareburt
 
+24-Apr-2018 v1.2.1: Set TrackActionItems icon to be visible by default.
 24-Apr-2018 v1.2.0: Made package load async / background load.
 06-Apr-2018 v1.1.9: Corrected mistake with extenstion name (space at the beginning)
 15-Mar-2018 v1.1.8: Added keyboard accelerators and grouping for Scrollbar menu items
