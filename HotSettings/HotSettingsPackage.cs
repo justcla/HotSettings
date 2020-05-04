@@ -9,7 +9,7 @@ using Task = System.Threading.Tasks.Task;
 namespace HotSettings
 {
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]       
+    [InstalledProductRegistration("#110", "#112", "1.3.1", IconResourceID = 400)]       
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExistsAndFullyLoaded_string, PackageAutoLoadFlags.BackgroundLoad)]
     [Guid(HotSettingsPackage.PackageGuidString)]

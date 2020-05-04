@@ -1,5 +1,6 @@
 ﻿Hot Settings
 by Justin Clareburt
+04-May-2020 v1.3.1: Fixed NullReferenceException when opening Diff window.
 07-Jul-2019 v1.3.0: Upgraded to include VS2019
 24-Apr-2018 v1.2.1: Set TrackActionItems icon to be visible by default.
 24-Apr-2018 v1.2.0: Made package load async / background load.

@@ -46,7 +46,12 @@ namespace HotSettings
 
         private Guid GetLanguageServiceGuid(IWpfTextView textView)
         {
+            // Get the TextBuffer from the TextView.
             IVsTextBuffer textBuffer = EditorAdaptersFactoryService.GetBufferAdapter(textView.TextBuffer);
+            // Handle NullReferenceException caused when Diff window (and others?) have no TextBuffer
+            if (textBuffer == null) return Guid.Empty;
+
+            // Fetch the language Guid
             textBuffer.GetLanguageServiceID(out Guid langServiceGuid);
             return langServiceGuid;
         }
