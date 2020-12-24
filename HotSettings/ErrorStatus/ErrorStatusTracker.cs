@@ -5,6 +5,7 @@ namespace HotSettings.ErrorStatus
     using System;
     using System.Linq;
     using System.Runtime.InteropServices;
+    using System.Text;
     using System.Windows.Input;
     using Microsoft.VisualStudio.Text;
     using Microsoft.VisualStudio.Text.Editor;
@@ -80,7 +81,7 @@ namespace HotSettings.ErrorStatus
 
         private void UpdateStatusBarFromErrorTag(IMappingTagSpan<IErrorTag> mappingTagSpan)
         {
-            var errorTagContent = mappingTagSpan?.Tag?.ToolTipContent?.ToString();
+            var errorTagContent = GetTextFromTagToolTip(mappingTagSpan);
             if (errorTagContent != null)
             {
                 SetStatusBarText(errorTagContent);
@@ -91,6 +92,20 @@ namespace HotSettings.ErrorStatus
             }
             // Always update the Last Error Text - even if it is null
             this.factory.LastErrorText = errorTagContent;
+        }
+
+        private static string GetTextFromTagToolTip(IMappingTagSpan<IErrorTag> mappingTagSpan)
+        {
+            var toolTipContent = (Microsoft.VisualStudio.Text.Adornments.ContainerElement)mappingTagSpan.Tag.ToolTipContent;
+            var textRuns = ((Microsoft.VisualStudio.Text.Adornments.ClassifiedTextElement)toolTipContent.Elements.ElementAt(0)).Runs;
+
+            // TODO: This can probably be written as a single line statement
+            var combinedText = new StringBuilder();
+            foreach (var run in textRuns)
+            {
+                combinedText.Append(run.Text);
+            }
+            return combinedText.ToString();
         }
 
         private void SetStatusBarText(string errorTagContent)
