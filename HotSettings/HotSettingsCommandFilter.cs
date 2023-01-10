@@ -6,6 +6,11 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.TextManager.Interop;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+using Microsoft.VisualStudio.Settings;
+using Microsoft.VisualStudio.Shell.Settings;
+using static HotSettings.Constants;
+using System.Collections;
+using Microsoft.VisualStudio.Shell;
 
 namespace HotSettings
 {
@@ -15,15 +20,17 @@ namespace HotSettings
         private Guid languageServiceGuid;
 
         private IVsTextManager6 TextManager;
+        private WritableSettingsStore UserSettingsStore;
 
         // Map<LanguageGuid, RestoreActions>
         private static Dictionary<Guid, Dictionary<string, object>> RestoreSettingsMap = new Dictionary<Guid, Dictionary<string, object>>();
 
-        public HotSettingsCommandFilter(IWpfTextView textView, Guid languageServiceGuid, IVsTextManager6 textManager)
+        public HotSettingsCommandFilter(IWpfTextView textView, Guid languageServiceGuid, IVsTextManager6 textManager, WritableSettingsStore userSettingsStore)
         {
             this.textView = textView;
             this.languageServiceGuid = languageServiceGuid;
-            TextManager = textManager;
+            this.TextManager = textManager;
+            this.UserSettingsStore = userSettingsStore;
         }
 
         public IOleCommandTarget Next { get; internal set; }
@@ -320,10 +327,23 @@ namespace HotSettings
             }
         }
 
-        private void ExecToggleLightbulbMargin(IWpfTextView textView)
+        public void ExecToggleLightbulbMargin(IWpfTextView textView)
         {
             bool enabled = (bool)textView.Options.GetOptionValue("TextViewHost/SuggestionMargin");
             textView.Options.SetOptionValue("TextViewHost/SuggestionMargin", !enabled);
+
+            // Make the setting sticky!
+            UpdateLightbulbMarginSetting(!enabled);
+        }
+
+        private void UpdateLightbulbMarginSetting(bool isShowMargin)
+        {
+            const string collectionPath = HOT_SETTINGS_GROUP;
+            if (!UserSettingsStore.CollectionExists(collectionPath))
+            {
+                UserSettingsStore.CreateCollection(collectionPath);
+            }
+            UserSettingsStore.SetBoolean(HOT_SETTINGS_GROUP, SHOW_LIGHTBLUB_MARGIN, isShowMargin);
         }
 
         public void ExecToggleSelectionMargin(IWpfTextView textView)

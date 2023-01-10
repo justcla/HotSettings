@@ -50,5 +50,13 @@ namespace HotSettings
         // Solution Explorer Commands
         public const int ToggleTrackActiveItemCmdId = 0x1210;
 
+
+        // --- CollectionPath and Keys for the User Settings Store
+        // System properties
+        public const string SOLUTION_NAVIGATOR_GROUP = @"ApplicationPrivateSettings\SolutionNavigator";
+        public const string TRACK_ACTIVE_ITEM_IN_SOLN_EXP = "TrackSelCtxInSlnExp";
+        // User properties
+        public const string HOT_SETTINGS_GROUP = "HotSettings";
+        public const string SHOW_LIGHTBLUB_MARGIN = "ShowLightbulbMargin";
     }
 }

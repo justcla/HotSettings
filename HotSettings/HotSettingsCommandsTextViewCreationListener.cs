@@ -8,6 +8,9 @@ using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Operations;
 using System;
+using Microsoft.VisualStudio.Settings;
+using Microsoft.VisualStudio.Shell.Settings;
+using static HotSettings.Constants;
 #pragma warning disable 0649
 
 namespace HotSettings
@@ -30,16 +33,28 @@ namespace HotSettings
         private IEditorOperationsFactoryService _editorOperationsFactory;
 
         private IVsTextManager6 TextManager;
+        IWpfTextView textView;
+        HotSettingsCommandFilter commandFilter;
+
+        private ShellSettingsManager SettingsManager;
+        private WritableSettingsStore UserSettingsStore;
+
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
-            IWpfTextView textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
+            textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
             Guid langServiceGuid = GetLanguageServiceGuid(textView);
 
             TextManager = (IVsTextManager6)_globalServiceProvider.GetService(typeof(SVsTextManager));
 
-            HotSettingsCommandFilter commandFilter = new HotSettingsCommandFilter(textView, langServiceGuid, TextManager);
+            SettingsManager = new ShellSettingsManager(_globalServiceProvider);
+            UserSettingsStore = SettingsManager.GetWritableSettingsStore(SettingsScope.UserSettings);
+
+            commandFilter = new HotSettingsCommandFilter(textView, langServiceGuid, TextManager, UserSettingsStore);
             textViewAdapter.AddCommandFilter(commandFilter, out IOleCommandTarget next);
+
+            // Apply global settings to this editor window. ie. Sticky setting for Lightbulb margin
+            ApplyInitialEditorMarginSettings();
 
             commandFilter.Next = next;
         }
@@ -54,6 +69,25 @@ namespace HotSettings
             // Fetch the language Guid
             textBuffer.GetLanguageServiceID(out Guid langServiceGuid);
             return langServiceGuid;
+        }
+
+        private void ApplyInitialEditorMarginSettings()
+        {
+            ApplyLightbulbMarginSetting();
+        }
+
+        private void ApplyLightbulbMarginSetting()
+        {
+            // Get the user's current sticky lightbulb margin setting
+            // Note: First time fetch will be empty and should default to TRUE (ie. Show the lightbulb margin)
+            bool showLightbulbMargin = UserSettingsStore.GetBoolean(HOT_SETTINGS_GROUP, SHOW_LIGHTBLUB_MARGIN, true);
+
+            // Turn off the lightbulb if user set it OFF.
+            // Note: Only worry about turning it OFF; it starts ON by default with a new editor.
+            if (!showLightbulbMargin)
+            {
+                textView.Options.SetOptionValue("TextViewHost/SuggestionMargin", false);
+            }
         }
     }
 }

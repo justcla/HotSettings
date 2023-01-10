@@ -1,6 +1,7 @@
 ﻿Hot Settings
 by Justin Clareburt
-18-Jul-2021 v1.5.0: Upgraded for VS2021
+10-Jan-2023 v1.6.0: Lightbulb margin made sticky
+18-Jul-2021 v1.5.0: Upgraded for VS2022
 26-Dec-2020 v1.4.0: Removed feature: Error info on status bar (Extracted to Hot Status extension)
 04-May-2020 v1.3.1: Fixed NullReferenceException when opening Diff window.
 07-Jul-2019 v1.3.0: Upgraded to include VS2019
