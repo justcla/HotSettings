@@ -6,6 +6,8 @@ using System;
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Shell.Interop;
+using static HotSettings.Constants;
+
 
 namespace HotSettings
 {
@@ -18,19 +20,10 @@ namespace HotSettings
         private readonly Guid HotSettingsPackageCmdSetGuid = Constants.HotSettingsCmdSetGuid;
         private const int ToggleTrackActiveItemCmdId = Constants.ToggleTrackActiveItemCmdId;
 
-        // UserSettingsStore properties
-        private const string SOLUTION_NAVIGATOR_GROUP = @"ApplicationPrivateSettings\SolutionNavigator";
-        private const string TRACK_ACTIVE_ITEM_IN_SOLN_EXP = "TrackSelCtxInSlnExp";
-
         /// <summary>
         /// VS Package that provides this command, not null.
         /// </summary>
         private readonly Package package;
-
-        private SettingsStore SettingsStore;
-        private IEditorOptionsFactoryService OptionsService;
-        private IVsTextManager2 TextManager;
-        //private IVsEditorAdaptersFactoryService EditorAdaptersFactoryService;
 
         /// <summary>
         /// Gets the instance of the command.
@@ -79,12 +72,6 @@ namespace HotSettings
         private TrackActiveItemsCommandHandler(Package package)
         {
             this.package = package ?? throw new ArgumentNullException("package");
-
-            ShellSettingsManager settingsManager = new ShellSettingsManager(package);
-            SettingsStore = settingsManager.GetReadOnlySettingsStore(SettingsScope.UserSettings);
-
-            OptionsService = ServicesUtil.GetMefService<IEditorOptionsFactoryService>(this.ServiceProvider);
-            TextManager = (IVsTextManager2)ServiceProvider.GetService(typeof(SVsTextManager));
 
             RegisterGlobalCommands();
         }
